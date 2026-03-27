@@ -204,58 +204,58 @@ function getF(){var d=gd().slice();if(srch){var s=srch.toLowerCase();d=d.filter(
 /* ===== CSV / EXCEL IMPORT ===== */
 // Column name mapping — flexible matching
 var COL_MAP={
-  "location":["location","store","site","place","loc","s no","sno"],
+  "location":["location","store","site","place","loc"],
   "brand":["brand","brand name"],
   "company":["company","electricity company","elec company","provider","discom"],
   "ca":["ca","ca no","ca no.","ca number","consumer no","consumer number","account"],
   "billDate":["bill date","billdate","billing date"],
-  "amount":["amount","amt","bill amount","₹ amount","rs","total","rs amount","₹amount","bill amt"],
-  "dueDate":["due date","duedate","due","payment due","due by","last date"],
-  "status":["status","payment status","status  payment date","payment date","status  payment","paid","payment"],
+  "amount":["amount","amt","bill amount","rs amount","bill amt","total"],
+  "dueDate":["due date","duedate","due","payment due","due by","last date","status   payment date","status payment date","status and payment date"],
+  "status":["status","payment status","paid","payment"],
   "remarks":["remarks","remark","notes","note","comment","comments"],
-  "billLink":["bill link","billlink","bill url","bill"],
-  "receiptLink":["receipt link","receiptlink","receipt url","receipt"]
+  "billLink":["bill link","billlink","bill url"],
+  "receiptLink":["receipt link","receiptlink","receipt url"]
 };
 
 function matchCol(header){
   var raw=header.toLowerCase().trim();
-  // exact known headers first
-  if(raw==="s.no"||raw==="s no"||raw==="sno"||raw==="#"||raw==="sr"||raw==="sr no"||raw==="sr.")return null; // skip serial number
-  if(raw==="status & payment date"||raw==="status &amp; payment date"||raw==="status and payment date")return "status";
-  if(raw==="₹ amount"||raw==="rs amount"||raw==="bill amount")return "amount";
+  // Skip serial number columns
+  if(raw==="s.no"||raw==="s no"||raw==="sno"||raw==="#"||raw==="sr"||raw==="sr no"||raw==="sr."||raw==="sr.no")return null;
+  // Skip bill number column (not bill date, not bill link, not bill amount)
+  if(raw==="bill no"||raw==="bill no."||raw==="bill number"||raw==="billno")return null;
+  
+  // Exact known headers — handle special characters
+  if(raw==="status & payment date"||raw==="status &amp; payment date"||raw==="status and payment date")return "dueDate";
+  if(raw==="₹ amount"||raw==="rs amount"||raw==="bill amount"||raw==="amount")return "amount";
   if(raw==="electricity company")return "company";
   if(raw==="ca no."||raw==="ca no"||raw==="ca number")return "ca";
   if(raw==="due date")return "dueDate";
   if(raw==="bill date")return "billDate";
   if(raw==="bill link")return "billLink";
   if(raw==="receipt link")return "receiptLink";
+  if(raw==="location")return "location";
+  if(raw==="brand")return "brand";
+  if(raw==="status")return "status";
+  if(raw==="remarks"||raw==="remark")return "remarks";
   
+  // Cleaned match
   var h=raw.replace(/[₹&]/g,"").replace(/[^a-z0-9 ]/g," ").replace(/\s+/g," ").trim();
   for(var field in COL_MAP){
     for(var i=0;i<COL_MAP[field].length;i++){
       if(h===COL_MAP[field][i])return field;
     }
   }
+  // Partial match — but be careful not to match "bill no" to "bill" fields
   for(var field in COL_MAP){
     for(var i=0;i<COL_MAP[field].length;i++){
-      if(h.indexOf(COL_MAP[field][i])>=0||COL_MAP[field][i].indexOf(h)>=0)return field;
-    }
-  }
-  return null;
-}
-
-function matchCol(header){
-  var h=header.toLowerCase().replace(/[^a-z0-9 ]/g,"").trim();
-  for(var field in COL_MAP){
-    for(var i=0;i<COL_MAP[field].length;i++){
-      if(h===COL_MAP[field][i]||h.indexOf(COL_MAP[field][i])>=0)return field;
+      if(h.indexOf(COL_MAP[field][i])>=0)return field;
     }
   }
   return null;
 }
 
 function parseImportRows(sheet){
-  var json=XLSX.utils.sheet_to_json(sheet,{header:1,defval:""});
+  var json=XLSX.utils.sheet_to_json(sheet,{header:1,defval:"",raw:true});
   if(!json||json.length<2)return{headers:[],rows:[],mapped:{}};
   var rawH=json[0].map(function(h){return String(h).trim();});
   var mapped={};
@@ -275,16 +275,22 @@ function parseImportRows(sheet){
 
 function parseDate(v){
   if(!v&&v!==0)return"";
-  // Excel serial number (e.g. 46082)
-  if(typeof v==="number"&&v>30000&&v<60000){
-    var d=new Date(Math.round((v-25569)*86400*1000));
-    if(!isNaN(d.getTime())){
-      return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+  // JS Date object (from XLSX cellDates:true)
+  if(v instanceof Date){
+    if(!isNaN(v.getTime())){
+      return v.getFullYear()+"-"+String(v.getMonth()+1).padStart(2,"0")+"-"+String(v.getDate()).padStart(2,"0");
     }
+    return"";
   }
-  // Date object from XLSX
-  if(v instanceof Date&&!isNaN(v.getTime())){
-    return v.getFullYear()+"-"+String(v.getMonth()+1).padStart(2,"0")+"-"+String(v.getDate()).padStart(2,"0");
+  // Excel serial number (e.g. 46082)
+  if(typeof v==="number"){
+    if(v>30000&&v<60000){
+      var d=new Date(Math.round((v-25569)*86400*1000));
+      if(!isNaN(d.getTime())){
+        return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+      }
+    }
+    return"";
   }
   var s=String(v).trim();
   if(!s)return"";
@@ -292,18 +298,21 @@ function parseDate(v){
   if(/^\d{4}-\d{2}-\d{2}$/.test(s))return s;
   // DD.MM.YYYY (dots — like 25.02.2026)
   var md=s.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/);
-  if(md){return md[3]+"-"+md[2].padStart(2,"0")+"-"+md[1].padStart(2,"0");}
+  if(md){return md[3]+"-"+String(md[2]).padStart(2,"0")+"-"+String(md[1]).padStart(2,"0");}
   // DD-MM-YYYY or DD/MM/YYYY
   var m=s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
   if(m){
     var day=parseInt(m[1]),mon=parseInt(m[2]);
-    if(day>12){return m[3]+"-"+m[2].padStart(2,"0")+"-"+m[1].padStart(2,"0");}
-    if(mon>12){return m[3]+"-"+m[1].padStart(2,"0")+"-"+m[2].padStart(2,"0");}
-    return m[3]+"-"+m[2].padStart(2,"0")+"-"+m[1].padStart(2,"0");
+    if(day>12){return m[3]+"-"+String(m[2]).padStart(2,"0")+"-"+String(m[1]).padStart(2,"0");}
+    if(mon>12){return m[3]+"-"+String(m[1]).padStart(2,"0")+"-"+String(m[2]).padStart(2,"0");}
+    return m[3]+"-"+String(m[2]).padStart(2,"0")+"-"+String(m[1]).padStart(2,"0");
   }
   // YYYY/MM/DD or YYYY.MM.DD
   var m3=s.match(/^(\d{4})[\/\-\.](\d{1,2})[\/\-\.](\d{1,2})$/);
-  if(m3){return m3[1]+"-"+m3[2].padStart(2,"0")+"-"+m3[3].padStart(2,"0");}
+  if(m3){return m3[1]+"-"+String(m3[2]).padStart(2,"0")+"-"+String(m3[3]).padStart(2,"0");}
+  // ISO string like "2026-03-25T00:00:00.000Z"
+  var m4=s.match(/^(\d{4})-(\d{2})-(\d{2})T/);
+  if(m4){return m4[1]+"-"+m4[2]+"-"+m4[3];}
   // Try JS Date parse as last resort
   var d2=new Date(s);
   if(!isNaN(d2.getTime())&&d2.getFullYear()>2000){
@@ -441,7 +450,7 @@ document.getElementById("csvFileInput").addEventListener("change",function(e){
   reader.onload=function(evt){
     try{
       var data=new Uint8Array(evt.target.result);
-      var wb=XLSX.read(data,{type:"array",cellDates:false,raw:false,dateNF:'yyyy-mm-dd'});
+      var wb=XLSX.read(data,{type:"array",cellDates:true,raw:false});
       var ws=wb.Sheets[wb.SheetNames[0]];
       var parsed=parseImportRows(ws);
       if(!parsed.rows.length){alert("No data rows found in file.");return;}
