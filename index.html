@@ -197,9 +197,15 @@ function E(s){var d=document.createElement("div");d.textContent=s;return d.inner
 function getUrl(c){return CU[c]||"#";}
 function mSort(a,b){var M=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];var pa=(a||"").split(" "),pb=(b||"").split(" ");var ya=parseInt(pa[1])||0,yb=parseInt(pb[1])||0;if(ya!==yb)return ya-yb;return(M.indexOf(pa[0])||0)-(M.indexOf(pb[0])||0);}
 function isCurr(m){try{var M=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];var p=(m||"").split(" ");if(p.length<2)return true;var mi=M.indexOf(p[0]),yi=parseInt(p[1]);if(isNaN(yi)||mi<0)return true;var n=new Date();if(yi>n.getFullYear())return true;if(yi<n.getFullYear())return false;return mi>=n.getMonth();}catch(e){return true;}}
-function dueTag(d,status){if(!d||!isCurr(actMonth))return null;if(status&&status.toLowerCase().indexOf("paid")>=0)return null;try{var dd=new Date(d+"T00:00:00"),now=new Date();now.setHours(0,0,0,0);var diff=Math.ceil((dd-now)/864e5);if(diff<0)return{l:"Overdue ("+Math.abs(diff)+"d)",c:"#dc2626",b:"#fef2f2"};if(diff===0)return{l:"Due Today!",c:"#dc2626",b:"#fef2f2"};if(diff<=3)return{l:"Due in "+diff+"d",c:"#ea580c",b:"#fff7ed"};if(diff<=5)return{l:"Due in "+diff+"d",c:"#d97706",b:"#fffbeb"};if(diff<=7)return{l:"Due in "+diff+"d",c:"#ca8a04",b:"#fefce8"};return{l:"Due in "+diff+"d",c:"#16a34a",b:"#f0fdf4"};}catch(e){return null;}}
-function getStats(d){var now=new Date();now.setHours(0,0,0,0);var o=0,t=0,w5=0,w7=0,amt=0,ic=isCurr(actMonth);d.forEach(function(r){var a=parseFloat(r.amount)||0;if(a>0)amt+=a;if(!ic||!r.dueDate)return;var paid=(r.status||"").toLowerCase().indexOf("paid")>=0;if(paid)return;var dd=new Date(r.dueDate+"T00:00:00");var diff=Math.ceil((dd-now)/864e5);if(diff<0)o++;if(diff===0)t++;if(diff>=0&&diff<=5)w5++;if(diff>=0&&diff<=7)w7++;});return{ov:o,td:t,w5:w5,w7:w7,total:d.length,amt:amt};}
-function getF(){var d=gd().slice();if(srch){var s=srch.toLowerCase();d=d.filter(function(r){return r.location.toLowerCase().indexOf(s)>=0||r.ca.indexOf(s)>=0||r.brand.toLowerCase().indexOf(s)>=0;});}if(compF!=="all")d=d.filter(function(r){return r.company===compF;});if(brandF!=="all")d=d.filter(function(r){return r.brand===brandF;});if(flt!=="all"&&isCurr(actMonth)){var now=new Date();now.setHours(0,0,0,0);d=d.filter(function(r){if(!r.dueDate)return false;var dd=new Date(r.dueDate+"T00:00:00");var diff=Math.ceil((dd-now)/864e5);if(flt==="overdue")return diff<0;if(flt==="today")return diff===0;if(flt==="5days")return diff>=0&&diff<=5;if(flt==="7days")return diff>=0&&diff<=7;return true;});}if(sCol)d.sort(function(a,b){var va=a[sCol]||"",vb=b[sCol]||"";if(sCol==="amount"){va=parseFloat(va)||0;vb=parseFloat(vb)||0;}return va<vb?(sDir==="asc"?-1:1):va>vb?(sDir==="asc"?1:-1):0;});return d;}
+function displayDate(d){
+  if(!d)return"";
+  var m=d.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(m)return m[3]+"."+m[2]+"."+m[1];
+  return d;
+}
+function dueTag(d,status){if(!d||!isCurr(actMonth))return null;if(status&&status.toLowerCase().indexOf("paid")>=0)return null;var dt=d;if(!/^\d{4}-/.test(dt))dt=parseDate(dt);try{var dd=new Date(dt+"T00:00:00"),now=new Date();now.setHours(0,0,0,0);var diff=Math.ceil((dd-now)/864e5);if(diff<0)return{l:"Overdue ("+Math.abs(diff)+"d)",c:"#dc2626",b:"#fef2f2"};if(diff===0)return{l:"Due Today!",c:"#dc2626",b:"#fef2f2"};if(diff<=3)return{l:"Due in "+diff+"d",c:"#ea580c",b:"#fff7ed"};if(diff<=5)return{l:"Due in "+diff+"d",c:"#d97706",b:"#fffbeb"};if(diff<=7)return{l:"Due in "+diff+"d",c:"#ca8a04",b:"#fefce8"};return{l:"Due in "+diff+"d",c:"#16a34a",b:"#f0fdf4"};}catch(e){return null;}}
+function getStats(d){var now=new Date();now.setHours(0,0,0,0);var o=0,t=0,w5=0,w7=0,amt=0,ic=isCurr(actMonth);d.forEach(function(r){var a=parseFloat(r.amount)||0;if(a>0)amt+=a;if(!ic||!r.dueDate)return;var paid=(r.status||"").toLowerCase().indexOf("paid")>=0;if(paid)return;var dt=r.dueDate;if(!/^\d{4}-/.test(dt))dt=parseDate(dt);var dd=new Date(dt+"T00:00:00");if(isNaN(dd.getTime()))return;var diff=Math.ceil((dd-now)/864e5);if(diff<0)o++;if(diff===0)t++;if(diff>=0&&diff<=5)w5++;if(diff>=0&&diff<=7)w7++;});return{ov:o,td:t,w5:w5,w7:w7,total:d.length,amt:amt};}
+function getF(){var d=gd().slice();if(srch){var s=srch.toLowerCase();d=d.filter(function(r){return r.location.toLowerCase().indexOf(s)>=0||r.ca.indexOf(s)>=0||r.brand.toLowerCase().indexOf(s)>=0;});}if(compF!=="all")d=d.filter(function(r){return r.company===compF;});if(brandF!=="all")d=d.filter(function(r){return r.brand===brandF;});if(flt!=="all"&&isCurr(actMonth)){var now=new Date();now.setHours(0,0,0,0);d=d.filter(function(r){if(!r.dueDate)return false;var paid=(r.status||"").toLowerCase().indexOf("paid")>=0;if(paid)return false;var dt=r.dueDate;if(!/^\d{4}-/.test(dt))dt=parseDate(dt);var dd=new Date(dt+"T00:00:00");if(isNaN(dd.getTime()))return false;var diff=Math.ceil((dd-now)/864e5);if(flt==="overdue")return diff<0;if(flt==="today")return diff===0;if(flt==="5days")return diff>=0&&diff<=5;if(flt==="7days")return diff>=0&&diff<=7;return true;});}if(sCol)d.sort(function(a,b){var va=a[sCol]||"",vb=b[sCol]||"";if(sCol==="amount"){va=parseFloat(va)||0;vb=parseFloat(vb)||0;}return va<vb?(sDir==="asc"?-1:1):va>vb?(sDir==="asc"?1:-1):0;});return d;}
 
 /* ===== CSV / EXCEL IMPORT ===== */
 // Column name mapping — flexible matching
@@ -533,7 +539,8 @@ f.forEach(function(r,i){
       var tp=fd==="dueDate"||fd==="billDate"?' type="date"':"";
       return '<div class="ce"><input value="'+E(editVal)+'"'+tp+' oninput="editVal=this.value" onkeydown="ck(event,\''+r.id+'\',\''+fd+'\')" autofocus style="width:'+(w?'130':'80')+'px"><button class="sv" onclick="sv(\''+r.id+'\',\''+fd+'\')">✓</button><button class="cn" onclick="cn()">✗</button></div>';
     }
-    return '<span class="cl'+(v?"":" mt")+'" onclick="se(\''+r.id+'\',\''+fd+'\')">'+E(v||"—")+'</span>';
+    var dv=(fd==="dueDate"||fd==="billDate")?displayDate(v):v;
+    return '<span class="cl'+(dv?"":" mt")+'" onclick="se(\''+r.id+'\',\''+fd+'\')">'+E(dv||"—")+'</span>';
   }
 
   var caH;
@@ -709,7 +716,8 @@ function renderTable(){
         var tp=fd==="dueDate"||fd==="billDate"?' type="date"':"";
         return '<div class="ce"><input value="'+E(editVal)+'"'+tp+' oninput="editVal=this.value" onkeydown="ck(event,\''+r.id+'\',\''+fd+'\')" autofocus style="width:'+(w?'130':'80')+'px"><button class="sv" onclick="sv(\''+r.id+'\',\''+fd+'\')">✓</button><button class="cn" onclick="cn()">✗</button></div>';
       }
-      return '<span class="cl'+(v?"":" mt")+'" onclick="se(\''+r.id+'\',\''+fd+'\')">'+E(v||"—")+'</span>';
+      var dv=(fd==="dueDate"||fd==="billDate")?displayDate(v):v;
+      return '<span class="cl'+(dv?"":" mt")+'" onclick="se(\''+r.id+'\',\''+fd+'\')">'+E(dv||"—")+'</span>';
     }
 
     var caH;
