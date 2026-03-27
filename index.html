@@ -99,8 +99,7 @@ td:hover .cab{opacity:1}
 <script>
 var BILL_FOLDER="https://drive.google.com/drive/folders/1asQDHp907t6zQToBnTOcScpZZp-R4mR-";
 var RCPT_FOLDER="https://drive.google.com/drive/folders/1U5yGOiRmvUBruo0dPktCUy_9-Jyvdx2W";
-var PARENT_FOLDER="https://drive.google.com/drive/folders/1gSx9ngnvF8ipL2x1HAaWFCeo3RyW9yra";
-var CU={"BESCOM":"https://www.bescom.co.in/bescom/main/quick-payment","BEST":"https://www.bestundertaking.net/","Adani Power":"https://www.adanielectricity.com/pay-your-bill/online-payments","MSEDCL":"https://wss.mahadiscom.in/wss/wss?uiActionName=getViewPayBill","Tata Power Mumbai":"https://pgi.billdesk.com/pgidsk/pgmerc/tatapwr/TATAPWRDetails.jsp","BSES":"https://www.bsesdelhi.com/web/brpl/quick-pay","BSES(rajdhani)":"https://www.bsesdelhi.com/web/brpl/quick-pay","BSES Yamuna":"https://www.bsesdelhi.com/web/bypl/verify-quickpay?p_p_id=com_bses_quick_pay_verification_portlet_QuickPayVerificationPortlet&p_p_lifecycle=1&p_p_state=normal&p_p_mode=view&_com_bses_quick_pay_verification_portlet_QuickPayVerificationPortlet_javax.portlet.action=submitQuickPayVerification","TSERC":"https://tgsouthernpower.org/paybillonline","UPCL":"https://www.upcl.org/wss/viewBill","PSPCL":"https://billpayment.pspcl.in/pgBillPay.aspx?uc=BillPayAdvance","CESC Limited":"https://srvcs.cesc.co.in/ptrlineins/mjpgav_payon/scriptfiles/monthlybill.php","TNEB":"https://www.tnebnet.org/awp/login?locale=ta","PVVNL":"https://consumer.uppcl.org/wss/pay_bill_home","JVVNL":"https://www.billdesk.com/pgidsk/pgmerc/jvvnljp/JVVNLJPDetails.jsp","TATA Power Delhi":"https://www.tatapower-ddl.com/billpay/paybillonline.aspx","MGVCL":"https://mpay.guvnl.in/paytm/QuickPay.php?&company=MGVCL"};
+var CU={"BESCOM":"https://www.bescom.co.in/bescom/main/quick-payment","BEST":"https://www.bestundertaking.net/","Adani Power":"https://www.adanielectricity.com/pay-your-bill/online-payments","MSEDCL":"https://wss.mahadiscom.in/wss/wss?uiActionName=getViewPayBill","Tata Power Mumbai":"https://pgi.billdesk.com/pgidsk/pgmerc/tatapwr/TATAPWRDetails.jsp","BSES":"https://www.bsesdelhi.com/web/brpl/quick-pay","BSES(rajdhani)":"https://www.bsesdelhi.com/web/brpl/quick-pay","BSES Yamuna":"https://www.bsesdelhi.com/web/bypl/verify-quickpay","TSERC":"https://tgsouthernpower.org/paybillonline","UPCL":"https://www.upcl.org/wss/viewBill","PSPCL":"https://billpayment.pspcl.in/pgBillPay.aspx?uc=BillPayAdvance","CESC Limited":"https://srvcs.cesc.co.in/ptrlineins/mjpgav_payon/scriptfiles/monthlybill.php","TNEB":"https://www.tnebnet.org/awp/login?locale=ta","PVVNL":"https://consumer.uppcl.org/wss/pay_bill_home","JVVNL":"https://www.billdesk.com/pgidsk/pgmerc/jvvnljp/JVVNLJPDetails.jsp","TATA Power Delhi":"https://www.tatapower-ddl.com/billpay/paybillonline.aspx","MGVCL":"https://mpay.guvnl.in/paytm/QuickPay.php?&company=MGVCL"};
 var _n=1;
 function mk(loc,brand,co,ca,amt,due,stat,rem){return{id:String(_n++),location:loc,brand:brand||"",company:co,ca:ca,billDate:"",amount:amt||"",dueDate:due||"",status:stat||"",remarks:rem||"",billLink:"",receiptLink:""};}
 
@@ -188,42 +187,173 @@ mk("Sarjapur","FNP","BESCOM","3885495000","6743","2025-11-29","Paid on 23.11.202
 mk("Kumarswami Layout","FNP","BESCOM","8874486000","9463","2025-11-29","Paid on 22.11.2025","")
 ],
 "Dec 2025":[
-mk("Powai MFC","MFC","Adani Power","151406551","11340","2025-12-02","Paid on 02.12.2025",""),
-mk("Lower Parel (FNP)","FNP","BEST","551309029","10080","2025-12-03","Paid on 02.12.2025",""),
+mk("Powai MFC","MFC","Adani Power","151406551","11340","2025-12-02","Paid on 02.12.2025","9810 / 31.12.2025"),
+mk("Lower Parel (FNP)","FNP","BEST","551309029","10080","2025-12-03","Paid on 02.12.2025","9780/30.12.2025"),
 mk("Thane (FNP)","FNP","MSEDCL","000018280744","10330","2025-12-03","Paid on 02.12.2025",""),
 mk("Chembur (FNP)","FNP","Adani Power","153025321","8860","2025-12-03","Paid on 02.12.2025",""),
+mk("Andheri West (FNP)","FNP","Tata Power Mumbai","900000124917","8762","2025-12-05","Paid on 02.12.2025",""),
 mk("Pune MFC","MFC","MSEDCL","160230561955","10460","2025-12-05","Paid on 02.12.2025",""),
+mk("Satya Niketan","MFC","BSES","102451305","4550","2025-12-06","Paid on 02.12.2025",""),
+mk("Dwarka 7 CODS","MFC","BSES","152317438","7071","2025-12-08","Paid on 08.12.2025",""),
 mk("Malabaar Hills","MFC","BEST","8761230218","13380","2025-12-08","Paid on 08.12.2025",""),
 mk("Vasant Kunj","MFC","BSES","152239812","15290","2025-12-08","Paid on 08.12.2025",""),
+mk("RPSG (Mumbai)","RPSG","Adani Power","153999698","8790","2025-12-08","Paid on 08.12.2025",""),
 mk("Dehradun (FK)","FK","UPCL","9761202099011","9484","2025-12-09","Paid on 09.12.2025",""),
+mk("Colaba","FNP","BEST","251113005","800","2025-12-09","Paid on 09.12.2025",""),
 mk("Oshiwara","MFC","Adani Power","150071714","9700","2025-12-10","Paid on 09.12.2025",""),
+mk("Mayur Vihar","MFC","BSES Yamuna","153976506","3430","2025-12-10","Paid on 09.12.2025",""),
+mk("Airoli (FNP)","FNP","MSEDCL","000094492670","5960","2025-12-10","Paid on 09.12.2025",""),
+mk("Marol(FNP)","FNP","Adani Power","100034381","810","2025-12-10","Paid on 09.12.2025",""),
+mk("BKC (FNP)","FNP","Adani Power","154069082","7340","2025-12-12","Paid on 12.12.2025",""),
+mk("Mira Road (FNP)","FNP","Adani Power","153586655","11310","2025-12-13","Paid on 12.12.2025",""),
 mk("Shahpur Jat","MFC","BSES","102434030","22140","2025-12-13","Paid on 19.12.2025",""),
-mk("Kalyan Nagar","Myntra/Zippee","BESCOM","2828728365","44739","2025-12-15","Paid on 15.12.2025",""),
+mk("SRT 10 Mumbai","SRT 10","Adani Power","151608255","3420","2025-12-15","Paid on 15.12.2025",""),
+mk("Khargar FNP","FNP","MSEDCL","029470023412","12010","2025-12-15","Paid on 15.12.2025",""),
+mk("Koramangala (Bangalore)","Zippee","BESCOM","4204782000","4585","2025-12-15","Paid on 16.12.2025",""),
 mk("Kempapura Clinikally","CLINIKALLY","BESCOM","5558583811","8592","2025-12-15","Paid on 15.12.2025",""),
+mk("Kolkata Warehouse","Zippee","CESC Limited","02001503311","10160","2025-12-15","Paid on 15.12.2025",""),
+mk("Kalyan Nagar","Myntra/Zippee","BESCOM","2828728365","44739","2025-12-15","Paid on 15.12.2025",""),
+mk("Pune Shop.1","Zippee","MSEDCL","170051270889","1950","2025-12-16","Paid on 15.12.2025",""),
+mk("Banashankari","FNP","BESCOM","1327053000","1526","2025-12-16","Paid on 15.12.2025",""),
+mk("Nizampet Myntra","MYNTRA","TSERC","110876895","8650","2025-12-16","Paid on 15.12.2025",""),
+mk("Hyderabad WH (1)","Zippee","TSERC","111367468","8205","2025-12-16","Paid on 15.12.2025",""),
+mk("Hyderabad WH (2)","Zippee","TSERC","111367464","8869","2025-12-16","Paid on 15.12.2025",""),
+mk("Koramangala (FNP)","FNP","BESCOM","0304618830","5594","2025-12-16","Paid on 15.12.2025",""),
+mk("Pune LG22","Zippee","MSEDCL","170055087612","6020","2025-12-16","Paid on 15.12.2025",""),
+mk("Gachiwoli (MT)","MYNTRA","TSERC","107552181","5796","2025-12-16","Paid on 15.12.2025",""),
+mk("Bangalore Vaaree","VAREE","BESCOM","5069867000","4961","2025-12-17","Paid on 15.12.2025",""),
+mk("Vashi","FNP","MSEDCL","000078915153","3750","2025-12-17","Paid on 15.12.2025",""),
+mk("Myntra Manikonda","MYNTRA","TSERC","114944482","7197","2025-12-17","Paid on 15.12.2025",""),
 mk("Myntra Brookfield","MYNTRA","BESCOM","9863223647","13347","2025-12-17","Paid on 15.12.2025",""),
+mk("BTM (Bangalore ST)","ST","BESCOM","4194944018","3374","2025-12-18","Paid on 18.12.2025","TO BE CHECKED WITH SUMIT SIR"),
+mk("Yelahanka (Epik)","QCF/Epik","BESCOM","8592860563","3827","2025-12-18","Paid on 15.12.2025",""),
+mk("Yelahanka (QCF-1)","QCF/Epik","BESCOM","0194967192","4267","2025-12-18","Paid on 15.12.2025",""),
+mk("Yelahanka (QCF-2)","QCF/Epik","BESCOM","3171018491","3686","2025-12-18","Paid on 15.12.2025",""),
+mk("HUFT Koramangala","HUFT","BESCOM","7228092000","2414","2025-12-18","Paid on 18.12.2025",""),
+mk("Yelankha (FNP)","FNP","BESCOM","6405308000","5892","2025-12-18","Paid on 15.12.2025",""),
 mk("Borivali","FNP/FNB","Adani Power","100879063","10910","2025-12-19","Paid on 15.12.2025",""),
+mk("Myntra Attapur","MYNTRA","TSERC","114073882","5943","2025-12-19","Paid on 15.12.2025",""),
+mk("K R Puram","FNP","BESCOM","2016579379","4648","2025-12-19","Paid on 15.12.2025",""),
+mk("Behala (Kolkata)","ST","CESC Limited","10001175461","410","2025-12-19","Paid on 15.12.2025",""),
+mk("Kalyan Nagar (ST)","ST","BESCOM","5478578491","3366","2025-12-20","Paid on 15.12.2025",""),
+mk("Powai (FNP)","FNP","Tata Power Mumbai","900000536606","10488","2025-12-22","Paid on 22.12.2025",""),
+mk("Andheri (Hyue)","HYUE","Adani Power","100948850","11120","2025-12-22","Paid on 22.12.2025",""),
+mk("RT Nagar (FNP)","FNP","BESCOM","9609705000","5153","2025-12-22","Paid on 22.12.2025",""),
+mk("Basaveshwara Nagar (M1)","Myntra","BESCOM","0891157000","1613","2025-12-22","Paid on 22.12.2025",""),
+mk("Basaveshwara Nagar (M2)","Myntra","BESCOM","0564057000","6634","2025-12-22","Paid on 22.12.2025",""),
+mk("Lamington Road","FNP","BEST","400045898","720","2025-12-22","Paid on 22.12.2025",""),
+mk("Hebbal (FNP)","FNP","BESCOM","4569209000","223","2025-12-22","Paid on 24.12.2025",""),
+mk("Varthur (ST)","ST","BESCOM","0863285000","4161","2025-12-23","Paid on 22.12.2025",""),
 mk("Khar","MFC","Adani Power","101412987","16120","2025-12-24","Paid on 24.12.2025",""),
 mk("Andheri WH (1)","Zippee","Tata Power Mumbai","900000868583","105260","2025-12-26","Paid on 26.12.2025",""),
+mk("Andheri WH (2)","Zippee","Tata Power Mumbai","900000868577","5405","2025-12-26","Hold",""),
+mk("Thaygaraja Nagar","Myntra","BESCOM","2670034558","10692","2025-12-26","Paid on 26.12.2025",""),
+mk("Yelahanka (MT-1)","MYNTRA","BESCOM","2388058000","1209","2025-12-26","","Zero amount shown on 26th Dec"),
+mk("Yelahanka (MT-2)","MYNTRA","BESCOM","2820058000","3987","2025-12-26","Paid on 26.12.2025",""),
+mk("Jaipur","Varee","JVVNL","210473037231","4140.71","2025-12-26","Paid on 26.12.2025",""),
+mk("JP Nagar","Myntra","BESCOM","3279059802","3440","2025-12-26","Paid on 26.12.2025",""),
 mk("Okhla Zippee","Zippee","BSES","152493803","81340","2025-12-27","Paid on 26.12.2025",""),
-mk("Moradabad (FK)","FK","PVVNL","7247166000","27298","2025-12-29","Paid on 29.12.2025",""),
+mk("Rajouri Garden","MFC","TATA Power Delhi","60019208556","10050","2025-12-27","Paid on 26.12.2025",""),
+mk("Pune Shop.2","Zippee","MSEDCL","170051240645","17430","2025-12-29","Paid on 02.12.2025",""),
+mk("Bannerghatta","FNP","BESCOM","2472045000","6482","2025-12-29","Paid on 02.12.2025","PAID: 5346/29.12.2025 (Receipt not generated)"),
+mk("Sarjapur (Myntra)","Myntra","BESCOM","4480480721","6546","2025-12-29","Paid on 29.12.2025","Paid 6666/-"),
+mk("Moradabad (FK)","FK","PVVNL","7247166000","27298","2025-12-29","Paid on 29.12.2025","receipt not generated"),
+mk("Lajpat Nagar","MFC","BSES","101915947","6620","2025-12-29","Paid on 29.12.2025",""),
+mk("Vasanthnagar (FNP)","FNP","BESCOM","5190100000","5477","2025-12-29","Paid on 29.12.2025","receipt not generated"),
+mk("Vadodara Warehouse","FK","MGVCL","02101240629","14015.16","2025-12-08","Paid on 08.12.2025",""),
 mk("Vadodara Warehouse","FK","MGVCL","02101240629","10535.4","2025-12-30","Paid on 29.12.2025",""),
-mk("Kumarswami Layout","FNP","BESCOM","8874486000","6807","2025-12-29","Paid on 29.12.2025","")
+mk("Ludhiana (HK)","HK","PSPCL","3009003233","","","Paid Two Times By Vikram, Sanjay Sir",""),
+mk("Periyamet (Chennai)","Zippee","TNEB","01144001101","","","","Need user name and password"),
+mk("Ludhiyana Dark Store","Haldiram","PSPCL","3002856540","","","","Need mail"),
+mk("Kumarswami Layout","FNP","BESCOM","8874486000","6807","2025-12-29","Paid on 29.12.2025","receipt not generated")
 ],
 "Jan 2026":[
 mk("Thane (FNP)","FNP","MSEDCL","000018280744","10780","2026-01-02","Paid on 02.01.2026",""),
 mk("Andheri West (FNP)","FNP","Tata Power Mumbai","900000124917","10034","2026-01-03","Paid on 31.12.2025",""),
 mk("Pune MFC","MFC","MSEDCL","160230561955","7960","2026-01-05","Paid on 05.01.2026",""),
+mk("Malabaar Hills","MFC","BEST","8761230218","9320","2026-01-05","","To check the latest"),
+mk("Satya Niketan","MFC","BSES","102451305","3590","2026-01-06","Paid on 05.01.2026",""),
+mk("RPSG (Mumbai)","RPSG","Adani Power","153999698","7530","2026-01-06","Paid on 15.01.2026","SK"),
 mk("Vasant Kunj","MFC","BSES","152239812","11960","2026-01-07","Paid on 05.01.2026",""),
+mk("Dwarka 7 CODS","MFC","BSES","152317438","5900","2026-01-07","Paid on 15.01.2026","SK"),
+mk("Dehradun (FK)","FK","UPCL","9761202099011","8762","2026-01-07","Paid on 15.01.2026","SK"),
+mk("Airoli (FNP)","FNP","MSEDCL","000094492670","9660","2026-01-09","Paid on 08.01.2026",""),
+mk("Marol(FNP)","FNP","Adani Power","100034381","3600","2026-01-09","Paid on 08.01.2026",""),
+mk("Oshiwara","MFC","Adani Power","150071714","7410","2026-01-09","Paid on 15.01.2026","SK"),
+mk("Mayur Vihar","MFC","BSES Yamuna","153976506","3440","2026-01-10","Paid on 08.01.2026",""),
+mk("BKC (FNP)","FNP","Adani Power","154069082","9510","2026-01-12","Paid on 12.01.2026",""),
+mk("Colaba","FNP","BEST","251113005","3290","2026-01-12","Paid on 12.01.2026",""),
+mk("Mira Road (FNP)","FNP","Adani Power","153586655","9920","2026-01-13","Paid on 13.01.2026",""),
+mk("Shahpur Jat","MFC","BSES","102434030","19210","2026-01-13","Paid on 15.01.2026","SK"),
+mk("Khargar FNP","FNP","MSEDCL","029470023412","10510","2026-01-14","Paid on 13.01.2026",""),
+mk("SRT 10 Mumbai","SRT 10","Adani Power","151608255","2950","2026-01-14","Paid on 15.01.2026","SK"),
+mk("Kempapura Clinikally","CLINIKALLY","BESCOM","5558583811","6646","2026-01-15","Paid on 13.01.2026",""),
+mk("Nizampet Myntra","MYNTRA","TSERC","110876895","8552","2026-01-15","Paid on 13.01.2026",""),
+mk("Pune Shop.1","Zippee","MSEDCL","170051270889","2640","2026-01-15","Paid on 15.01.2026","VK"),
+mk("Pune LG22","Zippee","MSEDCL","170055087612","-4730","2026-01-15","Not to be Paid as we have paid excess",""),
+mk("Hyderabad WH (1)","Zippee","TSERC","111367468","8668","2026-01-16","Paid on 13.01.2026",""),
+mk("Hyderabad WH (2)","Zippee","TSERC","111367464","10378","2026-01-16","Paid on 13.01.2026",""),
+mk("Koramangala (FNP)","FNP","BESCOM","0304618830","6154","2026-01-16","Paid on 13.01.2026",""),
 mk("Kalyan Nagar","Myntra/Zippee","BESCOM","2828728365","45483","2026-01-16","Paid on 13.01.2026",""),
-mk("Pune Shop.2","Zippee","MSEDCL","170051240645","17250","2026-01-17","Paid on 15.01.2026",""),
-mk("Borivali","FNP/FNB","Adani Power","100879063","10870","2026-01-19","Paid on 19.01.2026",""),
+mk("Banashankari","FNP","BESCOM","1327053000","5668","2026-01-16","Paid on 13.01.2026",""),
+mk("Bansawadi","FNP","BESCOM","6517823360","3267","2026-01-16","Paid on 13.01.2026",""),
+mk("Ludhiana (HK)","HK","PSPCL","3009003233","830","2026-01-16","Paid on 16.01.2026",""),
+mk("Kolkata Warehouse","Zippee","CESC Limited","02001503311","9960","2026-01-16","Paid on 15.01.2026","SK"),
+mk("Vashi","FNP","MSEDCL","000078915153","10760","2026-01-16","","Site is not loading"),
+mk("Thippasandra","FNP","BESCOM","4965764000","4815","2026-01-16","Paid on 16.01.2026",""),
+mk("Bangalore Vaaree","VAREE","BESCOM","5069867000","5172","2026-01-17","Paid on 13.01.2026",""),
+mk("Powai (FNP)","FNP","Tata Power Mumbai","900000536606","10143","2026-01-17","Paid on 13.01.2026",""),
+mk("Myntra Brookfield","MYNTRA","BESCOM","9863223647","13686","2026-01-17","Paid on 13.01.2026",""),
+mk("Myntra Manikonda","Myntra","TSERC","114944482","7281","2026-01-17","Paid on 16.01.2026",""),
+mk("Pune Shop.2","Zippee","MSEDCL","170051240645","17250","2026-01-17","Paid on 15.01.2026","SK"),
+mk("Yelankha (FNP)","FNP","BESCOM","6405308000","6366","2026-01-18","Paid on 13.01.2026","VK"),
+mk("HUFT Koramangala","HUFT","BESCOM","7228092000","2569","2026-01-18","Paid on 15.01.2026","VK"),
+mk("Gachiwoli (MT)","Myntra","TSERC","107552181","6416","2026-01-18","Paid on 16.01.2026",""),
+mk("BTM (Bangalore ST)","ST","BESCOM","4194944018","3354","2026-01-18","Paid on 15.01.2026","VK"),
+mk("Yelahanka (Epik)","Epik","BESCOM","8592860563","3549","2026-01-18","Paid on 15.01.2026","VK"),
+mk("Yelahanka (QCF-1)","QCF","BESCOM","0194967192","4211","2026-01-18","Paid on 15.01.2026","VK"),
+mk("Yelahanka (QCF-2)","QCF","BESCOM","3171018491","3633","2026-01-18","Paid on 15.01.2026","VK"),
+mk("Borivali","FNP/FNB","Adani Power","100879063","10870","2026-01-19","Paid on 19.01.2026","SK"),
+mk("Periyamet (Chennai)","Zippee","TNEB","01144001101","11495","2026-01-19","Paid on 19.01.2026","SK"),
+mk("K R Puram","FNP","BESCOM","2016579379","5719","2026-01-19","Paid on 19.01.2026","VK"),
+mk("Behala (Kolkata)","ST","CESC Limited","10001175461","460","2026-01-19","Paid on 19.01.2026","VK"),
+mk("Kalyan Nagar (ST)","ST","BESCOM","5478578491","3530","2026-01-20","Paid on 19.01.2026","VK"),
+mk("Andheri (Hyue)","HYUE","Adani Power","100948850","8350","2026-01-21","","Showing ZERO"),
+mk("Lamington Road","FNP","BEST","400045898","3820","2026-01-21","Paid on 19.01.2026","VK"),
+mk("Myntra Attapur","Myntra","TSERC","114073882","7764","2026-01-21","Paid on 19.01.2026","VK"),
+mk("Ghatkopar (1)","Zilo","Tata Power Mumbai","900000255854","23987","2026-01-22","Paid on 22.01.2026",""),
+mk("Ghatkopar (2)","Zilo","Tata Power Mumbai","900000255842","27346","2026-01-22","Paid on 20.01.2026",""),
+mk("Basaveshwara Nagar (M1)","Myntra","BESCOM","0891157000","1613","2026-01-22","Paid on 19.01.2026",""),
+mk("Basaveshwara Nagar (M2)","Myntra","BESCOM","0564057000","5962","2026-01-22","Paid on 19.01.2026",""),
+mk("RT Nagar (FNP)","FNP","BESCOM","9609705000","6740","2026-01-22","Paid on 19.01.2026",""),
+mk("White field","FNP","BESCOM","4871340057","2545","2026-01-23","Paid on 25.01.2026","VK"),
+mk("Electronic city","FNP","BESCOM","57628097314","7314","2026-01-23","","Showing Invalid CA number"),
+mk("Varthur (ST)","ST","BESCOM","0863285000","4069","2026-01-23","Paid on 19.01.2026",""),
 mk("Khar","MFC","Adani Power","101412987","15160","2026-01-24","Paid on 19.01.2026",""),
 mk("Moradabad (FK)","FK","PVVNL","7247166000","28447","2026-01-24","Paid on 19.01.2026",""),
+mk("Thaygaraja Nagar","Myntra","BESCOM","2670034558","11198","2026-01-25","Paid on 19.01.2026","VK"),
+mk("Rajouri Garden","MFC","TATA Power Delhi","60019208556","7810","2026-01-26","Paid on 22.01.2026",""),
 mk("Andheri WH (1)","Zippee","Tata Power Mumbai","900000868583","97628","2026-01-27","Paid on 27.01.2026",""),
+mk("Andheri WH (2)","Zippee","Tata Power Mumbai","900000868577","11124","2026-01-27","Paid on 12.01.2026",""),
 mk("Okhla","Zippee","BSES","152493803","83680","2026-01-27","Paid on 27.01.2026",""),
-mk("Basaveshwara Nagar","FNP","BESCOM","7543966674","28387","2026-01-29","Paid on 28.01.2026","50% paid by landlord"),
+mk("Marathalli","FNP","BESCOM","7094773168","5838","2026-01-27","Paid on 28.01.2026","Next Bill on 27th Jan 2026"),
+mk("Yelahanka (MT-1)","Myntra","BESCOM","2388058000","1296","2026-01-27","","Showing ZERO"),
+mk("Yelahanka (MT-2)","Myntra","BESCOM","2820058000","4715","2026-01-27","Paid on 27.01.2026",""),
+mk("Jaipur","Varee","JVVNL","210473037231","3846","2026-01-27","Paid on 27.01.2026",""),
+mk("JP Nagar","Myntra","BESCOM","3279059802","14544","2026-01-27","Paid on 27.01.2026",""),
+mk("Varthur","FNP","BESCOM","7268381956","11074","2026-01-27","Paid on 30.01.2026","100% Paid by sanjay sir need to adjust from Rental"),
+mk("Lajpat Nagar","MFC","BSES","101915947","6820","2026-01-28","Paid on 27.01.2026",""),
+mk("Sarjapur","FNP","BESCOM","3885495000","6785","2026-01-29","Paid on 27.01.2026","Paid 6533 on 15.01.2026 by vk sir"),
+mk("Sarjapur (Myntra)","Myntra","BESCOM","4480480721","6845","2026-01-29","Paid on 27.01.2026",""),
+mk("Vasanthnagar","FNP","BESCOM","5190100000","5656","2026-01-29","Paid on 27.01.2026","Need mail"),
+mk("Kumarswami Layout","FNP","BESCOM","8874486000","7226","2026-01-29","Paid on 27.01.2026",""),
+mk("Bannerghatta","FNP","BESCOM","2472045000","6592","2026-01-29","Paid on 27.01.2026",""),
+mk("Basaveshwara Nagar","FNP","BESCOM","7543966674","28387","2026-01-29","Paid on 28.01.2026","50% paid by the landlord"),
+mk("Ludhiyana Dark Store","Haldiram","PSPCL","3002856540","9140","2026-01-30","Paid on 16.01.2026",""),
+mk("Powai MFC","MFC","Adani Power","151406551","8810","2026-01-31","Paid on 27.01.2026",""),
 mk("Chembur (FNP)","FNP","Adani Power","153025321","17790","2026-01-31","Paid on 02.02.2026",""),
-mk("Vadodara Warehouse","FK","MGVCL","02101240629","13394.64","","Paid on 03.02.2026","")
+mk("Vadodara Warehouse","FK","MGVCL","02101240629","13394.64","","Paid on 03.02.2026",""),
+mk("Hebbal (FNP)","FNP","BESCOM","4569209000","","","","Showing Zero")
 ],
 "Mar 2026":[
 mk("Sarjapur","FNP","BESCOM","3885495000","6275","2026-03-01","Paid on 23.02.2026","VK Paid"),
@@ -233,18 +363,88 @@ mk("Bannerghatta","FNP","BESCOM","2472045000","6012","2026-03-01","Paid on 23.02
 mk("Basaveshwara Nagar","FNP","BESCOM","7543966674","16228","2026-03-01","","6000 Paid by us"),
 mk("Lower Parel (FNP)","FNP","BEST","551309029","9850","2026-03-02","Paid on 02.03.2026",""),
 mk("Powai MFC","MFC","Adani Power","151406551","8610","2026-03-03","Paid on 02.03.2026",""),
+mk("Chembur (FNP)","FNP","Adani Power","153025321","8710","2026-03-03","Paid on 02.03.2026",""),
 mk("Thane (FNP)","FNP","MSEDCL","000018280744","10800","2026-03-05","Paid on 02.03.2026",""),
-mk("Pune MFC","MFC","MSEDCL","160230561955","7100","2026-03-07","Paid on 02.03.2026","VK via CC"),
-mk("Shahpur Jat","MFC","BSES(rajdhani)","102434030","18000","2026-03-13","Paid on 10.03.2026",""),
-mk("Kalyan Nagar","Myntra/Zippee","BESCOM","2828728365","40110","2026-03-15","Paid on 10.03.2026",""),
+mk("Andheri West (FNP)","FNP","Tata Power Mumbai","900000124917","10261","2026-03-06","Paid on 02.03.2026",""),
+mk("Pune MFC","MFC","MSEDCL","160230561955","7100","2026-03-07","Paid on 02.03.2026","Paid by VK via CC"),
+mk("Dehradun (FK)","FK","UPCL","9761202099011","6734","2026-03-08","Paid on 02.03.2026","Paid by VK via CC"),
+mk("Malabaar Hills","MFC","BEST","8761230218","6000","2026-03-09","Paid on 09.03.2026",""),
+mk("RPSG (Mumbai)","RPSG","Adani Power","153999698","8320","2026-03-09","Paid on 09.03.2026",""),
+mk("Vasant Kunj","MFC","BSES","152239812","8830","2026-03-10","Paid on 10.03.2026",""),
 mk("Pune Shop.2","Zippee","MSEDCL","170051240645","20890","2026-03-10","Paid on 09.03.2026",""),
-mk("Hebbal (FNP)","FNP","BESCOM","4569209000","28050","2026-03-22","MANISH PLS CHECK","4 months bill"),
-mk("Moradabad (FK)","FK","PVVNL","7247166000","25496","2026-03-23","","Portal showing new amount"),
+mk("Colaba","FNP","BEST","251113005","9010","2026-03-11","Paid on 10.03.2026",""),
+mk("Oshiwara","MFC","Adani Power","150071714","6350","2026-03-11","Paid on 10.03.2026",""),
+mk("Mayur Vihar","MFC","BSES Yamuna","153976506","4480","2026-03-11","Paid on 10.03.2026",""),
+mk("Airoli (FNP)","FNP","MSEDCL","000094492670","13030","2026-03-12","Paid on 10.03.2026",""),
+mk("BKC (FNP)","FNP","Adani Power","154069082","9620","2026-03-13","Paid on 10.03.2026",""),
+mk("Shahpur Jat","MFC","BSES(rajdhani)","102434030","18000","2026-03-13","Paid on 10.03.2026",""),
+mk("Ludhiana (HK)","HK","PSPCL","3009003233","3130","2026-03-13","Paid on 10.03.2026",""),
+mk("Mira Road (FNP)","FNP","Adani Power","153586655","9880","2026-03-14","Paid on 10.03.2026",""),
+mk("Frazer Town","Partner","BESCOM","25381","6620","2026-02-15","","Half payment done by owner We Have to Pay only 1777 / PORTAL IS SHOWING 6620"),
+mk("Kalyan Nagar Added Property","Zippee","BESCOM","4097019435","5991","2026-03-15","Paid on 16.03.2026","should we have to pay full bill or only arrier bill"),
+mk("Kempapura Clinikally","CLINIKALLY","BESCOM","5558583811","9442","2026-03-15","Paid on 10.03.2026",""),
+mk("Penthouse (Kalyan Nagar)","Zippee","BESCOM","5754992496","7182.98","2026-03-15","","Not in Agreement Need to check with sumit sir"),
+mk("Nizampet Myntra","MYNTRA","TSERC","110876895","8629","2026-03-15","Paid on 10.03.2026",""),
+mk("Kalyan Nagar","Myntra/Zippee","BESCOM","2828728365","40110","2026-03-15","Paid on 10.03.2026",""),
+mk("SRT 10 Mumbai","SRT 10","Adani Power","151608255","2940","2026-03-16","Paid on 16.03.2026",""),
+mk("Thippasandra","FNP","BESCOM","4965764000","6110","2026-03-16","Paid on 16.03.2026",""),
+mk("Koramangala (FNP)","FNP","BESCOM","0304618830","5555","2026-03-16","Paid on 16.03.2026",""),
+mk("Banashankari","FNP","BESCOM","1327053000","5621","2026-03-16","Paid on 16.03.2026",""),
+mk("Bansawadi","FNP","BESCOM","6517823360","6930","2026-03-16","Paid on 16.03.2026",""),
+mk("Yeshwantpur","Partner","BESCOM","8343108360","544","2026-03-16","Paid on 16.03.2026",""),
+mk("Kolkata Warehouse","Zippee","CESC Limited","02001503311","9430","2026-03-16","Paid on 16.03.2026",""),
+mk("Sarjapur (Myntra)","Myntra","BESCOM","7505056613","10758","2026-03-17","Paid on 17.03.2026","Portal is Showing -12 / 17.02.2026"),
+mk("Khargar FNP","FNP","MSEDCL","029470023412","12090","2026-03-17","VK",""),
+mk("Bangalore Vaaree","VAREE","BESCOM","5069867000","4511","2026-03-17","VK",""),
+mk("Myntra Brookfield","MYNTRA","BESCOM","9863223647","12983","2026-03-17","VK",""),
+mk("Gachiwoli (MT)","Myntra","TSERC","107552181","5754","2026-03-18","VK",""),
+mk("Pune Shop.1","Zippee","MSEDCL","170051270889","2680","2026-03-18","VK",""),
+mk("Pune LG22","Zippee","MSEDCL","170055087612","-3260","2026-03-18","",""),
+mk("Yelankha","FNP","BESCOM","6405308000","6200","2026-03-18","VK",""),
+mk("Periyamet (Chennai)","Zippee","TNEB","01144001101","12901","2026-03-18","Paid on 17.03.2026","Money deducted but no payment receipt"),
+mk("HUFT Koramangala","HUFT","BESCOM","7228092000","4137","2026-03-18","Paid on 17.03.2026",""),
+mk("Yelahanka (Epik)","Epik","BESCOM","8592860563","3625","2026-03-18","Paid on 17.03.2026",""),
+mk("Yelahanka (QCF-1)","QCF","BESCOM","0194967192","5665","2026-03-18","Paid on 17.03.2026",""),
+mk("Yelahanka (QCF-2)","QCF","BESCOM","3171018491","2875","2026-03-18","Paid on 17.03.2026",""),
+mk("Vashi","FNP","MSEDCL","000078915153","-10740","2026-03-20","",""),
+mk("Powai (FNP)","FNP","Tata Power Mumbai","900000536606","10231","2026-03-20","Paid on 20.03.2026",""),
+mk("Borivali","FNP/FNB","Adani Power","100879063","10470","2026-03-20","Paid by Vikram on 20th Mar",""),
+mk("K R Puram","FNP","BESCOM","2016579379","5823","2026-03-20","Paid by Vikram on 20th Mar",""),
+mk("Kalyan Nagar (ST)","ST","BESCOM","5478578491","2955","2026-03-20","Paid by Vikram on 20th Mar",""),
+mk("Basaveshwara Nagar (M1)","Myntra","BESCOM","0891157000","1613","2026-03-20","Paid by Vikram on 20th Mar",""),
+mk("Hyderabad WH (1)","Zippee","TSERC","111367468","10952","2026-03-21","Paid on 20.03.2026",""),
+mk("Hyderabad WH (2)","Zippee","TSERC","111367464","11516","2026-03-21","Paid on 20.03.2026",""),
+mk("Myntra Attapur","Myntra","TSERC","114073882","5132","2026-03-21","Paid on 20.03.2026",""),
+mk("Myntra Manikonda","Myntra","TSERC","114944482","7761","2026-03-22","Paid on 20.03.2026",""),
+mk("Basaveshwara Nagar (M2)","Myntra","BESCOM","0564057000","5735","2026-03-22","Paid on 20.03.2026",""),
+mk("Hebbal (FNP)","FNP","BESCOM","4569209000","28050","2026-03-22","MANISH PLS CHECK WITH THE BILL","4 months bill (according to Bescom)"),
+mk("Moradabad (FK)","FK","PVVNL","7247166000","25496","2026-03-23","","Portal is showing new amount"),
+mk("Lamington Road","FNP","BEST","801149013","9050","2026-03-23","",""),
+mk("Ghatkopar (1)","Zilo","Tata Power Mumbai","900000255854","7578","2026-03-23","",""),
+mk("Ghatkopar (2)","Zilo","Tata Power Mumbai","900000255842","9234","2026-03-23","",""),
 mk("Khar","MFC","Adani Power","101412987","15180","2026-03-26","",""),
-mk("Andheri WH (1)","Zippee","Tata Power Mumbai","900000868583","94934","2026-03-25","",""),
-mk("Okhla","Zippee","BSES","152493803","91360","2026-03-30","",""),
+mk("Marol(FNP)","FNP","Adani Power","154161497","","","","Next bill on April"),
+mk("Varthur","FNP","BESCOM","7268381956","7079","2026-03-27","",""),
+mk("Behala (Kolkata)","ST","CESC Limited","10001175461","920","2026-03-23","",""),
+mk("Andheri (Hyue)","HYUE","Adani Power","100948850","","","","NOT SHOWING"),
+mk("RT Nagar","FNP","BESCOM","9609705000","6664","2026-03-22","Paid by Vikram on 20th Mar",""),
+mk("White field","FNP","BESCOM","4871340057","7013","2026-03-23","",""),
+mk("Electronic city","FNP","BESCOM","5762809","6358","2026-03-23","","Only open in Paytm"),
+mk("Varthur (ST)","ST","BESCOM","0863285000","4295","2026-03-23","",""),
+mk("Thaygaraja Nagar","Myntra","BESCOM","2670034558","11086","2026-03-25","",""),
 mk("Rajouri Garden","MFC","TATA Power Delhi","60019208556","12090","2026-03-30","",""),
-mk("Vadodara Warehouse","FK","MGVCL","02101240629","14177.58","","Paid on 13.03.2026","Paid by vk sir"),
+mk("Andheri WH (1)","Zippee","Tata Power Mumbai","900000868583","94934","2026-03-25","",""),
+mk("Andheri WH (2)","Zippee","Tata Power Mumbai","900000868577","6058","2026-03-25","",""),
+mk("Okhla","Zippee","BSES","152493803","91360","2026-03-30","",""),
+mk("Marathalli","FNP","BESCOM","7094773168","5722","2026-03-27","",""),
+mk("Yelahanka (MT-1)","Myntra","BESCOM","2388058000","1050","2026-03-26","",""),
+mk("Yelahanka (MT-2)","Myntra","BESCOM","2820058000","4144","2026-03-26","",""),
+mk("Jaipur","Varee","JVVNL","210473037231","2972","2026-03-23","",""),
+mk("JP Nagar","Myntra","BESCOM","1215925000","21362","2026-03-15","","New Property Bill"),
+mk("Lajpat Nagar","MFC","BSES(rajdhani)","101915947","6120","2026-03-31","",""),
+mk("Kumarswami Layout","FNP","BESCOM","8874486000","6959","2026-03-29","",""),
+mk("Bannerghatta","FNP","BESCOM","2472045000","9712","2026-03-29","",""),
+mk("Vadodara Warehouse","FK","MGVCL","02101240629","14177.58","","Paid on 13.03.2026","Paid by vk sir 14319"),
 mk("Ghitorni","Culture Circle","BSES","155063997","7680","2026-03-16","Paid on 16.03.2026","")
 ],
 "Apr 2026":[
@@ -257,19 +457,82 @@ mk("Lower Parel (FNP)","FNP","BEST","551309029","","","",""),
 mk("Powai MFC","MFC","Adani Power","151406551","11000","2026-04-01","",""),
 mk("Chembur (FNP)","FNP","Adani Power","153025321","","","",""),
 mk("Thane (FNP)","FNP","MSEDCL","000018280744","11160","2026-04-02","",""),
-mk("Oshiwara","MFC","Adani Power","150071714","7520","2026-04-04","",""),
-mk("Marol (FNP)","FNP","Adani Power","154161497","18670","2026-04-10","",""),
-mk("Ludhiana Dark Store","Haldiram","PSPCL","3002856540","-20","2026-04-01","",""),
+mk("Andheri West (FNP)","FNP","Tata Power Mumbai","900000124917","","","",""),
 mk("Pune MFC","MFC","MSEDCL","160230561955","","","",""),
 mk("Dehradun (FK)","FK","UPCL","9761202099011","","","",""),
 mk("Malabaar Hills","MFC","BEST","8761230218","","","",""),
+mk("RPSG (Mumbai)","RPSG","Adani Power","153999698","","","",""),
 mk("Vasant Kunj","MFC","BSES","152239812","","","",""),
+mk("Pune Shop.2","Zippee","MSEDCL","170051240645","","","",""),
+mk("Colaba","FNP","BEST","251113005","","","",""),
+mk("Oshiwara","MFC","Adani Power","150071714","7520","2026-04-04","",""),
+mk("Mayur Vihar","MFC","BSES Yamuna","153976506","","","",""),
+mk("Airoli (FNP)","FNP","MSEDCL","000094492670","","","",""),
+mk("BKC (FNP)","FNP","Adani Power","154069082","","","",""),
+mk("Shahpur Jat","MFC","BSES(rajdhani)","102434030","","","",""),
+mk("Ludhiana (HK)","HK","PSPCL","3009003233","","","",""),
+mk("Mira Road (FNP)","FNP","Adani Power","153586655","","","",""),
+mk("Frazer Town","Partner","BESCOM","25381","","","",""),
+mk("Kempapura Clinikally","CLINIKALLY","BESCOM","5558583811","","","",""),
+mk("Nizampet Myntra","MYNTRA","TSERC","110876895","","","",""),
 mk("Kalyan Nagar","Myntra/Zippee","BESCOM","2828728365","","","",""),
-mk("Khar","MFC","Adani Power","101412987","","","",""),
-mk("Andheri WH (1)","Zippee","Tata Power Mumbai","900000868583","","","",""),
-mk("Okhla","Zippee","BSES","152493803","","","",""),
-mk("Rajouri Garden","MFC","TATA Power Delhi","60019208556","","","",""),
+mk("SRT 10 Mumbai","SRT 10","Adani Power","151608255","","","",""),
+mk("Thippasandra","FNP","BESCOM","4965764000","","","",""),
+mk("Koramangala (FNP)","FNP","BESCOM","0304618830","","","",""),
+mk("Banashankari","FNP","BESCOM","1327053000","","","",""),
+mk("Bansawadi","FNP","BESCOM","6517823360","","","",""),
+mk("Yeshwantpur","Partner","BESCOM","8343108360","","","",""),
+mk("Kolkata Warehouse","Zippee","CESC Limited","02001503311","","","",""),
+mk("Sarjapur (Myntra)","Myntra","BESCOM","7505056613","","","",""),
+mk("Khargar FNP","FNP","MSEDCL","029470023412","","","",""),
+mk("Bangalore Vaaree","VAREE","BESCOM","5069867000","","","",""),
+mk("Myntra Brookfield","MYNTRA","BESCOM","9863223647","","","",""),
+mk("Gachiwoli (MT)","Myntra","TSERC","107552181","","","",""),
+mk("Pune Shop.1","Zippee","MSEDCL","170051270889","","","",""),
+mk("Pune LG22","Zippee","MSEDCL","170055087612","","","",""),
+mk("Yelankha","FNP","BESCOM","6405308000","","","",""),
+mk("Periyamet (Chennai)","Zippee","TNEB","01144001101","","","",""),
+mk("HUFT Koramangala","HUFT","BESCOM","7228092000","","","",""),
+mk("Yelahanka (Epik)","Epik","BESCOM","8592860563","","","",""),
+mk("Yelahanka (QCF-1)","QCF","BESCOM","0194967192","","","",""),
+mk("Yelahanka (QCF-2)","QCF","BESCOM","3171018491","","","",""),
+mk("Vashi","FNP","MSEDCL","000078915153","","","",""),
+mk("Powai (FNP)","FNP","Tata Power Mumbai","900000536606","","","",""),
+mk("Borivali","FNP/FNB","Adani Power","100879063","","","",""),
+mk("K R Puram","FNP","BESCOM","2016579379","","","",""),
+mk("Kalyan Nagar (ST)","ST","BESCOM","5478578491","","","",""),
+mk("Basaveshwara Nagar (M1)","Myntra","BESCOM","0891157000","","","",""),
+mk("Hyderabad WH (1)","Zippee","TSERC","111367468","","","",""),
+mk("Hyderabad WH (2)","Zippee","TSERC","111367464","","","",""),
+mk("Myntra Attapur","Myntra","TSERC","114073882","","","",""),
+mk("Myntra Manikonda","Myntra","TSERC","114944482","","","",""),
+mk("Basaveshwara Nagar (M2)","Myntra","BESCOM","0564057000","","","",""),
+mk("Hebbal (FNP)","FNP","BESCOM","4569209000","","","",""),
 mk("Moradabad (FK)","FK","PVVNL","7247166000","","","",""),
+mk("Lamington Road","FNP","BEST","801149013","","","",""),
+mk("Ghatkopar (1)","Zilo","Tata Power Mumbai","900000255854","","","",""),
+mk("Ghatkopar (2)","Zilo","Tata Power Mumbai","900000255842","","","",""),
+mk("Khar","MFC","Adani Power","101412987","","","",""),
+mk("Marol(FNP)","FNP","Adani Power","154161497","18670","2026-04-10","",""),
+mk("Varthur","FNP","BESCOM","7268381956","","","",""),
+mk("Behala (Kolkata)","ST","CESC Limited","10001175461","","","",""),
+mk("Andheri (Hyue)","HYUE","Adani Power","100948850","","","",""),
+mk("RT Nagar","FNP","BESCOM","9609705000","","","",""),
+mk("White field","FNP","BESCOM","4871340057","","","",""),
+mk("Electronic city","FNP","BESCOM","57628097314","","","",""),
+mk("Varthur (ST)","ST","BESCOM","0863285000","","","",""),
+mk("Thaygaraja Nagar","Myntra","BESCOM","2670034558","","","",""),
+mk("Rajouri Garden","MFC","TATA Power Delhi","60019208556","","","",""),
+mk("Andheri WH (1)","Zippee","Tata Power Mumbai","900000868583","","","",""),
+mk("Andheri WH (2)","Zippee","Tata Power Mumbai","900000868577","","","",""),
+mk("Okhla","Zippee","BSES","152493803","","","",""),
+mk("Marathalli","FNP","BESCOM","7094773168","","","",""),
+mk("Yelahanka (MT-1)","Myntra","BESCOM","2388058000","","","",""),
+mk("Yelahanka (MT-2)","Myntra","BESCOM","2820058000","","","",""),
+mk("Jaipur","Varee","JVVNL","210473037231","","","",""),
+mk("JP Nagar","Myntra","BESCOM","1215925000","","","",""),
+mk("Lajpat Nagar","MFC","BSES(rajdhani)","101915947","","","",""),
+mk("Ludhiyana Dark Store","Haldiram","PSPCL","3002856540","-20","2026-04-01","",""),
 mk("Vadodara Warehouse","FK","MGVCL","02101240629","","","",""),
 mk("Ghitorni","Culture Circle","BSES","155063997","","","","")
 ]
@@ -278,7 +541,7 @@ mk("Ghitorni","Culture Circle","BSES","155063997","","","","")
 var MORDER=["Oct 2025","Nov 2025","Dec 2025","Jan 2026","Mar 2026","Apr 2026"];
 var allData=JSON.parse(JSON.stringify(INIT_DATA));
 var actMonth="Apr 2026",editing=null,editVal="",flt="all",srch="",compF="all",brandF="all",sCol=null,sDir="asc";
-var addingRow=false; // tracks if inline add row is active
+var addingRow=false;
 
 function gd(){return allData[actMonth]||[];}
 function sd(d){allData[actMonth]=d;}
@@ -395,7 +658,6 @@ f.forEach(function(r,i){
   h+='<td style="text-align:center"><button class="del" onclick="delR(\''+r.id+'\')">🗑</button></td></tr>';
 });
 
-// Inline add row
 if(addingRow){
   var coOpts='';
   Object.keys(CU).forEach(function(c){coOpts+='<option value="'+E(c)+'">'+E(c)+'</option>';});
@@ -416,74 +678,31 @@ if(addingRow){
   h+='</tr>';
 }
 
-// Add row button at the bottom of table
 h+='<tr><td colspan="14" style="padding:4px 8px;border:none">';
 h+='<button class="add-row-btn" onclick="startAddRow()">+ Add New Store</button>';
 h+='</td></tr>';
 
 h+='</tbody></table></div></div>';
-h+='<div class="ft"><span>Click cells to edit · CA selectable · "paid" auto-dates · Tip: Press Tab to move between fields in new row</span><span>Pan India Electricity Sheet 2026</span></div>';
+h+='<div class="ft"><span>Click cells to edit · CA selectable · "paid" auto-dates · Tab between fields in new row</span><span>Pan India Electricity Sheet 2026</span></div>';
 
 document.getElementById("app").innerHTML=h;
 var ns=document.querySelector(".ts");if(ns&&scTop)ns.scrollTop=scTop;
-
-// If adding row, scroll to bottom and focus first field
-if(addingRow){
-  var ts=document.querySelector(".ts");
-  if(ts)ts.scrollTop=ts.scrollHeight;
-  var locInp=document.getElementById("nr_loc");
-  if(locInp)locInp.focus();
-}
-
+if(addingRow){var ts=document.querySelector(".ts");if(ts)ts.scrollTop=ts.scrollHeight;var locInp=document.getElementById("nr_loc");if(locInp)locInp.focus();}
 var ai=document.querySelector("input[autofocus]");if(ai){ai.focus();ai.selectionStart=ai.value.length;}
 }
 
-// Inline row add functions
-function startAddRow(){
-  addingRow=true;
-  editing=null;
-  render();
-}
-
-function cancelNewRow(){
-  addingRow=false;
-  render();
-}
-
+function startAddRow(){addingRow=true;editing=null;render();}
+function cancelNewRow(){addingRow=false;render();}
 function saveNewRow(){
   var loc=(document.getElementById("nr_loc").value||"").trim();
   var ca=(document.getElementById("nr_ca").value||"").trim();
   if(!loc||!ca){alert("Location & CA Number are required");return;}
   var d=gd();
-  d.push({
-    id:String(_n++),
-    location:loc,
-    brand:(document.getElementById("nr_brand").value||"").trim(),
-    company:document.getElementById("nr_comp").value,
-    ca:ca,
-    billDate:document.getElementById("nr_bdate").value||"",
-    amount:(document.getElementById("nr_amt").value||"").trim(),
-    dueDate:document.getElementById("nr_due").value||"",
-    status:(document.getElementById("nr_stat").value||"").trim(),
-    remarks:(document.getElementById("nr_rem").value||"").trim(),
-    billLink:"",
-    receiptLink:""
-  });
-  sd(d);
-  addingRow=false;
-  render();
+  d.push({id:String(_n++),location:loc,brand:(document.getElementById("nr_brand").value||"").trim(),company:document.getElementById("nr_comp").value,ca:ca,billDate:document.getElementById("nr_bdate").value||"",amount:(document.getElementById("nr_amt").value||"").trim(),dueDate:document.getElementById("nr_due").value||"",status:(document.getElementById("nr_stat").value||"").trim(),remarks:(document.getElementById("nr_rem").value||"").trim(),billLink:"",receiptLink:""});
+  sd(d);addingRow=false;render();
 }
+document.addEventListener("keydown",function(e){if(!addingRow)return;var t=e.target;if(!t||!t.id||!t.id.startsWith("nr_"))return;if(e.key==="Enter"){e.preventDefault();saveNewRow();}if(e.key==="Escape"){e.preventDefault();cancelNewRow();}});
 
-// Handle Enter key in new row inputs to save, Escape to cancel
-document.addEventListener("keydown",function(e){
-  if(!addingRow)return;
-  var t=e.target;
-  if(!t||!t.id||!t.id.startsWith("nr_"))return;
-  if(e.key==="Enter"){e.preventDefault();saveNewRow();}
-  if(e.key==="Escape"){e.preventDefault();cancelNewRow();}
-});
-
-// Actions
 function switchM(m){actMonth=m;editing=null;flt="all";srch="";compF="all";brandF="all";sCol=null;addingRow=false;render();}
 function setFlt(f){flt=f;render();}
 function setSrch(v){srch=v;render();}
@@ -498,34 +717,27 @@ function rmF(id,fd){var d=gd();for(var i=0;i<d.length;i++){if(d[i].id===id){d[i]
 function delR(id){var d=gd();var r=null;for(var i=0;i<d.length;i++){if(d[i].id===id){r=d[i];break;}}if(!r)return;if(!confirm('Delete "'+r.location+'" (CA: '+r.ca+')?'))return;if(!confirm('Final confirm: Remove "'+r.location+'"?'))return;sd(d.filter(function(x){return x.id!==id;}));render();}
 
 function upFlow(id,type){
-  var d=gd(),r=null;
-  for(var i=0;i<d.length;i++){if(d[i].id===id){r=d[i];break;}}
-  if(!r)return;
-  var isB=type==="bill";
-  var folder=isB?BILL_FOLDER:RCPT_FOLDER;
-  var field=isB?"billLink":"receiptLink";
-  var label=isB?"Bill":"Receipt";
+  var d=gd(),r=null;for(var i=0;i<d.length;i++){if(d[i].id===id){r=d[i];break;}}if(!r)return;
+  var isB=type==="bill";var folder=isB?BILL_FOLDER:RCPT_FOLDER;var field=isB?"billLink":"receiptLink";var label=isB?"Bill":"Receipt";
   var fn=r.location.replace(/[^a-zA-Z0-9]/g,"_")+"_"+actMonth.replace(" ","_")+"_"+label;
-
-  var ov=document.createElement("div");ov.className="mo";ov.id="upMod";
-  ov.addEventListener("click",function(e){if(e.target===ov)ov.remove();});
+  var ov=document.createElement("div");ov.className="mo";ov.addEventListener("click",function(e){if(e.target===ov)ov.remove();});
   var md=document.createElement("div");md.className="md";md.style.width="520px";
   var h2=document.createElement("h2");h2.textContent=(isB?"📄":"🧾")+" Upload "+label+" — "+r.location;md.appendChild(h2);
   var box=document.createElement("div");box.style.cssText="background:#f8fafc;border-radius:10px;padding:16px;margin-bottom:14px";
   var ti=document.createElement("div");ti.style.cssText="font-size:13px;font-weight:700;color:#1e293b;margin-bottom:12px";ti.textContent="Follow these steps:";box.appendChild(ti);
-  var s1=document.createElement("div");s1.className="step";var n1=document.createElement("div");n1.className="snum";n1.textContent="1";var t1=document.createElement("div");t1.className="stxt";t1.innerHTML="Click below to open the <b>"+label+"s</b> folder in Drive";s1.appendChild(n1);s1.appendChild(t1);box.appendChild(s1);
+  var s1=document.createElement("div");s1.className="step";var n1=document.createElement("div");n1.className="snum";n1.textContent="1";var t1=document.createElement("div");t1.className="stxt";t1.innerHTML="Click below to open the <b>"+label+"s</b> folder";s1.appendChild(n1);s1.appendChild(t1);box.appendChild(s1);
   var bw=document.createElement("div");bw.style.cssText="text-align:center;margin-bottom:14px";
   var ab=document.createElement("a");ab.href=folder;ab.target="_blank";ab.style.cssText="display:inline-block;padding:10px 24px;background:#1e40af;color:#fff;border-radius:8px;text-decoration:none;font-size:13px;font-weight:700";ab.textContent="📁 Open "+label+"s Folder";
   var s2w=document.createElement("div");s2w.style.cssText="opacity:0.4;transition:opacity .3s";ab.addEventListener("click",function(){s2w.style.opacity="1";});bw.appendChild(ab);box.appendChild(bw);
   var s2=document.createElement("div");s2.className="step";var n2=document.createElement("div");n2.className="snum";n2.textContent="2";var t2=document.createElement("div");t2.className="stxt";var code=document.createElement("code");code.style.cssText="background:#e2e8f0;padding:2px 6px;border-radius:4px;font-size:11px;color:#1e40af;user-select:all";code.textContent=fn;t2.textContent="Upload file. Suggested name: ";t2.appendChild(code);s2.appendChild(n2);s2.appendChild(t2);s2w.appendChild(s2);
-  var s3=document.createElement("div");s3.className="step";var n3=document.createElement("div");n3.className="snum";n3.textContent="3";var t3=document.createElement("div");t3.className="stxt";t3.innerHTML="Right-click file → <b>Share</b> → <b>Copy link</b>";s3.appendChild(n3);s3.appendChild(t3);s2w.appendChild(s3);
+  var s3=document.createElement("div");s3.className="step";var n3=document.createElement("div");n3.className="snum";n3.textContent="3";var t3=document.createElement("div");t3.className="stxt";t3.innerHTML="Right-click → <b>Share</b> → <b>Copy link</b>";s3.appendChild(n3);s3.appendChild(t3);s2w.appendChild(s3);
   var s4=document.createElement("div");s4.className="step";var n4=document.createElement("div");n4.className="snum g";n4.textContent="4";var t4=document.createElement("div");t4.className="stxt";t4.style.fontWeight="600";t4.textContent="Paste the link below:";s4.appendChild(n4);s4.appendChild(t4);s2w.appendChild(s4);
   box.appendChild(s2w);md.appendChild(box);
-  var inp=document.createElement("input");inp.id="upLink";inp.placeholder="Paste Google Drive shareable link here...";inp.style.cssText="width:100%;padding:10px 12px;border:2px solid #3b82f6;border-radius:8px;font-size:13px;outline:none;margin-bottom:10px;box-sizing:border-box";md.appendChild(inp);
+  var inp=document.createElement("input");inp.id="upLink";inp.placeholder="Paste Google Drive link here...";inp.style.cssText="width:100%;padding:10px 12px;border:2px solid #3b82f6;border-radius:8px;font-size:13px;outline:none;margin-bottom:10px;box-sizing:border-box";md.appendChild(inp);
   var btns=document.createElement("div");btns.className="mbtn";
   var cb=document.createElement("button");cb.className="mcn";cb.textContent="Cancel";cb.addEventListener("click",function(){ov.remove();});
-  var sb=document.createElement("button");sb.className="msv";sb.textContent="Save "+label+" Link";
-  sb.addEventListener("click",function(){var link=document.getElementById("upLink").value.trim();if(!link){alert("Please paste the Drive link first.");return;}var dd=gd();for(var j=0;j<dd.length;j++){if(dd[j].id===id){dd[j][field]=link;break;}}sd(dd);ov.remove();render();});
+  var sb=document.createElement("button");sb.className="msv";sb.textContent="Save Link";
+  sb.addEventListener("click",function(){var link=document.getElementById("upLink").value.trim();if(!link){alert("Paste the Drive link first.");return;}var dd=gd();for(var j=0;j<dd.length;j++){if(dd[j].id===id){dd[j][field]=link;break;}}sd(dd);ov.remove();render();});
   btns.appendChild(cb);btns.appendChild(sb);md.appendChild(btns);ov.appendChild(md);document.body.appendChild(ov);
 }
 
@@ -533,7 +745,7 @@ function prevFile(id,type){
   var d=gd(),r=null;for(var i=0;i<d.length;i++){if(d[i].id===id){r=d[i];break;}}if(!r)return;
   var isB=type==="bill";var link=isB?r.billLink:r.receiptLink;if(!link)return;
   var embedUrl=link;var m=link.match(/\/d\/([^\/]+)/);if(m)embedUrl="https://drive.google.com/file/d/"+m[1]+"/preview";var m2=link.match(/id=([^&]+)/);if(!m&&m2)embedUrl="https://drive.google.com/file/d/"+m2[1]+"/preview";
-  var ov=document.createElement("div");ov.className="mo";ov.id="prevMod";ov.addEventListener("click",function(e){if(e.target===ov)ov.remove();});
+  var ov=document.createElement("div");ov.className="mo";ov.addEventListener("click",function(e){if(e.target===ov)ov.remove();});
   var md=document.createElement("div");md.style.cssText="background:#fff;border-radius:14px;padding:16px;width:800px;max-width:95vw;height:80vh;display:flex;flex-direction:column";
   var top=document.createElement("div");top.style.cssText="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px";
   var title=document.createElement("h3");title.style.cssText="margin:0;font-size:15px;font-weight:700";title.textContent=(isB?"📄 Bill":"🧾 Receipt")+" — "+r.location;
@@ -541,14 +753,14 @@ function prevFile(id,type){
   var odr=document.createElement("a");odr.href=link;odr.target="_blank";odr.style.cssText="padding:5px 12px;background:#eff6ff;color:#2563eb;border-radius:6px;font-size:11px;font-weight:600;text-decoration:none";odr.textContent="Open in Drive ↗";
   var cls=document.createElement("button");cls.style.cssText="padding:5px 12px;background:#fee2e2;color:#dc2626;border:none;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer";cls.textContent="Close";cls.addEventListener("click",function(){ov.remove();});
   tbtns.appendChild(odr);tbtns.appendChild(cls);top.appendChild(title);top.appendChild(tbtns);md.appendChild(top);
-  var ifr=document.createElement("iframe");ifr.src=embedUrl;ifr.style.cssText="flex:1;border:1px solid #e2e8f0;border-radius:8px";ifr.allow="autoplay";ifr.allowFullscreen=true;md.appendChild(ifr);ov.appendChild(md);document.body.appendChild(ov);
+  var ifr=document.createElement("iframe");ifr.src=embedUrl;ifr.style.cssText="flex:1;border:1px solid #e2e8f0;border-radius:8px";ifr.allow="autoplay";md.appendChild(ifr);ov.appendChild(md);document.body.appendChild(ov);
 }
 
 function addMonth(){var name=prompt("Enter month name (e.g. May 2026):","");if(!name||!name.trim())return;var n=name.trim();if(allData[n]){alert("Month exists!");return;}var prev=gd();allData[n]=prev.map(function(r){return{id:String(_n++),location:r.location,brand:r.brand,company:r.company,ca:r.ca,billDate:"",amount:"",dueDate:"",status:"",remarks:"",billLink:"",receiptLink:""};});actMonth=n;render();}
 
-function delMonth(){var m=actMonth;var months=Object.keys(allData);if(months.length<=1){alert("Cannot delete the last month.");return;}var cnt=(allData[m]||[]).length;var step1=prompt("⚠️ DELETE \""+m+"\" ("+cnt+" stores)?\n\nType the month name exactly: \""+m+"\"");if(!step1||step1.trim()!==m){if(step1!==null)alert("Name did not match. Cancelled.");return;}if(!confirm("🔴 FINAL: Delete "+m+" with "+cnt+" entries permanently?"))return;delete allData[m];var rem=Object.keys(allData).sort(mSort);actMonth=rem[rem.length-1];render();}
+function delMonth(){var m=actMonth;var months=Object.keys(allData);if(months.length<=1){alert("Cannot delete the last month.");return;}var cnt=(allData[m]||[]).length;var step1=prompt("⚠️ DELETE \""+m+"\" ("+cnt+" stores)?\n\nType the month name exactly: \""+m+"\"");if(!step1||step1.trim()!==m){if(step1!==null)alert("Name did not match.");return;}if(!confirm("🔴 FINAL: Delete "+m+" permanently?"))return;delete allData[m];var rem=Object.keys(allData).sort(mSort);actMonth=rem[rem.length-1];render();}
 
-function resetM(){var cnt=(allData[actMonth]||[]).length;var s=prompt("⚠️ RESET \""+actMonth+"\"? Type RESET to confirm:");if(!s||s.trim()!=="RESET"){if(s!==null)alert("Cancelled.");return;}if(INIT_DATA[actMonth])allData[actMonth]=JSON.parse(JSON.stringify(INIT_DATA[actMonth]));else allData[actMonth]=[];render();}
+function resetM(){var s=prompt("⚠️ RESET \""+actMonth+"\"? Type RESET:");if(!s||s.trim()!=="RESET")return;if(INIT_DATA[actMonth])allData[actMonth]=JSON.parse(JSON.stringify(INIT_DATA[actMonth]));else allData[actMonth]=[];render();}
 
 function expMonth(){
   var d=gd();
@@ -556,9 +768,9 @@ function expMonth(){
   if(typeof XLSX!=="undefined"){
     try{var ws=XLSX.utils.aoa_to_sheet([hd].concat(d.map(function(r,i){return[i+1,r.location,r.brand,r.company,r.ca,r.billDate,r.amount,r.dueDate,r.status,r.remarks,r.billLink,r.receiptLink];})));
     ws["!cols"]=[{wch:5},{wch:25},{wch:15},{wch:22},{wch:16},{wch:12},{wch:10},{wch:12},{wch:25},{wch:25},{wch:35},{wch:35}];
-    var wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,actMonth);XLSX.writeFile(wb,"Pan_India_Electricity_2026_"+actMonth.replace(" ","_")+".xlsx");return;}catch(e){}
+    var wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,actMonth);XLSX.writeFile(wb,"Electricity_"+actMonth.replace(" ","_")+".xlsx");return;}catch(e){}
   }
-  dlHtml(d,hd,"Pan_India_Electricity_2026_"+actMonth.replace(" ","_")+".xls");
+  dlHtml(d,hd,"Electricity_"+actMonth.replace(" ","_")+".xls");
 }
 
 function expAll(){
@@ -569,14 +781,14 @@ function expAll(){
     ws["!cols"]=[{wch:5},{wch:25},{wch:15},{wch:22},{wch:16},{wch:12},{wch:10},{wch:12},{wch:25},{wch:25},{wch:35},{wch:35}];
     XLSX.utils.book_append_sheet(wb,ws,m);});XLSX.writeFile(wb,"Pan_India_Electricity_2026.xlsx");return;}catch(e){}
   }
-  var content='<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel"><head><meta charset="utf-8"><style>td,th{border:1px solid #000;padding:5px 8px;font-family:Calibri;font-size:11pt}th{background:#1E40AF;color:#fff;font-weight:bold;text-align:center}</style></head><body>';
-  months.forEach(function(m){var d=allData[m]||[];content+="<table><tr>";hd.forEach(function(h){content+="<th>"+h+"</th>";});content+="</tr>";d.forEach(function(r,i){content+="<tr><td>"+(i+1)+"</td><td>"+E(r.location)+"</td><td>"+E(r.brand)+"</td><td>"+E(r.company)+"</td><td>"+E(r.ca)+"</td><td>"+E(r.billDate)+"</td><td>"+E(r.amount)+"</td><td>"+E(r.dueDate)+"</td><td>"+E(r.status)+"</td><td>"+E(r.remarks)+"</td><td>"+E(r.billLink)+"</td><td>"+E(r.receiptLink)+"</td></tr>";});content+="</table>";});
+  var content='<html><head><meta charset="utf-8"><style>td,th{border:1px solid #000;padding:5px 8px;font-family:Calibri;font-size:11pt}th{background:#1E40AF;color:#fff;font-weight:bold}</style></head><body>';
+  months.forEach(function(m){var d=allData[m]||[];content+="<h3>"+E(m)+"</h3><table><tr>";hd.forEach(function(h){content+="<th>"+h+"</th>";});content+="</tr>";d.forEach(function(r,i){content+="<tr><td>"+(i+1)+"</td><td>"+E(r.location)+"</td><td>"+E(r.brand)+"</td><td>"+E(r.company)+"</td><td>"+E(r.ca)+"</td><td>"+E(r.billDate)+"</td><td>"+E(r.amount)+"</td><td>"+E(r.dueDate)+"</td><td>"+E(r.status)+"</td><td>"+E(r.remarks)+"</td><td>"+E(r.billLink)+"</td><td>"+E(r.receiptLink)+"</td></tr>";});content+="</table><br>";});
   content+="</body></html>";
   var blob=new Blob([content],{type:"application/vnd.ms-excel"});var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="Pan_India_Electricity_2026.xls";a.click();
 }
 
 function dlHtml(d,hd,fn){
-  var c='<html><head><meta charset="utf-8"><style>td,th{border:1px solid #000;padding:5px 8px;font-family:Calibri;font-size:11pt}th{background:#1E40AF;color:#fff;font-weight:bold;text-align:center}</style></head><body><table><tr>';
+  var c='<html><head><meta charset="utf-8"><style>td,th{border:1px solid #000;padding:5px 8px;font-family:Calibri;font-size:11pt}th{background:#1E40AF;color:#fff;font-weight:bold}</style></head><body><table><tr>';
   hd.forEach(function(h){c+="<th>"+h+"</th>";});c+="</tr>";
   d.forEach(function(r,i){c+="<tr><td>"+(i+1)+"</td><td>"+E(r.location)+"</td><td>"+E(r.brand)+"</td><td>"+E(r.company)+"</td><td>"+E(r.ca)+"</td><td>"+E(r.billDate)+"</td><td>"+E(r.amount)+"</td><td>"+E(r.dueDate)+"</td><td>"+E(r.status)+"</td><td>"+E(r.remarks)+"</td><td>"+E(r.billLink)+"</td><td>"+E(r.receiptLink)+"</td></tr>";});
   c+="</table></body></html>";
