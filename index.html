@@ -111,7 +111,70 @@ td:hover .cab{opacity:1}
 <script>
 var BILL_FOLDER="https://drive.google.com/drive/folders/1asQDHp907t6zQToBnTOcScpZZp-R4mR-";
 var RCPT_FOLDER="https://drive.google.com/drive/folders/1U5yGOiRmvUBruo0dPktCUy_9-Jyvdx2W";
-var CU={"BESCOM":"https://www.bescom.co.in/bescom/main/quick-payment","BEST":"https://www.bestundertaking.net/","Adani Power":"https://www.adanielectricity.com/pay-your-bill/online-payments","MSEDCL":"https://wss.mahadiscom.in/wss/wss?uiActionName=getViewPayBill","Tata Power Mumbai":"https://pgi.billdesk.com/pgidsk/pgmerc/tatapwr/TATAPWRDetails.jsp","BSES":"https://www.bsesdelhi.com/web/brpl/quick-pay","BSES(rajdhani)":"https://www.bsesdelhi.com/web/brpl/quick-pay","BSES Yamuna":"https://www.bsesdelhi.com/web/bypl/verify-quickpay?p_p_id=com_bses_quick_pay_verification_portlet_QuickPayVerificationPortlet&p_p_lifecycle=1&p_p_state=normal&p_p_mode=view&_com_bses_quick_pay_verification_portlet_QuickPayVerificationPortlet_javax.portlet.action=submitQuickPayVerification","TSERC":"https://tgsouthernpower.org/paybillonline","UPCL":"https://www.upcl.org/wss/viewBill","PSPCL":"https://billpayment.pspcl.in/pgBillPay.aspx?uc=BillPayAdvance","CESC Limited":"https://srvcs.cesc.co.in/ptrlineins/mjpgav_payon/scriptfiles/monthlybill.php","TNEB":"https://www.tnebnet.org/awp/login?locale=ta","PVVNL":"https://consumer.uppcl.org/wss/pay_bill_home","JVVNL":"https://www.billdesk.com/pgidsk/pgmerc/jvvnljp/JVVNLJPDetails.jsp","TATA Power Delhi":"https://www.tatapower-ddl.com/billpay/paybillonline.aspx","MGVCL":"https://mpay.guvnl.in/paytm/QuickPay.php?&company=MGVCL"};
+var CU_DEFAULT={"BESCOM":"https://www.bescom.co.in/bescom/main/quick-payment","BEST":"https://www.bestundertaking.net/","Adani Power":"https://www.adanielectricity.com/pay-your-bill/online-payments","MSEDCL":"https://wss.mahadiscom.in/wss/wss?uiActionName=getViewPayBill","Tata Power Mumbai":"https://pgi.billdesk.com/pgidsk/pgmerc/tatapwr/TATAPWRDetails.jsp","BSES":"https://www.bsesdelhi.com/web/brpl/quick-pay","BSES(rajdhani)":"https://www.bsesdelhi.com/web/brpl/quick-pay","BSES Yamuna":"https://www.bsesdelhi.com/web/bypl/verify-quickpay?p_p_id=com_bses_quick_pay_verification_portlet_QuickPayVerificationPortlet&p_p_lifecycle=1&p_p_state=normal&p_p_mode=view&_com_bses_quick_pay_verification_portlet_QuickPayVerificationPortlet_javax.portlet.action=submitQuickPayVerification","TSERC":"https://tgsouthernpower.org/paybillonline","UPCL":"https://www.upcl.org/wss/viewBill","PSPCL":"https://billpayment.pspcl.in/pgBillPay.aspx?uc=BillPayAdvance","CESC Limited":"https://srvcs.cesc.co.in/ptrlineins/mjpgav_payon/scriptfiles/monthlybill.php","TNEB":"https://www.tnebnet.org/awp/login?locale=ta","PVVNL":"https://consumer.uppcl.org/wss/pay_bill_home","JVVNL":"https://www.billdesk.com/pgidsk/pgmerc/jvvnljp/JVVNLJPDetails.jsp","TATA Power Delhi":"https://www.tatapower-ddl.com/billpay/paybillonline.aspx","MGVCL":"https://mpay.guvnl.in/paytm/QuickPay.php?&company=MGVCL","KSEB":"https://wss.kseb.in/selfservices/quickpay","KESCO":"https://www.kfresco.co.in/quickpay","TANGEDCO":"https://www.tnebnet.org/awp/login?locale=ta","WBSEDCL":"https://www.wbsedcl.in/irj/go/km/docs/internet/webpage/Quick_Pay.html","DHBVN":"https://www.dhbvn.org.in/web/dhbvn/bill-payment","UHBVN":"https://www.uhbvn.org.in/web/uhbvn/bill-payment","AVVNL":"https://energy.rajasthan.gov.in/content/raj/energy-department/avvnl/en/home.html","TPDDL":"https://www.tatapower-ddl.com/billpay/paybillonline.aspx","CSPDCL":"https://cspdcl.co.in/QuickBillPay/QuickPay","SOUTHCO":"https://www.tpsouthernodisha.com/","HESCOM":"https://hescom.karnataka.gov.in/","MESCOM":"https://mescom.karnataka.gov.in/","GESCOM":"https://gescom.karnataka.gov.in/"};
+var customCompanies={};
+var CU=Object.assign({},CU_DEFAULT,customCompanies);
+
+function addCompany(name,url){
+  if(!name)return;
+  customCompanies[name]=url||"#";
+  CU[name]=url||"#";
+}
+
+function showAddCompany(){
+  var ov=document.createElement("div");ov.className="mo";
+  ov.addEventListener("click",function(e){if(e.target===ov)ov.remove();});
+  var md=document.createElement("div");md.className="md";md.style.width="440px";
+  var h2=document.createElement("h2");h2.textContent="🏢 Add New Electricity Company";md.appendChild(h2);
+
+  var info=document.createElement("div");info.className="imp-info";
+  info.innerHTML="Currently <b>"+Object.keys(CU).length+"</b> companies available. Add a new one below.";
+  md.appendChild(info);
+
+  var lb1=document.createElement("label");lb1.textContent="Company Name *";md.appendChild(lb1);
+  var inp1=document.createElement("input");inp1.id="nc_name";inp1.placeholder="e.g. KSEB, TPDDL, GESCOM...";md.appendChild(inp1);
+
+  var lb2=document.createElement("label");lb2.textContent="Payment Portal URL";md.appendChild(lb2);
+  var inp2=document.createElement("input");inp2.id="nc_url";inp2.placeholder="https://...";md.appendChild(inp2);
+
+  var hint=document.createElement("div");hint.style.cssText="font-size:10px;color:#94a3b8;margin:-4px 0 10px";
+  hint.textContent="Leave URL blank if you don't have it — you can update it later.";md.appendChild(hint);
+
+  // Show existing companies
+  var lb3=document.createElement("label");lb3.textContent="Existing Companies";lb3.style.marginTop="8px";md.appendChild(lb3);
+  var listDiv=document.createElement("div");
+  listDiv.style.cssText="max-height:150px;overflow:auto;border:1px solid #e2e8f0;border-radius:7px;padding:6px;margin-bottom:10px;font-size:11px";
+  var sorted=Object.keys(CU).sort();
+  sorted.forEach(function(c){
+    var row=document.createElement("div");
+    row.style.cssText="display:flex;justify-content:space-between;align-items:center;padding:3px 4px;border-radius:4px";
+    row.onmouseover=function(){row.style.background="#f1f5f9";};
+    row.onmouseout=function(){row.style.background="";};
+    var name=document.createElement("span");name.style.fontWeight="600";name.textContent=c;
+    var link=document.createElement("a");link.href=CU[c];link.target="_blank";
+    link.style.cssText="color:#3b82f6;font-size:10px;text-decoration:none";
+    link.textContent=CU[c]!=="#"?"🔗 Portal":"—";
+    row.appendChild(name);row.appendChild(link);listDiv.appendChild(row);
+  });
+  md.appendChild(listDiv);
+
+  var btns=document.createElement("div");btns.className="mbtn";
+  var cb=document.createElement("button");cb.className="mcn";cb.textContent="Cancel";
+  cb.addEventListener("click",function(){ov.remove();});
+  var sb=document.createElement("button");sb.className="msv";sb.textContent="+ Add Company";
+  sb.addEventListener("click",function(){
+    var name=document.getElementById("nc_name").value.trim();
+    if(!name){alert("Company name is required");return;}
+    if(CU[name]){alert('"'+name+'" already exists!');return;}
+    var url=document.getElementById("nc_url").value.trim()||"#";
+    addCompany(name,url);
+    ov.remove();
+    render();
+    showToast("✅ Added "+name+" to companies list");
+  });
+  btns.appendChild(cb);btns.appendChild(sb);md.appendChild(btns);
+  ov.appendChild(md);document.body.appendChild(ov);
+}
 var _n=1;
 function mk(loc,brand,co,ca,amt,due,stat,rem){return{id:String(_n++),location:loc,brand:brand||"",company:co,ca:ca,billDate:"",amount:amt||"",dueDate:due||"",status:stat||"",remarks:rem||"",billLink:"",receiptLink:""};}
 
@@ -376,6 +439,7 @@ h+='<button class="hbtn" onclick="triggerImport()" style="background:rgba(34,197
 h+='<button class="hbtn" onclick="exportCSV()">📥 Export CSV</button>';
 h+='<button class="hbtn" onclick="expMonth()">📥 Export Excel</button>';
 h+='<button class="hbtn" onclick="expAll()">📥 Export All</button>';
+h+='<button class="hbtn" onclick="showAddCompany()" style="background:rgba(168,85,247,.3);border-color:rgba(168,85,247,.5)">🏢 Manage Companies</button>';
 h+='<button class="hbtn" onclick="addMonth()">+ New Month</button>';
 h+='<button class="hbtn" onclick="resetM()">Reset Month</button>';
 h+='</div></div>';
@@ -651,7 +715,7 @@ function setBrandF(v){brandF=v;render();}
 function doSort(c){if(sCol===c)sDir=sDir==="asc"?"desc":"asc";else{sCol=c;sDir="asc";}render();}
 function se(id,fd){var d=gd();for(var i=0;i<d.length;i++){if(d[i].id===id){editing=id+"_"+fd;editVal=d[i][fd]||"";break;}}render();}
 function cn(){editing=null;editVal="";render();}
-function sv(id,fd){var v=editVal;if(fd==="status"&&v.toLowerCase().trim()==="paid"){var t=new Date();v="Paid on "+String(t.getDate()).padStart(2,"0")+"."+String(t.getMonth()+1).padStart(2,"0")+"."+t.getFullYear();}var d=gd();for(var i=0;i<d.length;i++){if(d[i].id===id){d[i][fd]=v;break;}}sd(d);editing=null;editVal="";render();}
+function sv(id,fd){var v=editVal;if(fd==="status"&&v.toLowerCase().indexOf("paid")>=0&&!/\d{2}\.\d{2}\.\d{4}/.test(v)&&!/\d{4}-\d{2}-\d{2}/.test(v)&&!/\d{1,2}(st|nd|rd|th)\s/i.test(v)){var t=new Date();var ds=String(t.getDate()).padStart(2,"0")+"."+String(t.getMonth()+1).padStart(2,"0")+"."+t.getFullYear();v=v.replace(/\s*$/,"")+" on "+ds;}var d=gd();for(var i=0;i<d.length;i++){if(d[i].id===id){d[i][fd]=v;break;}}sd(d);editing=null;editVal="";render();}
 function ck(e,id,fd){if(e.key==="Enter")sv(id,fd);if(e.key==="Escape")cn();}
 function rmF(id,fd){var d=gd();for(var i=0;i<d.length;i++){if(d[i].id===id){d[i][fd]="";break;}}sd(d);render();}
 function delR(id){var d=gd();var r=null;for(var i=0;i<d.length;i++){if(d[i].id===id){r=d[i];break;}}if(!r)return;if(!confirm('Delete "'+r.location+'" (CA: '+r.ca+')?'))return;if(!confirm('Final confirm: Remove "'+r.location+'"?'))return;sd(d.filter(function(x){return x.id!==id;}));render();}
