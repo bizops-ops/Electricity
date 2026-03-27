@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Pan India Electricity Dashboard 2026</title>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#f1f5f9;color:#1e293b;min-height:100vh}
+.wrap{max-width:1600px;margin:0 auto;padding:12px}
+.header{background:linear-gradient(135deg,#1e40af,#3b82f6 50%,#06b6d4);border-radius:14px;padding:16px 22px;margin-bottom:12px;color:#fff;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.header h1{font-size:20px;font-weight:800}
+.header p{font-size:12px;opacity:.85;margin-top:3px}
+.hbtn{background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:7px;padding:7px 14px;cursor:pointer;font-size:12px;font-weight:600}
+.hbtn:hover{background:rgba(255,255,255,.35)}
+.tabs{display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap;background:#fff;border-radius:10px;padding:6px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.tab{padding:8px 16px;border-radius:7px;cursor:pointer;font-size:12px;font-weight:600;color:#64748b;border:none;background:transparent;position:relative;display:inline-flex;align-items:center;gap:4px}
+.tab:hover{background:#f1f5f9;color:#1e40af}
+.tab.act{background:#1e40af;color:#fff;box-shadow:0 2px 8px rgba(30,64,175,.3)}
+.tab .cnt{background:rgba(255,255,255,.25);border-radius:10px;padding:0 6px;font-size:10px}
+.tab.act .cnt{background:rgba(255,255,255,.3)}
+.tab:not(.act) .cnt{background:#e2e8f0;color:#475569}
+.tdel{background:#ef4444;color:#fff;border:none;border-radius:50%;width:16px;height:16px;font-size:11px;cursor:pointer;padding:0;margin-left:4px;line-height:16px;text-align:center}
+.tdel:hover{background:#dc2626}
+.stats{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.sc{padding:10px 14px;border-radius:9px;cursor:pointer;min-width:100px;text-align:center;border:2px solid transparent;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.sc .v{font-size:22px;font-weight:800}
+.sc .l{font-size:10px;font-weight:600;opacity:.85;margin-top:1px}
+.sc.on{color:#fff!important}
+.flt{background:#fff;border-radius:10px;padding:10px 14px;margin-bottom:12px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;box-shadow:0 1px 2px rgba(0,0,0,.05)}
+.flt input,.flt select{padding:7px 10px;border:1px solid #e2e8f0;border-radius:7px;font-size:12px;outline:none}
+.flt input{min-width:180px}
+.tw{background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.07)}
+.ts{overflow:auto;max-height:58vh}
+table{width:100%;border-collapse:collapse;font-size:12px;border:1px solid #d1d5db}
+th{padding:7px 5px;text-align:left;font-size:10px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.4px;border:1px solid #d1d5db;position:sticky;top:0;background:#f8fafc;z-index:2;white-space:nowrap;cursor:pointer;user-select:none}
+th:hover{color:#1e40af}
+td{padding:5px;vertical-align:middle;border:1px solid #e2e8f0}
+tr.rod{background:#fef2f2!important}
+tr.rpd{background:#bbf7d0!important}
+tr:hover{background:#f0f9ff!important}
+tr:nth-child(even){background:#fafbfc}
+.cl{cursor:pointer;display:inline-block;padding:1px 3px;border-radius:3px;font-size:11px;min-width:24px}
+.cl:hover{background:#e0f2fe}
+.cl.mt{color:#94a3b8}
+.ce{display:inline-flex;gap:2px;align-items:center}
+.ce input{padding:2px 3px;font-size:11px;border:1px solid #3b82f6;border-radius:3px;outline:none;width:120px}
+.ce .sv{background:#22c55e;color:#fff;border:none;border-radius:3px;padding:0 5px;cursor:pointer;font-size:10px;height:20px}
+.ce .cn{background:#ef4444;color:#fff;border:none;border-radius:3px;padding:0 5px;cursor:pointer;font-size:10px;height:20px}
+.lk{color:#2563eb;font-weight:600;text-decoration:none;font-size:11px}
+.lk:hover{text-decoration:underline}
+.cac{font-family:'Courier New',monospace;font-size:11px}
+.cat{user-select:all;cursor:text;padding:1px 3px;border-radius:3px}
+.cat::selection{background:#bfdbfe}
+.cab{background:none;border:none;color:#94a3b8;cursor:pointer;font-size:10px;padding:0 3px;opacity:0}
+td:hover .cab{opacity:1}
+.cab:hover{color:#3b82f6}
+.tag{display:inline-block;padding:1px 7px;border-radius:16px;font-size:9px;font-weight:700;white-space:nowrap}
+.del{background:none;border:none;color:#ef4444;cursor:pointer;font-size:13px;padding:1px 4px}
+.del:hover{background:#fef2f2;border-radius:4px}
+.ba{display:flex;gap:2px;justify-content:center;align-items:center}
+.ub{background:#eff6ff;color:#2563eb;border:1px dashed #93c5fd;border-radius:4px;padding:2px 7px;cursor:pointer;font-size:9px;font-weight:600}
+.ub:hover{background:#dbeafe;border-color:#3b82f6}
+.vb{border:none;border-radius:3px;padding:1px 5px;cursor:pointer;font-size:9px;font-weight:600}
+.eb{background:#fef3c7;color:#d97706;border:none;border-radius:3px;padding:1px 4px;cursor:pointer;font-size:9px}
+.rb{background:#fee2e2;color:#dc2626;border:none;border-radius:3px;padding:1px 3px;cursor:pointer;font-size:8px}
+.bc{text-align:center;min-width:80px}
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;display:flex;align-items:center;justify-content:center}
+.md{background:#fff;border-radius:14px;padding:20px;max-width:95vw;max-height:90vh;overflow:auto}
+.md h2{margin:0 0 14px;font-size:17px;font-weight:700}
+.md label{display:block;font-size:11px;font-weight:600;color:#475569;margin-bottom:2px}
+.md input,.md select{width:100%;padding:7px 10px;border:1px solid #e2e8f0;border-radius:7px;font-size:12px;outline:none;margin-bottom:8px;box-sizing:border-box}
+.mbtn{display:flex;gap:6px;justify-content:flex-end;margin-top:6px}
+.mbtn button{padding:7px 18px;border-radius:7px;font-size:12px;cursor:pointer}
+.mcn{border:1px solid #e2e8f0;background:#fff;color:#475569}
+.msv{border:none;background:#3b82f6;color:#fff;font-weight:600}
+.ft{margin-top:10px;padding:6px 14px;background:#fff;border-radius:7px;font-size:10px;color:#94a3b8;display:flex;justify-content:space-between;flex-wrap:wrap}
+.df{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:5px;font-size:10px;font-weight:600;text-decoration:none;margin-left:6px}
+.step{display:flex;gap:10px;margin-bottom:10px;align-items:center}
+.snum{background:#3b82f6;color:#fff;border-radius:50%;min-width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+.snum.g{background:#22c55e}
+.stxt{font-size:12px;color:#475569}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<script>
+var BILL_FOLDER="https://drive.google.com/drive/folders/1asQDHp907t6zQToBnTOcScpZZp-R4mR-";
+var RCPT_FOLDER="https://drive.google.com/drive/folders/1U5yGOiRmvUBruo0dPktCUy_9-Jyvdx2W";
+var PARENT_FOLDER="https://drive.google.com/drive/folders/1gSx9ngnvF8ipL2x1HAaWFCeo3RyW9yra";
+var CU={"BESCOM":"https://www.bescom.co.in/bescom/main/quick-payment","BEST":"https://www.bestundertaking.net/","Adani Power":"https://www.adanielectricity.com/pay-your-bill/online-payments","MSEDCL":"https://wss.mahadiscom.in/wss/wss?uiActionName=getViewPayBill","Tata Power Mumbai":"https://pgi.billdesk.com/pgidsk/pgmerc/tatapwr/TATAPWRDetails.jsp","BSES":"https://www.bsesdelhi.com/web/brpl/quick-pay","BSES(rajdhani)":"https://www.bsesdelhi.com/web/brpl/quick-pay","BSES Yamuna":"https://www.bsesdelhi.com/web/bypl/verify-quickpay?p_p_id=com_bses_quick_pay_verification_portlet_QuickPayVerificationPortlet&p_p_lifecycle=1&p_p_state=normal&p_p_mode=view&_com_bses_quick_pay_verification_portlet_QuickPayVerificationPortlet_javax.portlet.action=submitQuickPayVerification","TSERC":"https://tgsouthernpower.org/paybillonline","UPCL":"https://www.upcl.org/wss/viewBill","PSPCL":"https://billpayment.pspcl.in/pgBillPay.aspx?uc=BillPayAdvance","CESC Limited":"https://srvcs.cesc.co.in/ptrlineins/mjpgav_payon/scriptfiles/monthlybill.php","TNEB":"https://www.tnebnet.org/awp/login?locale=ta","PVVNL":"https://consumer.uppcl.org/wss/pay_bill_home","JVVNL":"https://www.billdesk.com/pgidsk/pgmerc/jvvnljp/JVVNLJPDetails.jsp","TATA Power Delhi":"https://www.tatapower-ddl.com/billpay/paybillonline.aspx","MGVCL":"https://mpay.guvnl.in/paytm/QuickPay.php?&company=MGVCL"};
+var _n=1;
+function mk(loc,brand,co,ca,amt,due,stat,rem){return{id:String(_n++),location:loc,brand:brand||"",company:co,ca:ca,billDate:"",amount:amt||"",dueDate:due||"",status:stat||"",remarks:rem||"",billLink:"",receiptLink:""};}
+
+var INIT_DATA={
+"Oct 2025":[
+mk("Satya Niketan","MFC","BSES","102451305","5610","2025-10-08","Paid on 04th Oct 2025",""),
+mk("Pune MFC","MFC","MSEDCL","160230561955","13500","2025-10-06","Paid on 07th Oct",""),
+mk("Dwarka 7 CODS","MFC","BSES","152317438","9260","2025-10-08","Paid on 04th Oct 2025",""),
+mk("Borivali","FNP/FNB","Adani Power","100879063","8160","2025-10-18","Paid on 18th Oct",""),
+mk("Malabaar Hills","MFC","BEST","8761230218","16570","2025-10-06","Paid on 07th Oct",""),
+mk("Thane (FNP)","FNP","MSEDCL","000018280744","2610","2025-10-03","Paid on 04th Oct 2025",""),
+mk("RPSG (Mumbai)","RPSG","Adani Power","153999698","7640","2025-10-07","Paid on 04th Oct 2025",""),
+mk("Vasant Kunj","MFC","BSES","152239812","28380","2025-10-08","Paid on 04th Oct 2025",""),
+mk("Oshiwara","MFC","Adani Power","150071714","9610","2025-10-09","Paid on 04th Oct 2025",""),
+mk("Mayur Vihar","MFC","BSES Yamuna","153976506","6640","2025-10-10","Paid on 04th Oct 2025",""),
+mk("Shahpur Jat","MFC","BSES","102434030","31470","2025-10-13","Paid on 13th Oct",""),
+mk("Kempapura Clinikally","CLINIKALLY","BESCOM","5558583811","7865","2025-10-15","Paid on 15 Oct",""),
+mk("Bangalore Vaaree","VAREE","BESCOM","5069867000","5232","2025-10-17","Paid on 17th Oct",""),
+mk("Pune Shop-1","Zippee","MSEDCL","170051270889","2080","2025-10-16","Paid on 16 Oct",""),
+mk("Koramangala (Bangalore)","Zippee","BESCOM","4204782000","5402","2025-10-15","Paid on 15 Oct",""),
+mk("Andheri Warehouse","Zippee","Tata Power Mumbai","900000868583","101042","2025-10-27","Paid on 27Oct2025",""),
+mk("Kolkata Warehouse","Zippee","CESC Limited","02001503311","9530","2025-10-17","Paid on 17th Oct",""),
+mk("Hyderabad WH (1)","Zippee","TSERC","111367468","10519","2025-10-20","Paid on 21st Oct",""),
+mk("Hyderabad WH (2)","Zippee","TSERC","111367464","13557","2025-10-20","Paid on 23rd Oct",""),
+mk("BTM (Bangalore ST)","ST","BESCOM","4194944018","3695","2025-10-18","Paid on 18th Oct",""),
+mk("Kalyan Nagar","Myntra/Zippee","BESCOM","2828728365","46563","2025-10-15","Paid on 15 Oct",""),
+mk("Thaygaraja Nagar","Myntra","BESCOM","2670034558","10507","2025-10-25","Paid on 25th Oct",""),
+mk("Behala (Kolkata)","ST","CESC Limited","10001175461","940","2025-10-21","Paid on 21st Oct",""),
+mk("Yelahanka (Epik)","Epik","BESCOM","8592860563","4239","2025-10-18","Paid on 18th Oct",""),
+mk("Yelahanka (QCF-1)","QCF","BESCOM","0194967192","4455","2025-10-18","Paid on 18th Oct",""),
+mk("Yelahanka (QCF-2)","QCF","BESCOM","3171018491","3219","2025-10-18","Paid on 18th Oct",""),
+mk("Kalyan Nagar (ST)","ST","BESCOM","5478578491","2692","2025-10-21","Paid on 21st Oct",""),
+mk("Lajpat Nagar","MFC","BSES","101915947","11040","2025-10-27","Paid on 27Oct2025",""),
+mk("Varthur (ST)","ST","BESCOM","0863285000","3659","2025-10-23","Paid on 23rd Oct",""),
+mk("Jaipur","Varee","JVVNL","210473037231","5973","2025-10-21","Paid on 24th Oct",""),
+mk("Basaveshwara Nagar (M1)","Myntra","BESCOM","0891157000","1613","2025-10-22","Paid on 22nd Oct",""),
+mk("Basaveshwara Nagar (M2)","Myntra","BESCOM","0564057000","6752","2025-10-22","Paid on 22nd Oct",""),
+mk("Andheri (Hyue)","HYUE","Adani Power","100948850","13040","2025-10-24","Paid on 24th Oct",""),
+mk("JP Nagar","Myntra","BESCOM","3279059802","11649","2025-10-26","Paid on 26th Oct",""),
+mk("Okhla Zippee","Zippee","BSES","152493803","134380","2025-10-29","Paid on 27Oct2025",""),
+mk("Khar","MFC","Adani Power","101412987","16620","2025-10-24","Paid on 24th Oct",""),
+mk("Rajouri Garden","MFC","TATA Power Delhi","60019208556","15340","2025-10-29","Paid on 27Oct2025",""),
+mk("Powai MFC","MFC","Adani Power","151406551","10160","2025-10-01","Paid on 01Oct 2025",""),
+mk("Myntra Brookfield","MYNTRA","BESCOM","9863223647","14183","2025-10-17","Paid on 17th Oct",""),
+mk("Myntra Attapur","Myntra","TSERC","114073882","6345","2025-10-20","Paid on 21st Oct",""),
+mk("HUFT Koramangala","HUFT","BESCOM","7228092000","3561","2025-10-18","",""),
+mk("Myntra Manikonda","Myntra","TSERC","114944482","8740","2025-10-20","Paid on 21st Oct",""),
+mk("Khargar FNP","FNP","MSEDCL","029470023412","4960","2025-10-15","Paid on 15 Oct",""),
+mk("Moradabad (FK)","FK","PVVNL","7247166000","19934","2025-10-21","Paid on 28th Oct 2025",""),
+mk("Powai (FNP)","FNP","Tata Power Mumbai","900000536606","719","2025-10-23","Paid on 23rd Oct",""),
+mk("Dehradun (FK)","FK","UPCL","9761202099011","7546","2025-10-14","Paid on 14th Oct",""),
+mk("Lower Parel (FNP)","FNP","BEST","551309029","2920","2025-10-06","Paid on 07th Oct",""),
+mk("Nizampet Myntra","MYNTRA","TSERC","110876895","10128","2025-10-16","Paid on 16 Oct",""),
+mk("RT Nagar","FNP","BESCOM","9609705000","6823","2025-10-22","Paid on 22nd Oct",""),
+mk("Vasanthnagar","FNP","BESCOM","5190100000","4724","2025-10-29","Paid on 28th Oct 2025",""),
+mk("Hebbal (FNP)","FNP","BESCOM","4569209000","6816","2025-10-22","Paid on 22nd Oct",""),
+mk("Yelankha","FNP","BESCOM","6405308000","4780","2025-10-18","Paid on 18th Oct",""),
+mk("Koramangala (FNP)","FNP","BESCOM","0304618830","5352","2025-10-16","Paid on 16 Oct",""),
+mk("Ludhiana (HK)","HK","PSPCL","3009003233","2940","2025-10-21","Paid on 21st Oct",""),
+mk("Airoli (FNP)","FNP","MSEDCL","000094492670","1350","2025-10-10","Paid on 23rd Oct",""),
+mk("Gachiwoli (MT)","Myntra","TSERC","107552181","7611","2025-10-21","Paid on 28th Oct 2025","")
+],
+"Nov 2025":[
+mk("Powai MFC","MFC","Adani Power","151406551","11240","2025-11-02","Paid on 02.11.2025",""),
+mk("Pune Shop.2","Zippee","MSEDCL","170051240645","17200","2025-11-03","Paid on 03.11.2025",""),
+mk("Lower Parel (FNP)","FNP","BEST","551309029","10250","2025-11-03","Paid on 03.11.2025",""),
+mk("Malabaar Hills","MFC","BEST","8761230218","12970","2025-11-04","Paid on 04.11.2025",""),
+mk("Thane (FNP)","FNP","MSEDCL","000018280744","10320","2025-11-04","Paid on 04.11.2025",""),
+mk("Andheri West (FNP)","FNP","Tata Power Mumbai","900000124917","695","2025-11-04","Paid on 04.11.2025",""),
+mk("Pune MFC","MFC","MSEDCL","160230561955","12900","2025-11-06","Paid on 06.11.2025",""),
+mk("Vasant Kunj","MFC","BSES","152239812","27710","2025-11-06","Paid on 06.11.2025",""),
+mk("Oshiwara","MFC","Adani Power","150071714","9550","2025-11-10","Paid on 10.11.2025",""),
+mk("Dehradun (FK)","FK","UPCL","9761202099011","13440","2025-11-10","Paid on 10.11.2025",""),
+mk("Shahpur Jat","MFC","BSES","102434030","29500","2025-11-13","Paid on 12.11.2025",""),
+mk("Kalyan Nagar","Myntra/Zippee","BESCOM","2828728365","48576","2025-11-15","Paid on 14.11.2025",""),
+mk("Kempapura Clinikally","CLINIKALLY","BESCOM","5558583811","8642","2025-11-15","Paid on 14.11.2025",""),
+mk("Myntra Brookfield","MYNTRA","BESCOM","9863223647","12902","2025-11-17","Paid on 17.11.2025",""),
+mk("Bannerghatta","FNP","BESCOM","2472045000","5169","2025-11-17","Paid on 17.11.2025",""),
+mk("Periyamet (Chennai)","Zippee","TNEB","01144001101","11819","2025-11-18","Paid on 18.11.2025",""),
+mk("Borivali","FNP/FNB","Adani Power","100879063","13120","2025-11-20","Paid on 20.11.2025",""),
+mk("Khar","MFC","Adani Power","101412987","19150","2025-11-25","Paid on 26.11.2025",""),
+mk("Andheri WH (1)","Zippee","Tata Power Mumbai","900000868583","106952","2025-11-25","Paid on 24.11.2025",""),
+mk("Okhla Zippee","Zippee","BSES","152493803","110610","2025-11-28","Paid on 26.11.2025",""),
+mk("Sarjapur","FNP","BESCOM","3885495000","6743","2025-11-29","Paid on 23.11.2025",""),
+mk("Kumarswami Layout","FNP","BESCOM","8874486000","9463","2025-11-29","Paid on 22.11.2025","")
+],
+"Dec 2025":[
+mk("Powai MFC","MFC","Adani Power","151406551","11340","2025-12-02","Paid on 02.12.2025",""),
+mk("Lower Parel (FNP)","FNP","BEST","551309029","10080","2025-12-03","Paid on 02.12.2025",""),
+mk("Thane (FNP)","FNP","MSEDCL","000018280744","10330","2025-12-03","Paid on 02.12.2025",""),
+mk("Chembur (FNP)","FNP","Adani Power","153025321","8860","2025-12-03","Paid on 02.12.2025",""),
+mk("Pune MFC","MFC","MSEDCL","160230561955","10460","2025-12-05","Paid on 02.12.2025",""),
+mk("Malabaar Hills","MFC","BEST","8761230218","13380","2025-12-08","Paid on 08.12.2025",""),
+mk("Vasant Kunj","MFC","BSES","152239812","15290","2025-12-08","Paid on 08.12.2025",""),
+mk("Dehradun (FK)","FK","UPCL","9761202099011","9484","2025-12-09","Paid on 09.12.2025",""),
+mk("Oshiwara","MFC","Adani Power","150071714","9700","2025-12-10","Paid on 09.12.2025",""),
+mk("Shahpur Jat","MFC","BSES","102434030","22140","2025-12-13","Paid on 19.12.2025",""),
+mk("Kalyan Nagar","Myntra/Zippee","BESCOM","2828728365","44739","2025-12-15","Paid on 15.12.2025",""),
+mk("Kempapura Clinikally","CLINIKALLY","BESCOM","5558583811","8592","2025-12-15","Paid on 15.12.2025",""),
+mk("Myntra Brookfield","MYNTRA","BESCOM","9863223647","13347","2025-12-17","Paid on 15.12.2025",""),
+mk("Borivali","FNP/FNB","Adani Power","100879063","10910","2025-12-19","Paid on 15.12.2025",""),
+mk("Khar","MFC","Adani Power","101412987","16120","2025-12-24","Paid on 24.12.2025",""),
+mk("Andheri WH (1)","Zippee","Tata Power Mumbai","900000868583","105260","2025-12-26","Paid on 26.12.2025",""),
+mk("Okhla Zippee","Zippee","BSES","152493803","81340","2025-12-27","Paid on 26.12.2025",""),
+mk("Moradabad (FK)","FK","PVVNL","7247166000","27298","2025-12-29","Paid on 29.12.2025",""),
+mk("Vadodara Warehouse","FK","MGVCL","02101240629","10535.4","2025-12-30","Paid on 29.12.2025",""),
+mk("Kumarswami Layout","FNP","BESCOM","8874486000","6807","2025-12-29","Paid on 29.12.2025","")
+],
+"Jan 2026":[
+mk("Thane (FNP)","FNP","MSEDCL","000018280744","10780","2026-01-02","Paid on 02.01.2026",""),
+mk("Andheri West (FNP)","FNP","Tata Power Mumbai","900000124917","10034","2026-01-03","Paid on 31.12.2025",""),
+mk("Pune MFC","MFC","MSEDCL","160230561955","7960","2026-01-05","Paid on 05.01.2026",""),
+mk("Vasant Kunj","MFC","BSES","152239812","11960","2026-01-07","Paid on 05.01.2026",""),
+mk("Kalyan Nagar","Myntra/Zippee","BESCOM","2828728365","45483","2026-01-16","Paid on 13.01.2026",""),
+mk("Pune Shop.2","Zippee","MSEDCL","170051240645","17250","2026-01-17","Paid on 15.01.2026",""),
+mk("Borivali","FNP/FNB","Adani Power","100879063","10870","2026-01-19","Paid on 19.01.2026",""),
+mk("Khar","MFC","Adani Power","101412987","15160","2026-01-24","Paid on 19.01.2026",""),
+mk("Moradabad (FK)","FK","PVVNL","7247166000","28447","2026-01-24","Paid on 19.01.2026",""),
+mk("Andheri WH (1)","Zippee","Tata Power Mumbai","900000868583","97628","2026-01-27","Paid on 27.01.2026",""),
+mk("Okhla","Zippee","BSES","152493803","83680","2026-01-27","Paid on 27.01.2026",""),
+mk("Basaveshwara Nagar","FNP","BESCOM","7543966674","28387","2026-01-29","Paid on 28.01.2026","50% paid by landlord"),
+mk("Chembur (FNP)","FNP","Adani Power","153025321","17790","2026-01-31","Paid on 02.02.2026",""),
+mk("Vadodara Warehouse","FK","MGVCL","02101240629","13394.64","","Paid on 03.02.2026","")
+],
+"Mar 2026":[
+mk("Sarjapur","FNP","BESCOM","3885495000","6275","2026-03-01","Paid on 23.02.2026","VK Paid"),
+mk("Vasanthnagar","FNP","BESCOM","5190100000","5665","2026-03-01","Paid on 23.02.2026","VK Paid"),
+mk("Kumarswami Layout","FNP","BESCOM","8874486000","7379","2026-03-01","Paid on 23.02.2026","VK Paid"),
+mk("Bannerghatta","FNP","BESCOM","2472045000","6012","2026-03-01","Paid on 23.02.2026","VK Paid"),
+mk("Basaveshwara Nagar","FNP","BESCOM","7543966674","16228","2026-03-01","","6000 Paid by us"),
+mk("Lower Parel (FNP)","FNP","BEST","551309029","9850","2026-03-02","Paid on 02.03.2026",""),
+mk("Powai MFC","MFC","Adani Power","151406551","8610","2026-03-03","Paid on 02.03.2026",""),
+mk("Thane (FNP)","FNP","MSEDCL","000018280744","10800","2026-03-05","Paid on 02.03.2026",""),
+mk("Pune MFC","MFC","MSEDCL","160230561955","7100","2026-03-07","Paid on 02.03.2026","VK via CC"),
+mk("Shahpur Jat","MFC","BSES(rajdhani)","102434030","18000","2026-03-13","Paid on 10.03.2026",""),
+mk("Kalyan Nagar","Myntra/Zippee","BESCOM","2828728365","40110","2026-03-15","Paid on 10.03.2026",""),
+mk("Pune Shop.2","Zippee","MSEDCL","170051240645","20890","2026-03-10","Paid on 09.03.2026",""),
+mk("Hebbal (FNP)","FNP","BESCOM","4569209000","28050","2026-03-22","MANISH PLS CHECK","4 months bill"),
+mk("Moradabad (FK)","FK","PVVNL","7247166000","25496","2026-03-23","","Portal showing new amount"),
+mk("Khar","MFC","Adani Power","101412987","15180","2026-03-26","",""),
+mk("Andheri WH (1)","Zippee","Tata Power Mumbai","900000868583","94934","2026-03-25","",""),
+mk("Okhla","Zippee","BSES","152493803","91360","2026-03-30","",""),
+mk("Rajouri Garden","MFC","TATA Power Delhi","60019208556","12090","2026-03-30","",""),
+mk("Vadodara Warehouse","FK","MGVCL","02101240629","14177.58","","Paid on 13.03.2026","Paid by vk sir"),
+mk("Ghitorni","Culture Circle","BSES","155063997","7680","2026-03-16","Paid on 16.03.2026","")
+],
+"Apr 2026":[
+mk("Sarjapur","FNP","BESCOM","3885495000","","","",""),
+mk("Vasanthnagar","FNP","BESCOM","5190100000","","","",""),
+mk("Kumarswami Layout","FNP","BESCOM","8874486000","","","",""),
+mk("Bannerghatta","FNP","BESCOM","2472045000","","","",""),
+mk("Basaveshwara Nagar","FNP","BESCOM","7543966674","","","",""),
+mk("Lower Parel (FNP)","FNP","BEST","551309029","","","",""),
+mk("Powai MFC","MFC","Adani Power","151406551","11000","2026-04-01","",""),
+mk("Chembur (FNP)","FNP","Adani Power","153025321","","","",""),
+mk("Thane (FNP)","FNP","MSEDCL","000018280744","11160","2026-04-02","",""),
+mk("Oshiwara","MFC","Adani Power","150071714","7520","2026-04-04","",""),
+mk("Marol (FNP)","FNP","Adani Power","154161497","18670","2026-04-10","",""),
+mk("Ludhiana Dark Store","Haldiram","PSPCL","3002856540","-20","2026-04-01","",""),
+mk("Pune MFC","MFC","MSEDCL","160230561955","","","",""),
+mk("Dehradun (FK)","FK","UPCL","9761202099011","","","",""),
+mk("Malabaar Hills","MFC","BEST","8761230218","","","",""),
+mk("Vasant Kunj","MFC","BSES","152239812","","","",""),
+mk("Kalyan Nagar","Myntra/Zippee","BESCOM","2828728365","","","",""),
+mk("Khar","MFC","Adani Power","101412987","","","",""),
+mk("Andheri WH (1)","Zippee","Tata Power Mumbai","900000868583","","","",""),
+mk("Okhla","Zippee","BSES","152493803","","","",""),
+mk("Rajouri Garden","MFC","TATA Power Delhi","60019208556","","","",""),
+mk("Moradabad (FK)","FK","PVVNL","7247166000","","","",""),
+mk("Vadodara Warehouse","FK","MGVCL","02101240629","","","",""),
+mk("Ghitorni","Culture Circle","BSES","155063997","","","","")
+]
+};
+
+var MORDER=["Oct 2025","Nov 2025","Dec 2025","Jan 2026","Mar 2026","Apr 2026"];
+var SK="elec_v5";
+var allData,actMonth="Apr 2026",editing=null,editVal="",flt="all",srch="",compF="all",brandF="all",sCol=null,sDir="asc";
+
+function loadAll(){try{var s=localStorage.getItem(SK);if(s){var p=JSON.parse(s);if(p&&typeof p==="object"&&!Array.isArray(p))return p;}}catch(e){}return JSON.parse(JSON.stringify(INIT_DATA));}
+function saveAll(){try{localStorage.setItem(SK,JSON.stringify(allData));}catch(e){}}
+allData=loadAll();
+MORDER.forEach(function(m){if(!allData[m])allData[m]=INIT_DATA[m]?JSON.parse(JSON.stringify(INIT_DATA[m])):[];});
+
+function gd(){return allData[actMonth]||[];}
+function sd(d){allData[actMonth]=d;saveAll();}
+function E(s){var d=document.createElement("div");d.textContent=s;return d.innerHTML;}
+function getUrl(c){return CU[c]||"#";}
+
+function mSort(a,b){var M=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];var pa=(a||"").split(" "),pb=(b||"").split(" ");var ya=parseInt(pa[1])||0,yb=parseInt(pb[1])||0;if(ya!==yb)return ya-yb;var ai=M.indexOf(pa[0]),bi=M.indexOf(pb[0]);return(ai<0?0:ai)-(bi<0?0:bi);}
+
+function isCurr(m){try{var M=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];var p=(m||"").split(" ");if(p.length<2)return true;var mi=M.indexOf(p[0]),yi=parseInt(p[1]);if(isNaN(yi)||mi<0)return true;var n=new Date();if(yi>n.getFullYear())return true;if(yi<n.getFullYear())return false;return mi>=n.getMonth();}catch(e){return true;}}
+
+function dueTag(d){if(!d||!isCurr(actMonth))return null;try{var dd=new Date(d+"T00:00:00"),now=new Date();now.setHours(0,0,0,0);var diff=Math.ceil((dd-now)/864e5);if(diff<0)return{l:"Overdue ("+Math.abs(diff)+"d)",c:"#dc2626",b:"#fef2f2"};if(diff===0)return{l:"Due Today!",c:"#dc2626",b:"#fef2f2"};if(diff<=3)return{l:"Due in "+diff+"d",c:"#ea580c",b:"#fff7ed"};if(diff<=5)return{l:"Due in "+diff+"d",c:"#d97706",b:"#fffbeb"};if(diff<=7)return{l:"Due in "+diff+"d",c:"#ca8a04",b:"#fefce8"};return{l:"Due in "+diff+"d",c:"#16a34a",b:"#f0fdf4"};}catch(e){return null;}}
+
+function getStats(d){var now=new Date();now.setHours(0,0,0,0);var o=0,t=0,w5=0,w7=0,amt=0,ic=isCurr(actMonth);d.forEach(function(r){var a=parseFloat(r.amount)||0;if(a>0)amt+=a;if(!ic||!r.dueDate)return;var dd=new Date(r.dueDate+"T00:00:00");var diff=Math.ceil((dd-now)/864e5);if(diff<0)o++;if(diff===0)t++;if(diff>=0&&diff<=5)w5++;if(diff>=0&&diff<=7)w7++;});return{ov:o,td:t,w5:w5,w7:w7,total:d.length,amt:amt};}
+
+function getF(){var d=gd().slice();if(srch){var s=srch.toLowerCase();d=d.filter(function(r){return r.location.toLowerCase().indexOf(s)>=0||r.ca.indexOf(s)>=0||r.brand.toLowerCase().indexOf(s)>=0;});}if(compF!=="all")d=d.filter(function(r){return r.company===compF;});if(brandF!=="all")d=d.filter(function(r){return r.brand===brandF;});if(flt!=="all"&&isCurr(actMonth)){var now=new Date();now.setHours(0,0,0,0);d=d.filter(function(r){if(!r.dueDate)return false;var dd=new Date(r.dueDate+"T00:00:00");var diff=Math.ceil((dd-now)/864e5);if(flt==="overdue")return diff<0;if(flt==="today")return diff===0;if(flt==="5days")return diff>=0&&diff<=5;if(flt==="7days")return diff>=0&&diff<=7;return true;});}if(sCol)d.sort(function(a,b){var va=a[sCol]||"",vb=b[sCol]||"";if(sCol==="amount"){va=parseFloat(va)||0;vb=parseFloat(vb)||0;}return va<vb?(sDir==="asc"?-1:1):va>vb?(sDir==="asc"?1:-1):0;});return d;}
+
+function render(){
+var scEl=document.querySelector(".ts");var scTop=scEl?scEl.scrollTop:0;
+var data=gd(),st=getStats(data),f=getF();
+var cos={},brs={};data.forEach(function(r){cos[r.company]=1;if(r.brand)brs[r.brand]=1;});
+var coList=Object.keys(cos).sort(),brList=Object.keys(brs).sort();
+var months=Object.keys(allData).sort(mSort);
+var h="";
+
+// Header
+h+='<div class="header"><div><h1>⚡ Pan India Electricity Dashboard 2026</h1>';
+h+='<p>'+E(actMonth)+' · '+st.total+' stores · Pending: ₹'+st.amt.toLocaleString("en-IN");
+h+=' <a href="'+BILL_FOLDER+'" target="_blank" class="df" style="background:#e8f5e9;color:#2e7d32">📁 Bills</a>';
+h+=' <a href="'+RCPT_FOLDER+'" target="_blank" class="df" style="background:#e8eaf6;color:#3949ab">🧾 Receipts</a>';
+h+='</p></div><div style="display:flex;gap:6px;flex-wrap:wrap">';
+h+='<button class="hbtn" onclick="showAdd()">+ Add Store</button>';
+h+='<button class="hbtn" onclick="addMonth()">+ New Month</button>';
+h+='<button class="hbtn" onclick="expMonth()">📥 Export Month</button>';
+h+='<button class="hbtn" onclick="expAll()">📥 Export All</button>';
+h+='<button class="hbtn" onclick="resetM()">Reset Month</button>';
+h+='</div></div>';
+
+// Tabs
+h+='<div class="tabs">';
+months.forEach(function(m){
+  var act=m===actMonth;
+  h+='<button class="tab'+(act?" act":"")+'" onclick="switchM(\''+E(m)+'\')">';
+  h+=E(m)+'<span class="cnt">'+(allData[m]||[]).length+'</span>';
+  if(act)h+='<button class="tdel" onclick="event.stopPropagation();delMonth()" title="Delete month">×</button>';
+  h+='</button>';
+});
+h+='</div>';
+
+// Stats
+function sc(lbl,val,col,bg,ft){var on=flt===ft;return '<div class="sc'+(on?" on":"")+'" onclick="setFlt(\''+ft+'\')" style="color:'+(on?"#fff":col)+';background:'+(on?col:bg)+';border-color:'+(on?col:"transparent")+'"><div class="v">'+val+'</div><div class="l">'+lbl+'</div></div>';}
+h+='<div class="stats">'+sc("All",st.total,"#3b82f6","#eff6ff","all")+sc("Overdue",st.ov,"#dc2626","#fef2f2","overdue")+sc("Due Today",st.td,"#ea580c","#fff7ed","today")+sc("Within 5d",st.w5,"#d97706","#fffbeb","5days")+sc("Within 7d",st.w7,"#16a34a","#f0fdf4","7days")+'</div>';
+
+// Filters
+h+='<div class="flt"><input placeholder="Search location, CA, brand..." value="'+E(srch)+'" oninput="setSrch(this.value)">';
+h+='<select onchange="setCompF(this.value)"><option value="all">All Companies</option>';
+coList.forEach(function(c){h+='<option value="'+E(c)+'"'+(compF===c?' selected':'')+'>'+E(c)+'</option>';});
+h+='</select><select onchange="setBrandF(this.value)"><option value="all">All Brands</option>';
+brList.forEach(function(b){h+='<option value="'+E(b)+'"'+(brandF===b?' selected':'')+'>'+E(b)+'</option>';});
+h+='</select><span style="font-size:11px;color:#64748b;margin-left:auto">'+f.length+' of '+data.length+'</span></div>';
+
+// Table
+function sh(col,lbl){var ar=sCol===col?(sDir==="asc"?" ↑":" ↓"):"";return '<th onclick="doSort(\''+col+'\')">'+lbl+ar+'</th>';}
+h+='<div class="tw"><div class="ts"><table><thead><tr><th>#</th>'+sh("location","Location")+sh("brand","Brand")+'<th>Company</th>'+sh("ca","CA No.")+sh("billDate","Bill Date")+sh("amount","₹ Amount")+sh("dueDate","Due Date")+'<th>Alert</th>'+sh("status","Status")+sh("remarks","Remarks")+'<th>Bill</th><th>Receipt</th><th>Del</th></tr></thead><tbody>';
+
+if(!f.length){h+='<tr><td colspan="14" style="text-align:center;padding:30px;color:#94a3b8">No entries</td></tr>';}
+f.forEach(function(r,i){
+  var tag=dueTag(r.dueDate);
+  var isOD=tag&&(tag.l.indexOf("Overdue")>=0||tag.l.indexOf("Today")>=0);
+  var isPd=(r.status||"").toLowerCase().indexOf("paid")>=0;
+  var rc=isOD?"rod":isPd?"rpd":"";
+
+  function cell(fd,v,w){
+    if(editing===r.id+"_"+fd){
+      var tp=fd==="dueDate"?' type="date"':"";
+      return '<div class="ce"><input value="'+E(editVal)+'"'+tp+' oninput="editVal=this.value" onkeydown="ck(event,\''+r.id+'\',\''+fd+'\')" autofocus style="width:'+(w?'130':'80')+'px"><button class="sv" onclick="sv(\''+r.id+'\',\''+fd+'\')">✓</button><button class="cn" onclick="cn()">✗</button></div>';
+    }
+    return '<span class="cl'+(v?"":" mt")+'" onclick="se(\''+r.id+'\',\''+fd+'\')">'+E(v||"—")+'</span>';
+  }
+
+  // CA cell
+  var caH;
+  if(editing===r.id+"_ca"){
+    caH='<div class="ce"><input value="'+E(editVal)+'" oninput="editVal=this.value" onkeydown="ck(event,\''+r.id+'\',\'ca\')" autofocus style="width:130px"><button class="sv" onclick="sv(\''+r.id+'\',\'ca\')">✓</button><button class="cn" onclick="cn()">✗</button></div>';
+  }else{
+    caH='<span class="cat">'+E(r.ca||"—")+'</span><button class="cab" onclick="se(\''+r.id+'\',\'ca\')">✎</button>';
+  }
+
+  var tagH=tag?'<span class="tag" style="color:'+tag.c+';background:'+tag.b+';border:1px solid '+tag.c+'22">'+tag.l+'</span>':'<span style="color:#cbd5e1;font-size:10px">—</span>';
+
+  // Bill cell
+  var bH;
+  if(editing===r.id+"_billLink"){
+    bH='<div class="ce"><input value="'+E(editVal)+'" oninput="editVal=this.value" onkeydown="ck(event,\''+r.id+'\',\'billLink\')" placeholder="Paste link" autofocus style="width:130px"><button class="sv" onclick="sv(\''+r.id+'\',\'billLink\')">✓</button><button class="cn" onclick="cn()">✗</button></div>';
+  }else if(r.billLink){
+    bH='<div class="ba"><button class="vb" style="background:#dbeafe;color:#2563eb" onclick="prevFile(\''+r.id+'\',\'bill\')">📄View</button><button class="eb" onclick="se(\''+r.id+'\',\'billLink\')">✎</button><button class="rb" onclick="rmF(\''+r.id+'\',\'billLink\')">✗</button></div>';
+  }else{
+    bH='<button class="ub" onclick="upFlow(\''+r.id+'\',\'bill\')">📤 Upload</button>';
+  }
+
+  // Receipt cell
+  var rH;
+  if(editing===r.id+"_receiptLink"){
+    rH='<div class="ce"><input value="'+E(editVal)+'" oninput="editVal=this.value" onkeydown="ck(event,\''+r.id+'\',\'receiptLink\')" placeholder="Paste link" autofocus style="width:130px"><button class="sv" onclick="sv(\''+r.id+'\',\'receiptLink\')">✓</button><button class="cn" onclick="cn()">✗</button></div>';
+  }else if(r.receiptLink){
+    rH='<div class="ba"><button class="vb" style="background:#dcfce7;color:#16a34a" onclick="prevFile(\''+r.id+'\',\'receipt\')">🧾View</button><button class="eb" onclick="se(\''+r.id+'\',\'receiptLink\')">✎</button><button class="rb" onclick="rmF(\''+r.id+'\',\'receiptLink\')">✗</button></div>';
+  }else{
+    rH='<button class="ub" onclick="upFlow(\''+r.id+'\',\'receipt\')">📤 Upload</button>';
+  }
+
+  h+='<tr class="'+rc+'"><td style="font-size:10px;color:#94a3b8">'+(i+1)+'</td>';
+  h+='<td style="font-weight:600;min-width:130px">'+cell("location",r.location,true)+'</td>';
+  h+='<td style="min-width:70px">'+cell("brand",r.brand)+'</td>';
+  h+='<td style="min-width:100px"><a href="'+getUrl(r.company)+'" target="_blank" class="lk">'+E(r.company)+' ↗</a></td>';
+  h+='<td class="cac">'+caH+'</td>';
+  h+='<td style="min-width:90px">'+cell("billDate",r.billDate,true)+'</td>';
+  h+='<td style="font-weight:600">'+cell("amount",r.amount)+'</td>';
+  h+='<td style="min-width:100px">'+cell("dueDate",r.dueDate,true)+'</td>';
+  h+='<td>'+tagH+'</td>';
+  h+='<td style="min-width:90px">'+cell("status",r.status,true)+'</td>';
+  h+='<td style="min-width:100px;max-width:160px">'+cell("remarks",r.remarks,true)+'</td>';
+  h+='<td class="bc">'+bH+'</td>';
+  h+='<td class="bc">'+rH+'</td>';
+  h+='<td style="text-align:center"><button class="del" onclick="delR(\''+r.id+'\')">🗑</button></td></tr>';
+});
+h+='</tbody></table></div></div>';
+h+='<div class="ft"><span>Click cells to edit · CA selectable · "paid" auto-dates · Data in localStorage</span><span>Pan India Electricity Sheet 2026</span></div>';
+
+document.getElementById("app").innerHTML=h;
+var ns=document.querySelector(".ts");if(ns&&scTop)ns.scrollTop=scTop;
+var ai=document.querySelector("input[autofocus]");if(ai){ai.focus();ai.selectionStart=ai.value.length;}
+}
+
+// Actions
+function switchM(m){actMonth=m;editing=null;flt="all";srch="";compF="all";brandF="all";sCol=null;render();}
+function setFlt(f){flt=f;render();}
+function setSrch(v){srch=v;render();}
+function setCompF(v){compF=v;render();}
+function setBrandF(v){brandF=v;render();}
+function doSort(c){if(sCol===c)sDir=sDir==="asc"?"desc":"asc";else{sCol=c;sDir="asc";}render();}
+function se(id,fd){var d=gd();for(var i=0;i<d.length;i++){if(d[i].id===id){editing=id+"_"+fd;editVal=d[i][fd]||"";break;}}render();}
+function cn(){editing=null;editVal="";render();}
+function sv(id,fd){var v=editVal;if(fd==="status"&&v.toLowerCase().trim()==="paid"){var t=new Date();v="Paid on "+String(t.getDate()).padStart(2,"0")+"."+String(t.getMonth()+1).padStart(2,"0")+"."+t.getFullYear();}var d=gd();for(var i=0;i<d.length;i++){if(d[i].id===id){d[i][fd]=v;break;}}sd(d);editing=null;editVal="";render();}
+function ck(e,id,fd){if(e.key==="Enter")sv(id,fd);if(e.key==="Escape")cn();}
+function rmF(id,fd){var d=gd();for(var i=0;i<d.length;i++){if(d[i].id===id){d[i][fd]="";break;}}sd(d);render();}
+function delR(id){var d=gd();var r=null;for(var i=0;i<d.length;i++){if(d[i].id===id){r=d[i];break;}}if(!r)return;if(!confirm('Delete "'+r.location+'" (CA: '+r.ca+')?'))return;if(!confirm('Final confirm: Remove "'+r.location+'"?'))return;sd(d.filter(function(x){return x.id!==id;}));render();}
+
+// Upload flow
+function upFlow(id,type){
+  var d=gd(),r=null;
+  for(var i=0;i<d.length;i++){if(d[i].id===id){r=d[i];break;}}
+  if(!r)return;
+  var isB=type==="bill";
+  var folder=isB?BILL_FOLDER:RCPT_FOLDER;
+  var field=isB?"billLink":"receiptLink";
+  var label=isB?"Bill":"Receipt";
+  var fn=r.location.replace(/[^a-zA-Z0-9]/g,"_")+"_"+actMonth.replace(" ","_")+"_"+label;
+
+  var ov=document.createElement("div");
+  ov.className="mo";
+  ov.id="upMod";
+  ov.addEventListener("click",function(e){if(e.target===ov)ov.remove();});
+
+  var md=document.createElement("div");
+  md.className="md";
+  md.style.width="520px";
+
+  var h2=document.createElement("h2");
+  h2.textContent=(isB?"📄":"🧾")+" Upload "+label+" — "+r.location;
+  md.appendChild(h2);
+
+  var box=document.createElement("div");
+  box.style.cssText="background:#f8fafc;border-radius:10px;padding:16px;margin-bottom:14px";
+
+  var ti=document.createElement("div");
+  ti.style.cssText="font-size:13px;font-weight:700;color:#1e293b;margin-bottom:12px";
+  ti.textContent="Follow these steps:";
+  box.appendChild(ti);
+
+  // Step 1
+  var s1=document.createElement("div");s1.className="step";
+  var n1=document.createElement("div");n1.className="snum";n1.textContent="1";
+  var t1=document.createElement("div");t1.className="stxt";t1.innerHTML="Click below to open the <b>"+label+"s</b> folder in Drive";
+  s1.appendChild(n1);s1.appendChild(t1);box.appendChild(s1);
+
+  var bw=document.createElement("div");bw.style.cssText="text-align:center;margin-bottom:14px";
+  var ab=document.createElement("a");ab.href=folder;ab.target="_blank";
+  ab.style.cssText="display:inline-block;padding:10px 24px;background:#1e40af;color:#fff;border-radius:8px;text-decoration:none;font-size:13px;font-weight:700";
+  ab.textContent="📁 Open "+label+"s Folder";
+  var s2w=document.createElement("div");s2w.style.cssText="opacity:0.4;transition:opacity .3s";
+  ab.addEventListener("click",function(){s2w.style.opacity="1";});
+  bw.appendChild(ab);box.appendChild(bw);
+
+  // Step 2
+  var s2=document.createElement("div");s2.className="step";
+  var n2=document.createElement("div");n2.className="snum";n2.textContent="2";
+  var t2=document.createElement("div");t2.className="stxt";
+  var code=document.createElement("code");code.style.cssText="background:#e2e8f0;padding:2px 6px;border-radius:4px;font-size:11px;color:#1e40af;user-select:all";
+  code.textContent=fn;
+  t2.textContent="Upload file. Suggested name: ";t2.appendChild(code);
+  s2.appendChild(n2);s2.appendChild(t2);s2w.appendChild(s2);
+
+  // Step 3
+  var s3=document.createElement("div");s3.className="step";
+  var n3=document.createElement("div");n3.className="snum";n3.textContent="3";
+  var t3=document.createElement("div");t3.className="stxt";t3.innerHTML="Right-click file → <b>Share</b> → <b>Copy link</b>";
+  s3.appendChild(n3);s3.appendChild(t3);s2w.appendChild(s3);
+
+  // Step 4
+  var s4=document.createElement("div");s4.className="step";
+  var n4=document.createElement("div");n4.className="snum g";n4.textContent="4";
+  var t4=document.createElement("div");t4.className="stxt";t4.style.fontWeight="600";t4.textContent="Paste the link below:";
+  s4.appendChild(n4);s4.appendChild(t4);s2w.appendChild(s4);
+
+  box.appendChild(s2w);md.appendChild(box);
+
+  var inp=document.createElement("input");
+  inp.id="upLink";
+  inp.placeholder="Paste Google Drive shareable link here...";
+  inp.style.cssText="width:100%;padding:10px 12px;border:2px solid #3b82f6;border-radius:8px;font-size:13px;outline:none;margin-bottom:10px;box-sizing:border-box";
+  md.appendChild(inp);
+
+  var btns=document.createElement("div");btns.className="mbtn";
+  var cb=document.createElement("button");cb.className="mcn";cb.textContent="Cancel";
+  cb.addEventListener("click",function(){ov.remove();});
+  var sb=document.createElement("button");sb.className="msv";sb.textContent="Save "+label+" Link";
+  sb.addEventListener("click",function(){
+    var link=document.getElementById("upLink").value.trim();
+    if(!link){alert("Please paste the Drive link first.");return;}
+    var dd=gd();for(var j=0;j<dd.length;j++){if(dd[j].id===id){dd[j][field]=link;break;}}
+    sd(dd);ov.remove();render();
+  });
+  btns.appendChild(cb);btns.appendChild(sb);md.appendChild(btns);
+  ov.appendChild(md);document.body.appendChild(ov);
+}
+
+// Preview
+function prevFile(id,type){
+  var d=gd(),r=null;
+  for(var i=0;i<d.length;i++){if(d[i].id===id){r=d[i];break;}}
+  if(!r)return;
+  var isB=type==="bill";
+  var link=isB?r.billLink:r.receiptLink;
+  if(!link)return;
+  var embedUrl=link;
+  var m=link.match(/\/d\/([^\/]+)/);
+  if(m)embedUrl="https://drive.google.com/file/d/"+m[1]+"/preview";
+  var m2=link.match(/id=([^&]+)/);
+  if(!m&&m2)embedUrl="https://drive.google.com/file/d/"+m2[1]+"/preview";
+
+  var ov=document.createElement("div");ov.className="mo";ov.id="prevMod";
+  ov.addEventListener("click",function(e){if(e.target===ov)ov.remove();});
+  var md=document.createElement("div");
+  md.style.cssText="background:#fff;border-radius:14px;padding:16px;width:800px;max-width:95vw;height:80vh;display:flex;flex-direction:column";
+  var top=document.createElement("div");
+  top.style.cssText="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px";
+  var title=document.createElement("h3");title.style.cssText="margin:0;font-size:15px;font-weight:700";
+  title.textContent=(isB?"📄 Bill":"🧾 Receipt")+" — "+r.location;
+  var tbtns=document.createElement("div");tbtns.style.cssText="display:flex;gap:6px";
+  var odr=document.createElement("a");odr.href=link;odr.target="_blank";
+  odr.style.cssText="padding:5px 12px;background:#eff6ff;color:#2563eb;border-radius:6px;font-size:11px;font-weight:600;text-decoration:none";
+  odr.textContent="Open in Drive ↗";
+  var cls=document.createElement("button");
+  cls.style.cssText="padding:5px 12px;background:#fee2e2;color:#dc2626;border:none;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer";
+  cls.textContent="Close";cls.addEventListener("click",function(){ov.remove();});
+  tbtns.appendChild(odr);tbtns.appendChild(cls);top.appendChild(title);top.appendChild(tbtns);md.appendChild(top);
+  var ifr=document.createElement("iframe");ifr.src=embedUrl;
+  ifr.style.cssText="flex:1;border:1px solid #e2e8f0;border-radius:8px";ifr.allow="autoplay";ifr.allowFullscreen=true;
+  md.appendChild(ifr);ov.appendChild(md);document.body.appendChild(ov);
+}
+
+// Month management
+function addMonth(){var name=prompt("Enter month name (e.g. May 2026):","");if(!name||!name.trim())return;var n=name.trim();if(allData[n]){alert("Month exists!");return;}var prev=gd();allData[n]=prev.map(function(r){return{id:String(_n++),location:r.location,brand:r.brand,company:r.company,ca:r.ca,billDate:"",amount:"",dueDate:"",status:"",remarks:"",billLink:"",receiptLink:""};});actMonth=n;saveAll();render();}
+
+function delMonth(){var m=actMonth;var months=Object.keys(allData);if(months.length<=1){alert("Cannot delete the last month.");return;}var cnt=(allData[m]||[]).length;var step1=prompt("⚠️ DELETE \""+m+"\" ("+cnt+" stores)?\n\nType the month name exactly: \""+m+"\"");if(!step1||step1.trim()!==m){if(step1!==null)alert("Name did not match. Cancelled.");return;}if(!confirm("🔴 FINAL: Delete "+m+" with "+cnt+" entries permanently?"))return;delete allData[m];var rem=Object.keys(allData).sort(mSort);actMonth=rem[rem.length-1];saveAll();render();}
+
+function resetM(){var cnt=(allData[actMonth]||[]).length;var s=prompt("⚠️ RESET \""+actMonth+"\"? Type RESET to confirm:");if(!s||s.trim()!=="RESET"){if(s!==null)alert("Cancelled.");return;}if(INIT_DATA[actMonth])allData[actMonth]=JSON.parse(JSON.stringify(INIT_DATA[actMonth]));else allData[actMonth]=[];saveAll();render();}
+
+// Add store
+function showAdd(){
+  var ov=document.createElement("div");ov.className="mo";ov.id="addMod";
+  ov.addEventListener("click",function(e){if(e.target===ov)ov.remove();});
+  var md=document.createElement("div");md.className="md";md.style.width="480px";
+  var h2=document.createElement("h2");h2.textContent="Add Store to "+actMonth;md.appendChild(h2);
+  var fields=[{id:"nl",l:"Location *"},{id:"nb",l:"Brand"},{id:"nca",l:"CA Number *"},{id:"nbd",l:"Bill Date",t:"date"},{id:"nam",l:"Amount"},{id:"ndd",l:"Due Date",t:"date"},{id:"ns",l:"Status"},{id:"nr",l:"Remarks"},{id:"nbl",l:"Bill Link",p:"Google Drive link"},{id:"nrl",l:"Receipt Link",p:"Google Drive link"}];
+  fields.forEach(function(f){
+    var lb=document.createElement("label");lb.textContent=f.l;md.appendChild(lb);
+    var inp=document.createElement("input");inp.id=f.id;if(f.t)inp.type=f.t;if(f.p)inp.placeholder=f.p;md.appendChild(inp);
+  });
+  var lb=document.createElement("label");lb.textContent="Company";md.appendChild(lb);
+  var sel=document.createElement("select");sel.id="nc";
+  Object.keys(CU).forEach(function(c){var o=document.createElement("option");o.value=c;o.textContent=c;sel.appendChild(o);});
+  md.appendChild(sel);
+  var btns=document.createElement("div");btns.className="mbtn";
+  var cb=document.createElement("button");cb.className="mcn";cb.textContent="Cancel";cb.addEventListener("click",function(){ov.remove();});
+  var sb=document.createElement("button");sb.className="msv";sb.textContent="Add Store";
+  sb.addEventListener("click",function(){
+    var l=document.getElementById("nl").value.trim(),ca=document.getElementById("nca").value.trim();
+    if(!l||!ca){alert("Location & CA required");return;}
+    var d=gd();d.push({id:String(_n++),location:l,brand:document.getElementById("nb").value.trim(),company:document.getElementById("nc").value,ca:ca,billDate:document.getElementById("nbd").value||"",amount:document.getElementById("nam").value.trim(),dueDate:document.getElementById("ndd").value||"",status:document.getElementById("ns").value.trim(),remarks:document.getElementById("nr").value.trim(),billLink:document.getElementById("nbl").value.trim(),receiptLink:document.getElementById("nrl").value.trim()});
+    sd(d);ov.remove();render();
+  });
+  btns.appendChild(cb);btns.appendChild(sb);md.appendChild(btns);
+  ov.appendChild(md);document.body.appendChild(ov);
+}
+
+// Export
+function expMonth(){
+  var d=gd();
+  var hd=["S.No","Location","Brand","Electricity Company","CA No.","Bill Date","Amount","Due Date","Status & Payment Date","Remarks","Bill Link","Receipt Link"];
+  if(typeof XLSX!=="undefined"){
+    try{var ws=XLSX.utils.aoa_to_sheet([hd].concat(d.map(function(r,i){return[i+1,r.location,r.brand,r.company,r.ca,r.billDate,r.amount,r.dueDate,r.status,r.remarks,r.billLink,r.receiptLink];})));
+    ws["!cols"]=[{wch:5},{wch:25},{wch:15},{wch:22},{wch:16},{wch:12},{wch:10},{wch:12},{wch:25},{wch:25},{wch:35},{wch:35}];
+    var wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,actMonth);XLSX.writeFile(wb,"Pan_India_Electricity_2026_"+actMonth.replace(" ","_")+".xlsx");return;}catch(e){}
+  }
+  dlHtml(d,hd,"Pan_India_Electricity_2026_"+actMonth.replace(" ","_")+".xls");
+}
+
+function expAll(){
+  var hd=["S.No","Location","Brand","Electricity Company","CA No.","Bill Date","Amount","Due Date","Status & Payment Date","Remarks","Bill Link","Receipt Link"];
+  var months=Object.keys(allData).sort(mSort);
+  if(typeof XLSX!=="undefined"){
+    try{var wb=XLSX.utils.book_new();months.forEach(function(m){var d=allData[m]||[];var ws=XLSX.utils.aoa_to_sheet([hd].concat(d.map(function(r,i){return[i+1,r.location,r.brand,r.company,r.ca,r.billDate,r.amount,r.dueDate,r.status,r.remarks,r.billLink,r.receiptLink];})));
+    ws["!cols"]=[{wch:5},{wch:25},{wch:15},{wch:22},{wch:16},{wch:12},{wch:10},{wch:12},{wch:25},{wch:25},{wch:35},{wch:35}];
+    XLSX.utils.book_append_sheet(wb,ws,m);});XLSX.writeFile(wb,"Pan_India_Electricity_2026.xlsx");return;}catch(e){}
+  }
+  var content='<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel"><head><meta charset="utf-8"><style>td,th{border:1px solid #000;padding:5px 8px;font-family:Calibri;font-size:11pt}th{background:#1E40AF;color:#fff;font-weight:bold;text-align:center}</style></head><body>';
+  months.forEach(function(m){var d=allData[m]||[];content+="<table><tr>";hd.forEach(function(h){content+="<th>"+h+"</th>";});content+="</tr>";d.forEach(function(r,i){content+="<tr><td>"+(i+1)+"</td><td>"+E(r.location)+"</td><td>"+E(r.brand)+"</td><td>"+E(r.company)+"</td><td>"+E(r.ca)+"</td><td>"+E(r.billDate)+"</td><td>"+E(r.amount)+"</td><td>"+E(r.dueDate)+"</td><td>"+E(r.status)+"</td><td>"+E(r.remarks)+"</td><td>"+E(r.billLink)+"</td><td>"+E(r.receiptLink)+"</td></tr>";});content+="</table>";});
+  content+="</body></html>";
+  var blob=new Blob([content],{type:"application/vnd.ms-excel"});var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="Pan_India_Electricity_2026.xls";a.click();
+}
+
+function dlHtml(d,hd,fn){
+  var c='<html><head><meta charset="utf-8"><style>td,th{border:1px solid #000;padding:5px 8px;font-family:Calibri;font-size:11pt}th{background:#1E40AF;color:#fff;font-weight:bold;text-align:center}</style></head><body><table><tr>';
+  hd.forEach(function(h){c+="<th>"+h+"</th>";});c+="</tr>";
+  d.forEach(function(r,i){c+="<tr><td>"+(i+1)+"</td><td>"+E(r.location)+"</td><td>"+E(r.brand)+"</td><td>"+E(r.company)+"</td><td>"+E(r.ca)+"</td><td>"+E(r.billDate)+"</td><td>"+E(r.amount)+"</td><td>"+E(r.dueDate)+"</td><td>"+E(r.status)+"</td><td>"+E(r.remarks)+"</td><td>"+E(r.billLink)+"</td><td>"+E(r.receiptLink)+"</td></tr>";});
+  c+="</table></body></html>";
+  var blob=new Blob([c],{type:"application/vnd.ms-excel"});var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=fn;a.click();
+}
+
+render();
+</script>
+</body>
+</html>
