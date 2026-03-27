@@ -273,11 +273,56 @@ function parseImportRows(sheet){
   return{headers:rawH,rows:rows,mapped:mapped};
 }
 
+function parseDate(v){
+  if(!v&&v!==0)return"";
+  // Excel serial number (e.g. 46082)
+  if(typeof v==="number"&&v>30000&&v<60000){
+    var d=new Date(Math.round((v-25569)*86400*1000));
+    if(!isNaN(d.getTime())){
+      return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+    }
+  }
+  // Date object from XLSX
+  if(v instanceof Date&&!isNaN(v.getTime())){
+    return v.getFullYear()+"-"+String(v.getMonth()+1).padStart(2,"0")+"-"+String(v.getDate()).padStart(2,"0");
+  }
+  var s=String(v).trim();
+  if(!s)return"";
+  // Already YYYY-MM-DD
+  if(/^\d{4}-\d{2}-\d{2}$/.test(s))return s;
+  // DD.MM.YYYY (dots — like 25.02.2026)
+  var md=s.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/);
+  if(md){return md[3]+"-"+md[2].padStart(2,"0")+"-"+md[1].padStart(2,"0");}
+  // DD-MM-YYYY or DD/MM/YYYY
+  var m=s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+  if(m){
+    var day=parseInt(m[1]),mon=parseInt(m[2]);
+    if(day>12){return m[3]+"-"+m[2].padStart(2,"0")+"-"+m[1].padStart(2,"0");}
+    if(mon>12){return m[3]+"-"+m[1].padStart(2,"0")+"-"+m[2].padStart(2,"0");}
+    return m[3]+"-"+m[2].padStart(2,"0")+"-"+m[1].padStart(2,"0");
+  }
+  // YYYY/MM/DD or YYYY.MM.DD
+  var m3=s.match(/^(\d{4})[\/\-\.](\d{1,2})[\/\-\.](\d{1,2})$/);
+  if(m3){return m3[1]+"-"+m3[2].padStart(2,"0")+"-"+m3[3].padStart(2,"0");}
+  // Try JS Date parse as last resort
+  var d2=new Date(s);
+  if(!isNaN(d2.getTime())&&d2.getFullYear()>2000){
+    return d2.getFullYear()+"-"+String(d2.getMonth()+1).padStart(2,"0")+"-"+String(d2.getDate()).padStart(2,"0");
+  }
+  return s;
+}
+
 function rowToRecord(row,mapped){
   function g(field){
     if(mapped[field]===undefined)return"";
     var v=row[mapped[field]];
     return v===undefined||v===null?"":String(v).trim();
+  }
+  function gd(field){
+    if(mapped[field]===undefined)return"";
+    var v=row[mapped[field]];
+    if(v===undefined||v===null)return"";
+    return parseDate(v);
   }
   return{
     id:String(_n++),
@@ -285,9 +330,9 @@ function rowToRecord(row,mapped){
     brand:g("brand"),
     company:g("company"),
     ca:g("ca"),
-    billDate:g("billDate"),
+    billDate:gd("billDate"),
     amount:g("amount"),
-    dueDate:g("dueDate"),
+    dueDate:gd("dueDate"),
     status:g("status"),
     remarks:g("remarks"),
     billLink:g("billLink"),
@@ -396,7 +441,7 @@ document.getElementById("csvFileInput").addEventListener("change",function(e){
   reader.onload=function(evt){
     try{
       var data=new Uint8Array(evt.target.result);
-      var wb=XLSX.read(data,{type:"array"});
+      var wb=XLSX.read(data,{type:"array",cellDates:false,raw:false,dateNF:'yyyy-mm-dd'});
       var ws=wb.Sheets[wb.SheetNames[0]];
       var parsed=parseImportRows(ws);
       if(!parsed.rows.length){alert("No data rows found in file.");return;}
