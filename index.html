@@ -1,117 +1,89 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Pan India Electricity Dashboard 2026</title>
-<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Segoe UI',system-ui,sans-serif;background:#f1f5f9;color:#1e293b;min-height:100vh}
-.wrap{max-width:1600px;margin:0 auto;padding:12px}
-.header{background:linear-gradient(135deg,#1e40af,#3b82f6 50%,#06b6d4);border-radius:14px;padding:16px 22px;margin-bottom:12px;color:#fff;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
-.header h1{font-size:20px;font-weight:800}
-.header p{font-size:12px;opacity:.85;margin-top:3px}
-.hbtn{background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:7px;padding:7px 14px;cursor:pointer;font-size:12px;font-weight:600}
-.hbtn:hover{background:rgba(255,255,255,.35)}
-.tabs{display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap;background:#fff;border-radius:10px;padding:6px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
-.tab{padding:8px 16px;border-radius:7px;cursor:pointer;font-size:12px;font-weight:600;color:#64748b;border:none;background:transparent;position:relative;display:inline-flex;align-items:center;gap:4px}
-.tab:hover{background:#f1f5f9;color:#1e40af}
-.tab.act{background:#1e40af;color:#fff;box-shadow:0 2px 8px rgba(30,64,175,.3)}
-.tab .cnt{background:rgba(255,255,255,.25);border-radius:10px;padding:0 6px;font-size:10px}
-.tab.act .cnt{background:rgba(255,255,255,.3)}
-.tab:not(.act) .cnt{background:#e2e8f0;color:#475569}
-.tdel{background:#ef4444;color:#fff;border:none;border-radius:50%;width:16px;height:16px;font-size:11px;cursor:pointer;padding:0;margin-left:4px;line-height:16px;text-align:center}
-.tdel:hover{background:#dc2626}
-.stats{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
-.sc{padding:10px 14px;border-radius:9px;cursor:pointer;min-width:100px;text-align:center;border:2px solid transparent;box-shadow:0 1px 2px rgba(0,0,0,.06)}
-.sc .v{font-size:22px;font-weight:800}
-.sc .l{font-size:10px;font-weight:600;opacity:.85;margin-top:1px}
-.sc .amt{font-size:9px;font-weight:700;opacity:.8;margin-top:2px}
-.sc.on{color:#fff!important}
-.flt{background:#fff;border-radius:10px;padding:10px 14px;margin-bottom:12px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;box-shadow:0 1px 2px rgba(0,0,0,.05)}
-.flt input,.flt select{padding:7px 10px;border:1px solid #e2e8f0;border-radius:7px;font-size:12px;outline:none}
-.flt input{min-width:180px}
-.tw{background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.07)}
-.ts{overflow:auto;max-height:58vh}
-table{width:100%;border-collapse:collapse;font-size:12px;border:1px solid #d1d5db}
-th{padding:7px 5px;text-align:left;font-size:10px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.4px;border:1px solid #d1d5db;position:sticky;top:0;background:#f8fafc;z-index:2;white-space:nowrap;cursor:pointer;user-select:none}
-th:hover{color:#1e40af}
-td{padding:5px;vertical-align:middle;border:1px solid #e2e8f0}
-tr.rod{background:#fef2f2!important}
-tr.rpd{background:#bbf7d0!important}
-tr:hover{background:#f0f9ff!important}
-tr:nth-child(even){background:#fafbfc}
-tr.newrow{background:#eff6ff!important;border:2px solid #3b82f6}
-tr.newrow td{border-color:#bfdbfe}
-tr.totrow{background:#f8fafc!important;font-weight:700;border-top:2px solid #3b82f6}
-.nr-inp{padding:4px 6px;font-size:11px;border:1px solid #93c5fd;border-radius:4px;outline:none;width:100%;box-sizing:border-box;background:#fff}
-.nr-inp:focus{border-color:#3b82f6;box-shadow:0 0 0 2px rgba(59,130,246,.15)}
-.nr-sel{padding:4px 4px;font-size:11px;border:1px solid #93c5fd;border-radius:4px;outline:none;background:#fff;width:100%}
-.nr-save{background:#22c55e;color:#fff;border:none;border-radius:5px;padding:4px 10px;cursor:pointer;font-size:10px;font-weight:700;white-space:nowrap}
-.nr-save:hover{background:#16a34a}
-.nr-cancel{background:#ef4444;color:#fff;border:none;border-radius:5px;padding:4px 8px;cursor:pointer;font-size:10px;font-weight:700;white-space:nowrap}
-.nr-cancel:hover{background:#dc2626}
-.cl{cursor:pointer;display:inline-block;padding:1px 3px;border-radius:3px;font-size:11px;min-width:24px}
-.cl:hover{background:#e0f2fe}
-.cl.mt{color:#94a3b8}
-.ce{display:inline-flex;gap:2px;align-items:center}
-.ce input{padding:2px 3px;font-size:11px;border:1px solid #3b82f6;border-radius:3px;outline:none;width:120px}
-.ce .sv{background:#22c55e;color:#fff;border:none;border-radius:3px;padding:0 5px;cursor:pointer;font-size:10px;height:20px}
-.ce .cn{background:#ef4444;color:#fff;border:none;border-radius:3px;padding:0 5px;cursor:pointer;font-size:10px;height:20px}
-.lk{color:#2563eb;font-weight:600;text-decoration:none;font-size:11px}
-.lk:hover{text-decoration:underline}
-.cac{font-family:'Courier New',monospace;font-size:11px}
-.cat{user-select:all;cursor:text;padding:1px 3px;border-radius:3px}
-.cat::selection{background:#bfdbfe}
-.cab{background:none;border:none;color:#94a3b8;cursor:pointer;font-size:10px;padding:0 3px;opacity:0}
-td:hover .cab{opacity:1}
-.cab:hover{color:#3b82f6}
-.tag{display:inline-block;padding:1px 7px;border-radius:16px;font-size:9px;font-weight:700;white-space:nowrap}
-.del{background:none;border:none;color:#ef4444;cursor:pointer;font-size:13px;padding:1px 4px}
-.del:hover{background:#fef2f2;border-radius:4px}
-.ba{display:flex;gap:2px;justify-content:center;align-items:center}
-.ub{background:#eff6ff;color:#2563eb;border:1px dashed #93c5fd;border-radius:4px;padding:2px 7px;cursor:pointer;font-size:9px;font-weight:600}
-.ub:hover{background:#dbeafe;border-color:#3b82f6}
-.vb{border:none;border-radius:3px;padding:1px 5px;cursor:pointer;font-size:9px;font-weight:600}
-.eb{background:#fef3c7;color:#d97706;border:none;border-radius:3px;padding:1px 4px;cursor:pointer;font-size:9px}
-.rb{background:#fee2e2;color:#dc2626;border:none;border-radius:3px;padding:1px 3px;cursor:pointer;font-size:8px}
-.bc{text-align:center;min-width:80px}
-.mo{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;display:flex;align-items:center;justify-content:center}
-.md{background:#fff;border-radius:14px;padding:20px;max-width:95vw;max-height:90vh;overflow:auto}
-.md h2{margin:0 0 14px;font-size:17px;font-weight:700}
-.md label{display:block;font-size:11px;font-weight:600;color:#475569;margin-bottom:2px}
-.md input,.md select{width:100%;padding:7px 10px;border:1px solid #e2e8f0;border-radius:7px;font-size:12px;outline:none;margin-bottom:8px;box-sizing:border-box}
-.mbtn{display:flex;gap:6px;justify-content:flex-end;margin-top:6px}
-.mbtn button{padding:7px 18px;border-radius:7px;font-size:12px;cursor:pointer}
-.mcn{border:1px solid #e2e8f0;background:#fff;color:#475569}
-.msv{border:none;background:#3b82f6;color:#fff;font-weight:600}
-.ft{margin-top:10px;padding:6px 14px;background:#fff;border-radius:7px;font-size:10px;color:#94a3b8;display:flex;justify-content:space-between;flex-wrap:wrap}
-.df{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:5px;font-size:10px;font-weight:600;text-decoration:none;margin-left:6px}
-.step{display:flex;gap:10px;margin-bottom:10px;align-items:center}
-.snum{background:#3b82f6;color:#fff;border-radius:50%;min-width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
-.snum.g{background:#22c55e}
-.stxt{font-size:12px;color:#475569}
-.add-row-btn{background:none;border:2px dashed #93c5fd;border-radius:6px;padding:6px 0;width:100%;cursor:pointer;color:#3b82f6;font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:4px;margin-top:2px}
-.add-row-btn:hover{background:#eff6ff;border-color:#3b82f6}
-.imp-preview{margin:12px 0;max-height:260px;overflow:auto;border:1px solid #e2e8f0;border-radius:8px}
-.imp-preview table{font-size:11px;width:100%}
-.imp-preview th{background:#f1f5f9;font-size:10px;padding:5px 6px;position:static}
-.imp-preview td{padding:4px 6px;font-size:11px}
-.imp-info{background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:10px 14px;margin:10px 0;font-size:12px;color:#1e40af}
-.imp-warn{background:#fef3c7;border:1px solid #fde68a;border-radius:8px;padding:10px 14px;margin:10px 0;font-size:12px;color:#92400e}
-.synci{display:inline-block;width:8px;height:8px;border-radius:50%;margin-left:6px;vertical-align:middle}
-.synci.ok{background:#22c55e}
-.synci.saving{background:#f59e0b;animation:pulse .8s infinite}
-.synci.err{background:#ef4444}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-</style>
-</head>
-<body>
-<div class="wrap" id="app"><div style="display:flex;align-items:center;justify-content:center;min-height:60vh;flex-direction:column;gap:12px"><div style="font-size:36px">⚡</div><div style="font-size:16px;font-weight:700;color:#1e40af">Loading Dashboard...</div><div style="font-size:12px;color:#94a3b8">Connecting to database</div></div></div>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Pan India Electricity Dashboard 2026</title><script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Segoe UI',system-ui,sans-serif;background:#f1f5f9;color:#1e293b;min-height:100vh}/* ===== AUTH STYLES ===== */.auth-overlay{position:fixed;inset:0;background:linear-gradient(135deg,#0f172a 0%,#1e3a5f 50%,#0f172a 100%);display:flex;align-items:center;justify-content:center;z-index:9999}.auth-card{background:#fff;border-radius:20px;padding:40px 36px;width:380px;max-width:92vw;box-shadow:0 25px 60px rgba(0,0,0,.4)}.auth-card .logo{text-align:center;margin-bottom:24px}.auth-card .logo .icon{font-size:48px;margin-bottom:8px}.auth-card .logo h2{font-size:20px;font-weight:800;color:#1e40af;margin:0}.auth-card .logo p{font-size:12px;color:#64748b;margin-top:4px}.auth-field{margin-bottom:16px}.auth-field label{display:block;font-size:11px;font-weight:700;color:#475569;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px}.auth-field input{width:100%;padding:11px 14px;border:2px solid #e2e8f0;border-radius:10px;font-size:14px;outline:none;transition:border-color .2s,box-shadow .2s;box-sizing:border-box}.auth-field input:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.15)}.auth-btn{width:100%;padding:12px;background:linear-gradient(135deg,#1e40af,#3b82f6);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;margin-top:8px;transition:transform .1s,box-shadow .2s}.auth-btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(30,64,175,.35)}.auth-btn:active{transform:translateY(0)}.auth-error{background:#fef2f2;color:#dc2626;border:1px solid #fecaca;border-radius:8px;padding:8px 12px;font-size:12px;font-weight:600;text-align:center;margin-top:12px;display:none}.auth-field .toggle-pass{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:16px;color:#94a3b8;padding:0}.auth-field .field-wrap{position:relative}@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}/* ===== DASHBOARD STYLES ===== */.wrap{max-width:1600px;margin:0 auto;padding:12px}.header{background:linear-gradient(135deg,#1e40af,#3b82f6 50%,#06b6d4);border-radius:14px;padding:16px 22px;margin-bottom:12px;color:#fff;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}.header h1{font-size:20px;font-weight:800}.header p{font-size:12px;opacity:.85;margin-top:3px}.hbtn{background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:7px;padding:7px 14px;cursor:pointer;font-size:12px;font-weight:600}.hbtn:hover{background:rgba(255,255,255,.35)}.tabs{display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap;background:#fff;border-radius:10px;padding:6px;box-shadow:0 1px 3px rgba(0,0,0,.06)}.tab{padding:8px 16px;border-radius:7px;cursor:pointer;font-size:12px;font-weight:600;color:#64748b;border:none;background:transparent;position:relative;display:inline-flex;align-items:center;gap:4px}.tab:hover{background:#f1f5f9;color:#1e40af}.tab.act{background:#1e40af;color:#fff;box-shadow:0 2px 8px rgba(30,64,175,.3)}.tab .cnt{background:rgba(255,255,255,.25);border-radius:10px;padding:0 6px;font-size:10px}.tab.act .cnt{background:rgba(255,255,255,.3)}.tab:not(.act) .cnt{background:#e2e8f0;color:#475569}.tdel{background:#ef4444;color:#fff;border:none;border-radius:50%;width:16px;height:16px;font-size:11px;cursor:pointer;padding:0;margin-left:4px;line-height:16px;text-align:center}.tdel:hover{background:#dc2626}.stats{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}.sc{padding:10px 14px;border-radius:9px;cursor:pointer;min-width:100px;text-align:center;border:2px solid transparent;box-shadow:0 1px 2px rgba(0,0,0,.06)}.sc .v{font-size:22px;font-weight:800}.sc .l{font-size:10px;font-weight:600;opacity:.85;margin-top:1px}.sc .amt{font-size:9px;font-weight:700;opacity:.8;margin-top:2px}.sc.on{color:#fff!important}.flt{background:#fff;border-radius:10px;padding:10px 14px;margin-bottom:12px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;box-shadow:0 1px 2px rgba(0,0,0,.05)}.flt input,.flt select{padding:7px 10px;border:1px solid #e2e8f0;border-radius:7px;font-size:12px;outline:none}.flt input{min-width:180px}.tw{background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.07)}.ts{overflow:auto;max-height:58vh}table{width:100%;border-collapse:collapse;font-size:12px;border:1px solid #d1d5db}th{padding:7px 5px;text-align:left;font-size:10px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.4px;border:1px solid #d1d5db;position:sticky;top:0;background:#f8fafc;z-index:2;white-space:nowrap;cursor:pointer;user-select:none}th:hover{color:#1e40af}td{padding:5px;vertical-align:middle;border:1px solid #e2e8f0}tr.rod{background:#fef2f2!important}tr.rpd{background:#bbf7d0!important}tr:hover{background:#f0f9ff!important}tr:nth-child(even){background:#fafbfc}tr.newrow{background:#eff6ff!important;border:2px solid #3b82f6}tr.newrow td{border-color:#bfdbfe}tr.totrow{background:#f8fafc!important;font-weight:700;border-top:2px solid #3b82f6}.nr-inp{padding:4px 6px;font-size:11px;border:1px solid #93c5fd;border-radius:4px;outline:none;width:100%;box-sizing:border-box;background:#fff}.nr-inp:focus{border-color:#3b82f6;box-shadow:0 0 0 2px rgba(59,130,246,.15)}.nr-sel{padding:4px 4px;font-size:11px;border:1px solid #93c5fd;border-radius:4px;outline:none;background:#fff;width:100%}.nr-save{background:#22c55e;color:#fff;border:none;border-radius:5px;padding:4px 10px;cursor:pointer;font-size:10px;font-weight:700;white-space:nowrap}.nr-save:hover{background:#16a34a}.nr-cancel{background:#ef4444;color:#fff;border:none;border-radius:5px;padding:4px 8px;cursor:pointer;font-size:10px;font-weight:700;white-space:nowrap}.nr-cancel:hover{background:#dc2626}.cl{cursor:pointer;display:inline-block;padding:1px 3px;border-radius:3px;font-size:11px;min-width:24px}.cl:hover{background:#e0f2fe}.cl.mt{color:#94a3b8}.ce{display:inline-flex;gap:2px;align-items:center}.ce input{padding:2px 3px;font-size:11px;border:1px solid #3b82f6;border-radius:3px;outline:none;width:120px}.ce .sv{background:#22c55e;color:#fff;border:none;border-radius:3px;padding:0 5px;cursor:pointer;font-size:10px;height:20px}.ce .cn{background:#ef4444;color:#fff;border:none;border-radius:3px;padding:0 5px;cursor:pointer;font-size:10px;height:20px}.lk{color:#2563eb;font-weight:600;text-decoration:none;font-size:11px}.lk:hover{text-decoration:underline}.cac{font-family:'Courier New',monospace;font-size:11px}.cat{user-select:all;cursor:text;padding:1px 3px;border-radius:3px}.cat::selection{background:#bfdbfe}.cab{background:none;border:none;color:#94a3b8;cursor:pointer;font-size:10px;padding:0 3px;opacity:0}td:hover .cab{opacity:1}.cab:hover{color:#3b82f6}.tag{display:inline-block;padding:1px 7px;border-radius:16px;font-size:9px;font-weight:700;white-space:nowrap}.del{background:none;border:none;color:#ef4444;cursor:pointer;font-size:13px;padding:1px 4px}.del:hover{background:#fef2f2;border-radius:4px}.ba{display:flex;gap:2px;justify-content:center;align-items:center}.ub{background:#eff6ff;color:#2563eb;border:1px dashed #93c5fd;border-radius:4px;padding:2px 7px;cursor:pointer;font-size:9px;font-weight:600}.ub:hover{background:#dbeafe;border-color:#3b82f6}.vb{border:none;border-radius:3px;padding:1px 5px;cursor:pointer;font-size:9px;font-weight:600}.eb{background:#fef3c7;color:#d97706;border:none;border-radius:3px;padding:1px 4px;cursor:pointer;font-size:9px}.rb{background:#fee2e2;color:#dc2626;border:none;border-radius:3px;padding:1px 3px;cursor:pointer;font-size:8px}.bc{text-align:center;min-width:80px}.mo{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;display:flex;align-items:center;justify-content:center}.md{background:#fff;border-radius:14px;padding:20px;max-width:95vw;max-height:90vh;overflow:auto}.md h2{margin:0 0 14px;font-size:17px;font-weight:700}.md label{display:block;font-size:11px;font-weight:600;color:#475569;margin-bottom:2px}.md input,.md select{width:100%;padding:7px 10px;border:1px solid #e2e8f0;border-radius:7px;font-size:12px;outline:none;margin-bottom:8px;box-sizing:border-box}.mbtn{display:flex;gap:6px;justify-content:flex-end;margin-top:6px}.mbtn button{padding:7px 18px;border-radius:7px;font-size:12px;cursor:pointer}.mcn{border:1px solid #e2e8f0;background:#fff;color:#475569}.msv{border:none;background:#3b82f6;color:#fff;font-weight:600}.ft{margin-top:10px;padding:6px 14px;background:#fff;border-radius:7px;font-size:10px;color:#94a3b8;display:flex;justify-content:space-between;flex-wrap:wrap}.df{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:5px;font-size:10px;font-weight:600;text-decoration:none;margin-left:6px}.step{display:flex;gap:10px;margin-bottom:10px;align-items:center}.snum{background:#3b82f6;color:#fff;border-radius:50%;min-width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}.snum.g{background:#22c55e}.stxt{font-size:12px;color:#475569}.add-row-btn{background:none;border:2px dashed #93c5fd;border-radius:6px;padding:6px 0;width:100%;cursor:pointer;color:#3b82f6;font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:4px;margin-top:2px}.add-row-btn:hover{background:#eff6ff;border-color:#3b82f6}.imp-preview{margin:12px 0;max-height:260px;overflow:auto;border:1px solid #e2e8f0;border-radius:8px}.imp-preview table{font-size:11px;width:100%}.imp-preview th{background:#f1f5f9;font-size:10px;padding:5px 6px;position:static}.imp-preview td{padding:4px 6px;font-size:11px}.imp-info{background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:10px 14px;margin:10px 0;font-size:12px;color:#1e40af}.imp-warn{background:#fef3c7;border:1px solid #fde68a;border-radius:8px;padding:10px 14px;margin:10px 0;font-size:12px;color:#92400e}.synci{display:inline-block;width:8px;height:8px;border-radius:50%;margin-left:6px;vertical-align:middle}.synci.ok{background:#22c55e}.synci.saving{background:#f59e0b;animation:pulse .8s infinite}.synci.err{background:#ef4444}@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}</style></head><body>
+
+<!-- ===== AUTH PAGE ===== -->
+<div class="auth-overlay" id="authOverlay">
+<div class="auth-card">
+<div class="logo">
+<div class="icon">⚡</div>
+<h2>Pan India Electricity</h2>
+<p>Dashboard 2026 · Secure Login</p>
+</div>
+<div class="auth-field">
+<label>Login ID</label>
+<div class="field-wrap">
+<input type="text" id="authUser" placeholder="Enter your Login ID" autocomplete="off" spellcheck="false">
+</div>
+</div>
+<div class="auth-field">
+<label>Password</label>
+<div class="field-wrap">
+<input type="password" id="authPass" placeholder="Enter your Password">
+<button class="toggle-pass" id="togglePass" type="button">👁</button>
+</div>
+</div>
+<button class="auth-btn" id="authBtn">Sign In →</button>
+<div class="auth-error" id="authError">Invalid Login ID or Password</div>
+</div>
+</div>
+
+<!-- ===== DASHBOARD (hidden until auth) ===== -->
+<div class="wrap" id="app" style="display:none"><div style="display:flex;align-items:center;justify-content:center;min-height:60vh;flex-direction:column;gap:12px"><div style="font-size:36px">⚡</div><div style="font-size:16px;font-weight:700;color:#1e40af">Loading Dashboard...</div><div style="font-size:12px;color:#94a3b8">Connecting to database</div></div></div>
 <input type="file" id="csvFileInput" accept=".csv,.xlsx,.xls" style="display:none">
+
 <script>
+/* ========================================= */
+/* ===== AUTH GATE ===== */
+/* ========================================= */
+var AUTH_ID="Bizops@2026";
+var AUTH_PASS="Zippee@1234";
+var isAuthed=false;
+
+function doLogin(){
+  var u=document.getElementById("authUser").value.trim();
+  var p=document.getElementById("authPass").value;
+  var errEl=document.getElementById("authError");
+  if(u===AUTH_ID&&p===AUTH_PASS){
+    isAuthed=true;
+    document.getElementById("authOverlay").style.display="none";
+    document.getElementById("app").style.display="block";
+    errEl.style.display="none";
+    loadFromDB();
+  }else{
+    errEl.style.display="block";
+    document.getElementById("authPass").value="";
+    document.getElementById("authPass").focus();
+    errEl.style.animation="none";
+    errEl.offsetHeight;
+    errEl.style.animation="shake .4s ease";
+  }
+}
+
+function doLogout(){
+  isAuthed=false;
+  document.getElementById("app").style.display="none";
+  document.getElementById("authOverlay").style.display="flex";
+  document.getElementById("authUser").value="";
+  document.getElementById("authPass").value="";
+  document.getElementById("authError").style.display="none";
+  document.getElementById("authUser").focus();
+}
+
+document.getElementById("authBtn").addEventListener("click",doLogin);
+document.getElementById("authUser").addEventListener("keydown",function(e){
+  if(e.key==="Enter"){e.preventDefault();document.getElementById("authPass").focus();}
+});
+document.getElementById("authPass").addEventListener("keydown",function(e){
+  if(e.key==="Enter"){e.preventDefault();doLogin();}
+});
+document.getElementById("togglePass").addEventListener("click",function(){
+  var inp=document.getElementById("authPass");
+  if(inp.type==="password"){inp.type="text";this.textContent="🙈";}
+  else{inp.type="password";this.textContent="👁";}
+});
+
+/* ========================================= */
 /* ===== SUPABASE CONFIG ===== */
+/* ========================================= */
 var SUPA_URL="https://awsrsmddcfksdrfpijqf.supabase.co";
 var SUPA_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF3c3JzbWRkY2Zrc2RyZnBpanFmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2MzA5MzksImV4cCI6MjA5MDIwNjkzOX0.eNI3Sv6Pqp-bK7I16ph-r5PZNAwSA86_S7AcEO6DSQ4";
 var SUPA_TBL="electricity_bills";
@@ -124,31 +96,29 @@ function supaFetch(path,opts){
   return fetch(SUPA_URL+"/rest/v1/"+path,{method:opts.method||"GET",headers:h,body:opts.body?JSON.stringify(opts.body):undefined});
 }
 
+/* ========================================= */
 /* ===== GLOBALS ===== */
+/* ========================================= */
 var BILL_FOLDER="https://drive.google.com/drive/folders/1asQDHp907t6zQToBnTOcScpZZp-R4mR-";
 var RCPT_FOLDER="https://drive.google.com/drive/folders/1U5yGOiRmvUBruo0dPktCUy_9-Jyvdx2W";
 var CU_DEFAULT={"BESCOM":"https://www.bescom.co.in/bescom/main/quick-payment","BEST":"https://www.bestundertaking.net/","Adani Power":"https://www.adanielectricity.com/pay-your-bill/online-payments","MSEDCL":"https://wss.mahadiscom.in/wss/wss?uiActionName=getViewPayBill","Tata Power Mumbai":"https://pgi.billdesk.com/pgidsk/pgmerc/tatapwr/TATAPWRDetails.jsp","BSES":"https://www.bsesdelhi.com/web/brpl/quick-pay","BSES(rajdhani)":"https://www.bsesdelhi.com/web/brpl/quick-pay","BSES Yamuna":"https://www.bsesdelhi.com/web/bypl/verify-quickpay?p_p_id=com_bses_quick_pay_verification_portlet_QuickPayVerificationPortlet&p_p_lifecycle=1&p_p_state=normal&p_p_mode=view&_com_bses_quick_pay_verification_portlet_QuickPayVerificationPortlet_javax.portlet.action=submitQuickPayVerification","TSERC":"https://tgsouthernpower.org/paybillonline","UPCL":"https://www.upcl.org/wss/viewBill","PSPCL":"https://billpayment.pspcl.in/pgBillPay.aspx?uc=BillPayAdvance","CESC Limited":"https://srvcs.cesc.co.in/ptrlineins/mjpgav_payon/scriptfiles/monthlybill.php","TNEB":"https://www.tnebnet.org/awp/login?locale=ta","PVVNL":"https://consumer.uppcl.org/wss/pay_bill_home","JVVNL":"https://www.billdesk.com/pgidsk/pgmerc/jvvnljp/JVVNLJPDetails.jsp","TATA Power Delhi":"https://www.tatapower-ddl.com/billpay/paybillonline.aspx","MGVCL":"https://mpay.guvnl.in/paytm/QuickPay.php?&company=MGVCL","KSEB":"https://wss.kseb.in/selfservices/quickpay","KESCO":"https://www.kfresco.co.in/quickpay","TANGEDCO":"https://www.tnebnet.org/awp/login?locale=ta","WBSEDCL":"https://www.wbsedcl.in/irj/go/km/docs/internet/webpage/Quick_Pay.html","DHBVN":"https://www.dhbvn.org.in/web/dhbvn/bill-payment","UHBVN":"https://www.uhbvn.org.in/web/uhbvn/bill-payment","AVVNL":"https://energy.rajasthan.gov.in/content/raj/energy-department/avvnl/en/home.html","TPDDL":"https://www.tatapower-ddl.com/billpay/paybillonline.aspx","CSPDCL":"https://cspdcl.co.in/QuickBillPay/QuickPay","SOUTHCO":"https://www.tpsouthernodisha.com/","HESCOM":"https://hescom.karnataka.gov.in/","MESCOM":"https://mescom.karnataka.gov.in/","GESCOM":"https://gescom.karnataka.gov.in/"};
 var customCompanies={};
 var CU=Object.assign({},CU_DEFAULT,customCompanies);
+
 function addCompany(n,u){if(!n)return;customCompanies[n]=u||"#";CU[n]=u||"#";}
 
 var _n=1;
-var INIT_DATA={
-"Oct 2025":[],
-"Nov 2025":[],
-"Dec 2025":[],
-"Jan 2026":[],
-"Mar 2026":[],
-"Apr 2026":[]
-};
-
+var INIT_DATA={"Oct 2025":[],"Nov 2025":[],"Dec 2025":[],"Jan 2026":[],"Mar 2026":[],"Apr 2026":[]};
 var allData={};
 var actMonth="Apr 2026",editing=null,editVal="",flt="all",srch="",compF="all",brandF="all",sCol=null,sDir="asc";
 var addingRow=false;
 var saveQueue=null,saving=false;
 
+/* ========================================= */
 /* ===== SUPABASE LOAD/SAVE ===== */
+/* ========================================= */
 async function loadFromDB(){
+  if(!isAuthed)return;
   try{
     var resp=await supaFetch(SUPA_TBL+"?select=*&order=id.asc&limit=5000");
     if(!resp.ok)throw new Error("HTTP "+resp.status);
@@ -164,31 +134,37 @@ async function loadFromDB(){
       actMonth=sorted[sorted.length-1];
       syncStatus="ok";
     }else{
-      allData={"Apr 2026":[]};actMonth="Apr 2026";syncStatus="ok";
+      allData={"Apr 2026":[]};
+      actMonth="Apr 2026";
+      syncStatus="ok";
     }
   }catch(e){
     console.log("DB load error:",e);
-    allData={"Apr 2026":[]};actMonth="Apr 2026";syncStatus="err";
+    allData={"Apr 2026":[]};
+    actMonth="Apr 2026";
+    syncStatus="err";
   }
   render();
 }
 
-async function saveToDB(){
-  if(saveQueue)clearTimeout(saveQueue);
-  saveQueue=setTimeout(doSave,800);
-}
+async function saveToDB(){if(saveQueue)clearTimeout(saveQueue);saveQueue=setTimeout(doSave,800);}
 
 async function doSave(){
-  if(saving)return;saving=true;syncStatus="saving";render();
+  if(saving)return;
+  saving=true;syncStatus="saving";render();
   try{
     var m=actMonth;
     await supaFetch(SUPA_TBL+"?month=eq."+encodeURIComponent(m),{method:"DELETE"});
     var d=gd();
     if(d.length>0){
-      var rows=d.map(function(r){return{month:m,location:r.location,brand:r.brand,company:r.company,ca:r.ca,bill_date:r.billDate,amount:r.amount,due_date:r.dueDate,status:r.status,remarks:r.remarks,bill_link:r.billLink,receipt_link:r.receiptLink};});
+      var rows=d.map(function(r){
+        return{month:m,location:r.location,brand:r.brand,company:r.company,ca:r.ca,bill_date:r.billDate,amount:r.amount,due_date:r.dueDate,status:r.status,remarks:r.remarks,bill_link:r.billLink,receipt_link:r.receiptLink};
+      });
       var resp=await supaFetch(SUPA_TBL,{method:"POST",body:rows,prefer:"return=representation"});
       var ins=await resp.json();
-      if(Array.isArray(ins)){for(var i=0;i<ins.length&&i<d.length;i++){d[i]._dbId=ins[i].id;d[i].id=String(ins[i].id);}}
+      if(Array.isArray(ins)){
+        for(var i=0;i<ins.length&&i<d.length;i++){d[i]._dbId=ins[i].id;d[i].id=String(ins[i].id);}
+      }
     }
     syncStatus="ok";
   }catch(e){console.log("Save error:",e);syncStatus="err";}
@@ -200,150 +176,662 @@ async function saveAllToDB(){
   try{
     await supaFetch(SUPA_TBL+"?id=gt.0",{method:"DELETE"});
     var all=[];
-    Object.keys(allData).forEach(function(m){(allData[m]||[]).forEach(function(r){all.push({month:m,location:r.location,brand:r.brand,company:r.company,ca:r.ca,bill_date:r.billDate,amount:r.amount,due_date:r.dueDate,status:r.status,remarks:r.remarks,bill_link:r.billLink,receipt_link:r.receiptLink});});});
-    for(var i=0;i<all.length;i+=500){await supaFetch(SUPA_TBL,{method:"POST",body:all.slice(i,i+500),prefer:"return=minimal"});}
-    syncStatus="ok";showToast("✅ Saved "+all.length+" records");
+    Object.keys(allData).forEach(function(m){
+      (allData[m]||[]).forEach(function(r){
+        all.push({month:m,location:r.location,brand:r.brand,company:r.company,ca:r.ca,bill_date:r.billDate,amount:r.amount,due_date:r.dueDate,status:r.status,remarks:r.remarks,bill_link:r.billLink,receipt_link:r.receiptLink});
+      });
+    });
+    for(var i=0;i<all.length;i+=500){
+      await supaFetch(SUPA_TBL,{method:"POST",body:all.slice(i,i+500),prefer:"return=minimal"});
+    }
+    syncStatus="ok";
+    showToast("✅ Saved "+all.length+" records");
     await loadFromDB();
   }catch(e){syncStatus="err";showToast("⚠️ Save failed");render();}
 }
 
-/* ===== CORE FUNCTIONS (unchanged) ===== */
+/* ========================================= */
+/* ===== CORE FUNCTIONS ===== */
+/* ========================================= */
 function gd(){return allData[actMonth]||[];}
 function sd(d){allData[actMonth]=d;saveToDB();}
 function E(s){var d=document.createElement("div");d.textContent=s;return d.innerHTML;}
 function getUrl(c){return CU[c]||"#";}
-function mSort(a,b){var M=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];var pa=(a||"").split(" "),pb=(b||"").split(" ");var ya=parseInt(pa[1])||0,yb=parseInt(pb[1])||0;if(ya!==yb)return ya-yb;return(M.indexOf(pa[0])||0)-(M.indexOf(pb[0])||0);}
-function isCurr(m){try{var M=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];var p=(m||"").split(" ");if(p.length<2)return true;var mi=M.indexOf(p[0]),yi=parseInt(p[1]);if(isNaN(yi)||mi<0)return true;var n=new Date();if(yi>n.getFullYear())return true;if(yi<n.getFullYear())return false;return mi>=n.getMonth();}catch(e){return true;}}
-function displayDate(d){if(!d)return"";var m=d.match(/^(\d{4})-(\d{2})-(\d{2})$/);if(m)return m[3]+"."+m[2]+"."+m[1];return d;}
-function dueTag(d,status){if(!d||!isCurr(actMonth))return null;if(status&&status.toLowerCase().indexOf("paid")>=0)return null;var dt=d;if(!/^\d{4}-/.test(dt))dt=parseDate(dt);try{var dd=new Date(dt+"T00:00:00"),now=new Date();now.setHours(0,0,0,0);var diff=Math.ceil((dd-now)/864e5);if(diff<0)return{l:"Overdue ("+Math.abs(diff)+"d)",c:"#dc2626",b:"#fef2f2"};if(diff===0)return{l:"Due Today!",c:"#dc2626",b:"#fef2f2"};if(diff<=3)return{l:"Due in "+diff+"d",c:"#ea580c",b:"#fff7ed"};if(diff<=5)return{l:"Due in "+diff+"d",c:"#d97706",b:"#fffbeb"};if(diff<=7)return{l:"Due in "+diff+"d",c:"#ca8a04",b:"#fefce8"};return{l:"Due in "+diff+"d",c:"#16a34a",b:"#f0fdf4"};}catch(e){return null;}}
-function getStats(d){var now=new Date();now.setHours(0,0,0,0);var o=0,t=0,w5=0,w7=0,amt=0,oAmt=0,tAmt=0,w5Amt=0,w7Amt=0,ic=isCurr(actMonth);d.forEach(function(r){var a=parseFloat(r.amount)||0;if(a>0)amt+=a;if(!ic||!r.dueDate)return;var paid=(r.status||"").toLowerCase().indexOf("paid")>=0;if(paid)return;var dt=r.dueDate;if(!/^\d{4}-/.test(dt))dt=parseDate(dt);var dd=new Date(dt+"T00:00:00");if(isNaN(dd.getTime()))return;var diff=Math.ceil((dd-now)/864e5);if(diff<0){o++;oAmt+=a;}if(diff===0){t++;tAmt+=a;}if(diff>=0&&diff<=5){w5++;w5Amt+=a;}if(diff>=0&&diff<=7){w7++;w7Amt+=a;}});return{ov:o,td:t,w5:w5,w7:w7,total:d.length,amt:amt,oAmt:oAmt,tAmt:tAmt,w5Amt:w5Amt,w7Amt:w7Amt};}
-function getF(){var d=gd().slice();if(srch){var s=srch.toLowerCase();d=d.filter(function(r){return r.location.toLowerCase().indexOf(s)>=0||r.ca.indexOf(s)>=0||r.brand.toLowerCase().indexOf(s)>=0;});}if(compF!=="all")d=d.filter(function(r){return r.company===compF;});if(brandF!=="all")d=d.filter(function(r){return r.brand===brandF;});if(flt!=="all"&&isCurr(actMonth)){var now=new Date();now.setHours(0,0,0,0);d=d.filter(function(r){if(!r.dueDate)return false;var paid=(r.status||"").toLowerCase().indexOf("paid")>=0;if(paid)return false;var dt=r.dueDate;if(!/^\d{4}-/.test(dt))dt=parseDate(dt);var dd=new Date(dt+"T00:00:00");if(isNaN(dd.getTime()))return false;var diff=Math.ceil((dd-now)/864e5);if(flt==="overdue")return diff<0;if(flt==="today")return diff===0;if(flt==="5days")return diff>=0&&diff<=5;if(flt==="7days")return diff>=0&&diff<=7;return true;});}if(sCol)d.sort(function(a,b){var va=a[sCol]||"",vb=b[sCol]||"";if(sCol==="amount"){va=parseFloat(va)||0;vb=parseFloat(vb)||0;}return va<vb?(sDir==="asc"?-1:1):va>vb?(sDir==="asc"?1:-1):0;});return d;}
 
-/* ===== CSV/EXCEL IMPORT (unchanged) ===== */
-var COL_MAP={"location":["location","store","site","place","loc"],"brand":["brand","brand name"],"company":["company","electricity company","elec company","provider","discom"],"ca":["ca","ca no","ca no.","ca number","consumer no","consumer number","account"],"billDate":["bill date","billdate","billing date"],"amount":["amount","amt","bill amount","rs amount","bill amt","total"],"dueDate":["due date","duedate","due","payment due","due by","last date","status   payment date","status payment date","status and payment date"],"status":["status","payment status","paid","payment"],"remarks":["remarks","remark","notes","note","comment","comments"],"billLink":["bill link","billlink","bill url"],"receiptLink":["receipt link","receiptlink","receipt url"]};
-function matchCol(header){var raw=header.toLowerCase().trim();if(raw==="s.no"||raw==="s no"||raw==="sno"||raw==="#"||raw==="sr"||raw==="sr no"||raw==="sr."||raw==="sr.no")return null;if(raw==="bill no"||raw==="bill no."||raw==="bill number"||raw==="billno")return null;if(raw==="status & payment date"||raw==="status &amp; payment date"||raw==="status and payment date")return"dueDate";if(raw==="₹ amount"||raw==="rs amount"||raw==="bill amount"||raw==="amount")return"amount";if(raw==="electricity company")return"company";if(raw==="ca no."||raw==="ca no"||raw==="ca number")return"ca";if(raw==="due date")return"dueDate";if(raw==="bill date")return"billDate";if(raw==="bill link")return"billLink";if(raw==="receipt link")return"receiptLink";if(raw==="location")return"location";if(raw==="brand")return"brand";if(raw==="status")return"status";if(raw==="remarks"||raw==="remark")return"remarks";var h=raw.replace(/[₹&]/g,"").replace(/[^a-z0-9 ]/g," ").replace(/\s+/g," ").trim();for(var field in COL_MAP){for(var i=0;i<COL_MAP[field].length;i++){if(h===COL_MAP[field][i])return field;}}for(var field in COL_MAP){for(var i=0;i<COL_MAP[field].length;i++){if(h.indexOf(COL_MAP[field][i])>=0)return field;}}return null;}
-function parseImportRows(sheet){var json=XLSX.utils.sheet_to_json(sheet,{header:1,defval:"",raw:true});if(!json||json.length<2)return{headers:[],rows:[],mapped:{}};var rawH=json[0].map(function(h){return String(h).trim();});var mapped={};rawH.forEach(function(h,i){var m=matchCol(h);if(m)mapped[m]=i;});var rows=[];for(var r=1;r<json.length;r++){var row=json[r];var empty=true;for(var c=0;c<row.length;c++){if(String(row[c]).trim()){empty=false;break;}}if(!empty)rows.push(row);}return{headers:rawH,rows:rows,mapped:mapped};}
-function parseDate(v){if(!v&&v!==0)return"";if(v instanceof Date){if(!isNaN(v.getTime()))return v.getFullYear()+"-"+String(v.getMonth()+1).padStart(2,"0")+"-"+String(v.getDate()).padStart(2,"0");return"";}if(typeof v==="number"){if(v>30000&&v<60000){var d=new Date(Math.round((v-25569)*86400*1000));if(!isNaN(d.getTime()))return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}return"";}var s=String(v).trim();if(!s)return"";if(/^\d{4}-\d{2}-\d{2}$/.test(s))return s;var md=s.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/);if(md)return md[3]+"-"+String(md[2]).padStart(2,"0")+"-"+String(md[1]).padStart(2,"0");var m=s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);if(m){var day=parseInt(m[1]),mon=parseInt(m[2]);if(day>12)return m[3]+"-"+String(m[2]).padStart(2,"0")+"-"+String(m[1]).padStart(2,"0");if(mon>12)return m[3]+"-"+String(m[1]).padStart(2,"0")+"-"+String(m[2]).padStart(2,"0");return m[3]+"-"+String(m[2]).padStart(2,"0")+"-"+String(m[1]).padStart(2,"0");}var m3=s.match(/^(\d{4})[\/\-\.](\d{1,2})[\/\-\.](\d{1,2})$/);if(m3)return m3[1]+"-"+String(m3[2]).padStart(2,"0")+"-"+String(m3[3]).padStart(2,"0");var m4=s.match(/^(\d{4})-(\d{2})-(\d{2})T/);if(m4)return m4[1]+"-"+m4[2]+"-"+m4[3];var d2=new Date(s);if(!isNaN(d2.getTime())&&d2.getFullYear()>2000)return d2.getFullYear()+"-"+String(d2.getMonth()+1).padStart(2,"0")+"-"+String(d2.getDate()).padStart(2,"0");return s;}
-function rowToRecord(row,mapped){function g(field){if(mapped[field]===undefined)return"";var v=row[mapped[field]];return v===undefined||v===null?"":String(v).trim();}function gd(field){if(mapped[field]===undefined)return"";var v=row[mapped[field]];if(v===undefined||v===null)return"";return parseDate(v);}return{id:String(_n++),location:g("location"),brand:g("brand"),company:g("company"),ca:g("ca"),billDate:gd("billDate"),amount:g("amount"),dueDate:gd("dueDate"),status:g("status"),remarks:g("remarks"),billLink:g("billLink"),receiptLink:g("receiptLink")};}
+function mSort(a,b){
+  var M=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  var pa=(a||"").split(" "),pb=(b||"").split(" ");
+  var ya=parseInt(pa[1])||0,yb=parseInt(pb[1])||0;
+  if(ya!==yb)return ya-yb;
+  return(M.indexOf(pa[0])||0)-(M.indexOf(pb[0])||0);
+}
 
-function showImportModal(parsed){var ov=document.createElement("div");ov.className="mo";ov.addEventListener("click",function(e){if(e.target===ov)ov.remove();});var md=document.createElement("div");md.className="md";md.style.width="750px";var h2=document.createElement("h2");h2.textContent="📥 Import Data → "+actMonth;md.appendChild(h2);var info=document.createElement("div");info.className="imp-info";var mappedFields=Object.keys(parsed.mapped);info.innerHTML="<b>"+parsed.rows.length+" rows</b> found with <b>"+mappedFields.length+"</b> columns matched: "+mappedFields.join(", ");md.appendChild(info);var unmapped=[];parsed.headers.forEach(function(h){if(!matchCol(h))unmapped.push(h);});if(unmapped.length){var warn=document.createElement("div");warn.className="imp-warn";warn.innerHTML="⚠️ Skipped columns: <b>"+unmapped.map(function(u){return E(u);}).join(", ")+"</b>";md.appendChild(warn);}var pw=document.createElement("div");pw.className="imp-preview";var pt='<table><thead><tr>';var showCols=["location","brand","company","ca","amount","dueDate","status","remarks"];showCols.forEach(function(c){pt+="<th>"+c+"</th>";});pt+="</tr></thead><tbody>";var previewN=Math.min(parsed.rows.length,8);for(var i=0;i<previewN;i++){var rec=rowToRecord(parsed.rows[i],parsed.mapped);pt+="<tr>";showCols.forEach(function(c){pt+="<td>"+E(rec[c]||"—")+"</td>";});pt+="</tr>";}if(parsed.rows.length>8)pt+='<tr><td colspan="'+showCols.length+'" style="text-align:center;color:#94a3b8;padding:6px">... and '+(parsed.rows.length-8)+' more rows</td></tr>';pt+="</tbody></table>";pw.innerHTML=pt;md.appendChild(pw);var btns=document.createElement("div");btns.className="mbtn";btns.style.marginTop="14px";var cb=document.createElement("button");cb.className="mcn";cb.textContent="Cancel";cb.addEventListener("click",function(){ov.remove();});var sb=document.createElement("button");sb.className="msv";sb.style.cssText="background:#22c55e;padding:8px 24px;font-size:13px";sb.textContent="✓ Import "+parsed.rows.length+" Rows";sb.addEventListener("click",function(){var newData=[];for(var j=0;j<parsed.rows.length;j++)newData.push(rowToRecord(parsed.rows[j],parsed.mapped));allData[actMonth]=newData;sd(newData);ov.remove();render();showToast("✅ Imported "+newData.length+" rows");});btns.appendChild(cb);btns.appendChild(sb);md.appendChild(btns);ov.appendChild(md);document.body.appendChild(ov);}
+function isCurr(m){
+  try{
+    var M=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    var p=(m||"").split(" ");
+    if(p.length<2)return true;
+    var mi=M.indexOf(p[0]),yi=parseInt(p[1]);
+    if(isNaN(yi)||mi<0)return true;
+    var n=new Date();
+    if(yi>n.getFullYear())return true;
+    if(yi<n.getFullYear())return false;
+    return mi>=n.getMonth();
+  }catch(e){return true;}
+}
 
-function showToast(msg){var t=document.createElement("div");t.style.cssText="position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1e293b;color:#fff;padding:10px 24px;border-radius:10px;font-size:13px;font-weight:600;z-index:2000;box-shadow:0 4px 20px rgba(0,0,0,.2)";t.textContent=msg;document.body.appendChild(t);setTimeout(function(){t.style.opacity="0";t.style.transition="opacity .3s";setTimeout(function(){t.remove();},300);},2500);}
+function displayDate(d){
+  if(!d)return"";
+  var m=d.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(m)return m[3]+"."+m[2]+"."+m[1];
+  return d;
+}
+
+function dueTag(d,status){
+  if(!d||!isCurr(actMonth))return null;
+  if(status&&status.toLowerCase().indexOf("paid")>=0)return null;
+  var dt=d;
+  if(!/^\d{4}-/.test(dt))dt=parseDate(dt);
+  try{
+    var dd=new Date(dt+"T00:00:00"),now=new Date();
+    now.setHours(0,0,0,0);
+    var diff=Math.ceil((dd-now)/864e5);
+    if(diff<0)return{l:"Overdue ("+Math.abs(diff)+"d)",c:"#dc2626",b:"#fef2f2"};
+    if(diff===0)return{l:"Due Today!",c:"#dc2626",b:"#fef2f2"};
+    if(diff<=3)return{l:"Due in "+diff+"d",c:"#ea580c",b:"#fff7ed"};
+    if(diff<=5)return{l:"Due in "+diff+"d",c:"#d97706",b:"#fffbeb"};
+    if(diff<=7)return{l:"Due in "+diff+"d",c:"#ca8a04",b:"#fefce8"};
+    return{l:"Due in "+diff+"d",c:"#16a34a",b:"#f0fdf4"};
+  }catch(e){return null;}
+}
+
+function getStats(d){
+  var now=new Date();now.setHours(0,0,0,0);
+  var o=0,t=0,w5=0,w7=0,amt=0,oAmt=0,tAmt=0,w5Amt=0,w7Amt=0,ic=isCurr(actMonth);
+  d.forEach(function(r){
+    var a=parseFloat(r.amount)||0;
+    if(a>0)amt+=a;
+    if(!ic||!r.dueDate)return;
+    var paid=(r.status||"").toLowerCase().indexOf("paid")>=0;
+    if(paid)return;
+    var dt=r.dueDate;
+    if(!/^\d{4}-/.test(dt))dt=parseDate(dt);
+    var dd=new Date(dt+"T00:00:00");
+    if(isNaN(dd.getTime()))return;
+    var diff=Math.ceil((dd-now)/864e5);
+    if(diff<0){o++;oAmt+=a;}
+    if(diff===0){t++;tAmt+=a;}
+    if(diff>=0&&diff<=5){w5++;w5Amt+=a;}
+    if(diff>=0&&diff<=7){w7++;w7Amt+=a;}
+  });
+  return{ov:o,td:t,w5:w5,w7:w7,total:d.length,amt:amt,oAmt:oAmt,tAmt:tAmt,w5Amt:w5Amt,w7Amt:w7Amt};
+}
+
+function getF(){
+  var d=gd().slice();
+  if(srch){var s=srch.toLowerCase();d=d.filter(function(r){return r.location.toLowerCase().indexOf(s)>=0||r.ca.indexOf(s)>=0||r.brand.toLowerCase().indexOf(s)>=0;});}
+  if(compF!=="all")d=d.filter(function(r){return r.company===compF;});
+  if(brandF!=="all")d=d.filter(function(r){return r.brand===brandF;});
+  if(flt!=="all"&&isCurr(actMonth)){
+    var now=new Date();now.setHours(0,0,0,0);
+    d=d.filter(function(r){
+      if(!r.dueDate)return false;
+      var paid=(r.status||"").toLowerCase().indexOf("paid")>=0;
+      if(paid)return false;
+      var dt=r.dueDate;
+      if(!/^\d{4}-/.test(dt))dt=parseDate(dt);
+      var dd=new Date(dt+"T00:00:00");
+      if(isNaN(dd.getTime()))return false;
+      var diff=Math.ceil((dd-now)/864e5);
+      if(flt==="overdue")return diff<0;
+      if(flt==="today")return diff===0;
+      if(flt==="5days")return diff>=0&&diff<=5;
+      if(flt==="7days")return diff>=0&&diff<=7;
+      return true;
+    });
+  }
+  if(sCol)d.sort(function(a,b){var va=a[sCol]||"",vb=b[sCol]||"";if(sCol==="amount"){va=parseFloat(va)||0;vb=parseFloat(vb)||0;}return va<vb?(sDir==="asc"?-1:1):va>vb?(sDir==="asc"?1:-1):0;});
+  return d;
+}
+
+/* ========================================= */
+/* ===== CSV/EXCEL IMPORT ===== */
+/* ========================================= */
+var COL_MAP={"location":["location","store","site","place","loc"],"brand":["brand","brand name"],"company":["company","electricity company","elec company","provider","discom"],"ca":["ca","ca no","ca no.","ca number","consumer no","consumer number","account"],"billDate":["bill date","billdate","billing date"],"amount":["amount","amt","bill amount","rs amount","bill amt","total"],"dueDate":["due date","duedate","due","payment due","due by","last date","status payment date","status payment date","status and payment date"],"status":["status","payment status","paid","payment"],"remarks":["remarks","remark","notes","note","comment","comments"],"billLink":["bill link","billlink","bill url"],"receiptLink":["receipt link","receiptlink","receipt url"]};
+
+function matchCol(header){
+  var raw=header.toLowerCase().trim();
+  if(raw==="s.no"||raw==="s no"||raw==="sno"||raw==="#"||raw==="sr"||raw==="sr no"||raw==="sr."||raw==="sr.no")return null;
+  if(raw==="bill no"||raw==="bill no."||raw==="bill number"||raw==="billno")return null;
+  if(raw==="status & payment date"||raw==="status &amp; payment date"||raw==="status and payment date")return"dueDate";
+  if(raw==="₹ amount"||raw==="rs amount"||raw==="bill amount"||raw==="amount")return"amount";
+  if(raw==="electricity company")return"company";
+  if(raw==="ca no."||raw==="ca no"||raw==="ca number")return"ca";
+  if(raw==="due date")return"dueDate";
+  if(raw==="bill date")return"billDate";
+  if(raw==="bill link")return"billLink";
+  if(raw==="receipt link")return"receiptLink";
+  if(raw==="location")return"location";
+  if(raw==="brand")return"brand";
+  if(raw==="status")return"status";
+  if(raw==="remarks"||raw==="remark")return"remarks";
+  var h=raw.replace(/[₹&]/g,"").replace(/[^a-z0-9 ]/g," ").replace(/\s+/g," ").trim();
+  for(var field in COL_MAP){for(var i=0;i<COL_MAP[field].length;i++){if(h===COL_MAP[field][i])return field;}}
+  for(var field in COL_MAP){for(var i=0;i<COL_MAP[field].length;i++){if(h.indexOf(COL_MAP[field][i])>=0)return field;}}
+  return null;
+}
+
+function parseImportRows(sheet){
+  var json=XLSX.utils.sheet_to_json(sheet,{header:1,defval:"",raw:true});
+  if(!json||json.length<2)return{headers:[],rows:[],mapped:{}};
+  var rawH=json[0].map(function(h){return String(h).trim();});
+  var mapped={};
+  rawH.forEach(function(h,i){var m=matchCol(h);if(m)mapped[m]=i;});
+  var rows=[];
+  for(var r=1;r<json.length;r++){
+    var row=json[r];var empty=true;
+    for(var c=0;c<row.length;c++){if(String(row[c]).trim()){empty=false;break;}}
+    if(!empty)rows.push(row);
+  }
+  return{headers:rawH,rows:rows,mapped:mapped};
+}
+
+function parseDate(v){
+  if(!v&&v!==0)return"";
+  if(v instanceof Date){if(!isNaN(v.getTime()))return v.getFullYear()+"-"+String(v.getMonth()+1).padStart(2,"0")+"-"+String(v.getDate()).padStart(2,"0");return"";}
+  if(typeof v==="number"){if(v>30000&&v<60000){var d=new Date(Math.round((v-25569)*86400*1000));if(!isNaN(d.getTime()))return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}return"";}
+  var s=String(v).trim();
+  if(!s)return"";
+  if(/^\d{4}-\d{2}-\d{2}$/.test(s))return s;
+  var md=s.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/);
+  if(md)return md[3]+"-"+String(md[2]).padStart(2,"0")+"-"+String(md[1]).padStart(2,"0");
+  var m=s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+  if(m){var day=parseInt(m[1]),mon=parseInt(m[2]);if(day>12)return m[3]+"-"+String(m[2]).padStart(2,"0")+"-"+String(m[1]).padStart(2,"0");if(mon>12)return m[3]+"-"+String(m[1]).padStart(2,"0")+"-"+String(m[2]).padStart(2,"0");return m[3]+"-"+String(m[2]).padStart(2,"0")+"-"+String(m[1]).padStart(2,"0");}
+  var m3=s.match(/^(\d{4})[\/\-\.](\d{1,2})[\/\-\.](\d{1,2})$/);
+  if(m3)return m3[1]+"-"+String(m3[2]).padStart(2,"0")+"-"+String(m3[3]).padStart(2,"0");
+  var m4=s.match(/^(\d{4})-(\d{2})-(\d{2})T/);
+  if(m4)return m4[1]+"-"+m4[2]+"-"+m4[3];
+  var d2=new Date(s);
+  if(!isNaN(d2.getTime())&&d2.getFullYear()>2000)return d2.getFullYear()+"-"+String(d2.getMonth()+1).padStart(2,"0")+"-"+String(d2.getDate()).padStart(2,"0");
+  return s;
+}
+
+function rowToRecord(row,mapped){
+  function g(field){if(mapped[field]===undefined)return"";var v=row[mapped[field]];return v===undefined||v===null?"":String(v).trim();}
+  function gd(field){if(mapped[field]===undefined)return"";var v=row[mapped[field]];if(v===undefined||v===null)return"";return parseDate(v);}
+  return{id:String(_n++),location:g("location"),brand:g("brand"),company:g("company"),ca:g("ca"),billDate:gd("billDate"),amount:g("amount"),dueDate:gd("dueDate"),status:g("status"),remarks:g("remarks"),billLink:g("billLink"),receiptLink:g("receiptLink")};
+}
+
+function showImportModal(parsed){
+  var ov=document.createElement("div");ov.className="mo";
+  ov.addEventListener("click",function(e){if(e.target===ov)ov.remove();});
+  var md=document.createElement("div");md.className="md";md.style.width="750px";
+  var h2=document.createElement("h2");h2.textContent="📥 Import Data → "+actMonth;md.appendChild(h2);
+  var info=document.createElement("div");info.className="imp-info";
+  var mappedFields=Object.keys(parsed.mapped);
+  info.innerHTML="<b>"+parsed.rows.length+" rows</b> found with <b>"+mappedFields.length+"</b> columns matched: "+mappedFields.join(", ");
+  md.appendChild(info);
+  var unmapped=[];parsed.headers.forEach(function(h){if(!matchCol(h))unmapped.push(h);});
+  if(unmapped.length){var warn=document.createElement("div");warn.className="imp-warn";warn.innerHTML="⚠️ Skipped columns: <b>"+unmapped.map(function(u){return E(u);}).join(", ")+"</b>";md.appendChild(warn);}
+  var pw=document.createElement("div");pw.className="imp-preview";
+  var pt='<table><thead><tr>';
+  var showCols=["location","brand","company","ca","amount","dueDate","status","remarks"];
+  showCols.forEach(function(c){pt+="<th>"+c+"</th>";});
+  pt+="</tr></thead><tbody>";
+  var previewN=Math.min(parsed.rows.length,8);
+  for(var i=0;i<previewN;i++){var rec=rowToRecord(parsed.rows[i],parsed.mapped);pt+="<tr>";showCols.forEach(function(c){pt+="<td>"+E(rec[c]||"—")+"</td>";});pt+="</tr>";}
+  if(parsed.rows.length>8)pt+='<tr><td colspan="'+showCols.length+'" style="text-align:center;color:#94a3b8;padding:6px">... and '+(parsed.rows.length-8)+' more rows</td></tr>';
+  pt+="</tbody></table>";pw.innerHTML=pt;md.appendChild(pw);
+  var btns=document.createElement("div");btns.className="mbtn";btns.style.marginTop="14px";
+  var cb=document.createElement("button");cb.className="mcn";cb.textContent="Cancel";
+  cb.addEventListener("click",function(){ov.remove();});
+  var sb=document.createElement("button");sb.className="msv";sb.style.cssText="background:#22c55e;padding:8px 24px;font-size:13px";
+  sb.textContent="✓ Import "+parsed.rows.length+" Rows";
+  sb.addEventListener("click",function(){
+    var newData=[];for(var j=0;j<parsed.rows.length;j++)newData.push(rowToRecord(parsed.rows[j],parsed.mapped));
+    allData[actMonth]=newData;sd(newData);ov.remove();render();showToast("✅ Imported "+newData.length+" rows");
+  });
+  btns.appendChild(cb);btns.appendChild(sb);md.appendChild(btns);ov.appendChild(md);document.body.appendChild(ov);
+}
+
+function showToast(msg){
+  var t=document.createElement("div");
+  t.style.cssText="position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1e293b;color:#fff;padding:10px 24px;border-radius:10px;font-size:13px;font-weight:600;z-index:2000;box-shadow:0 4px 20px rgba(0,0,0,.2)";
+  t.textContent=msg;document.body.appendChild(t);
+  setTimeout(function(){t.style.opacity="0";t.style.transition="opacity .3s";setTimeout(function(){t.remove();},300);},2500);
+}
+
 function triggerImport(){var inp=document.getElementById("csvFileInput");inp.value="";inp.click();}
-document.getElementById("csvFileInput").addEventListener("change",function(e){var file=e.target.files[0];if(!file)return;var reader=new FileReader();reader.onload=function(evt){try{var data=new Uint8Array(evt.target.result);var wb=XLSX.read(data,{type:"array",cellDates:true,raw:false});var ws=wb.Sheets[wb.SheetNames[0]];var parsed=parseImportRows(ws);if(!parsed.rows.length){alert("No data rows found.");return;}showImportModal(parsed);}catch(err){alert("Error: "+err.message);}};reader.readAsArrayBuffer(file);});
-function exportCSV(){var d=gd();var hd=["S.No","Location","Brand","Electricity Company","CA No.","Bill Date","Amount","Due Date","Status & Payment Date","Remarks","Bill Link","Receipt Link"];var lines=[hd.join(",")];d.forEach(function(r,i){var row=[i+1,'"'+r.location.replace(/"/g,'""')+'"','"'+r.brand.replace(/"/g,'""')+'"','"'+r.company.replace(/"/g,'""')+'"','"'+r.ca+'"',r.billDate,r.amount,r.dueDate,'"'+(r.status||"").replace(/"/g,'""')+'"','"'+(r.remarks||"").replace(/"/g,'""')+'"',r.billLink,r.receiptLink];lines.push(row.join(","));});var blob=new Blob([lines.join("\n")],{type:"text/csv;charset=utf-8;"});var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="Electricity_"+actMonth.replace(" ","_")+".csv";a.click();}
 
-function showAddCompany(){var ov=document.createElement("div");ov.className="mo";ov.addEventListener("click",function(e){if(e.target===ov)ov.remove();});var md=document.createElement("div");md.className="md";md.style.width="440px";var h2=document.createElement("h2");h2.textContent="🏢 Add New Electricity Company";md.appendChild(h2);var info=document.createElement("div");info.className="imp-info";info.innerHTML="Currently <b>"+Object.keys(CU).length+"</b> companies. Add new:";md.appendChild(info);var lb1=document.createElement("label");lb1.textContent="Company Name *";md.appendChild(lb1);var inp1=document.createElement("input");inp1.id="nc_name";inp1.placeholder="e.g. KSEB, TPDDL...";md.appendChild(inp1);var lb2=document.createElement("label");lb2.textContent="Payment Portal URL";md.appendChild(lb2);var inp2=document.createElement("input");inp2.id="nc_url";inp2.placeholder="https://...";md.appendChild(inp2);var btns=document.createElement("div");btns.className="mbtn";var cb=document.createElement("button");cb.className="mcn";cb.textContent="Cancel";cb.addEventListener("click",function(){ov.remove();});var sb=document.createElement("button");sb.className="msv";sb.textContent="+ Add";sb.addEventListener("click",function(){var name=document.getElementById("nc_name").value.trim();if(!name){alert("Name required");return;}if(CU[name]){alert("Exists!");return;}addCompany(name,document.getElementById("nc_url").value.trim()||"#");ov.remove();render();showToast("✅ Added "+name);});btns.appendChild(cb);btns.appendChild(sb);md.appendChild(btns);ov.appendChild(md);document.body.appendChild(ov);}
-
-/* ===== RENDER ===== */
-function render(){
-var scEl=document.querySelector(".ts");var scTop=scEl?scEl.scrollTop:0;
-var data=gd(),st=getStats(data),f=getF();
-var cos={},brs={};data.forEach(function(r){cos[r.company]=1;if(r.brand)brs[r.brand]=1;});
-var coList=Object.keys(cos).sort(),brList=Object.keys(brs).sort();
-var months=Object.keys(allData).sort(mSort);
-var h="";
-var syncDot='<span class="synci '+syncStatus+'" title="'+(syncStatus==="ok"?"Synced":syncStatus==="saving"?"Saving...":"Error")+'"></span>';
-
-h+='<div class="header"><div><h1>⚡ Pan India Electricity Dashboard 2026 '+syncDot+'</h1>';
-h+='<p>'+E(actMonth)+' · '+st.total+' stores · Total: ₹'+st.amt.toLocaleString("en-IN");
-h+=' <a href="'+BILL_FOLDER+'" target="_blank" class="df" style="background:#e8f5e9;color:#2e7d32">📁 Bills</a>';
-h+=' <a href="'+RCPT_FOLDER+'" target="_blank" class="df" style="background:#e8eaf6;color:#3949ab">🧾 Receipts</a>';
-h+='</p></div><div style="display:flex;gap:6px;flex-wrap:wrap">';
-h+='<button class="hbtn" onclick="triggerImport()" style="background:rgba(34,197,94,.3);border-color:rgba(34,197,94,.5)">📤 Import CSV/Excel</button>';
-h+='<button class="hbtn" onclick="exportCSV()">📥 Export CSV</button>';
-h+='<button class="hbtn" onclick="expMonth()">📥 Export Excel</button>';
-h+='<button class="hbtn" onclick="expAll()">📥 Export All</button>';
-h+='<button class="hbtn" onclick="showAddCompany()" style="background:rgba(168,85,247,.3);border-color:rgba(168,85,247,.5)">🏢 Companies</button>';
-h+='<button class="hbtn" onclick="saveAllToDB()" style="background:rgba(34,197,94,.4);border-color:rgba(34,197,94,.6)">☁️ Sync All</button>';
-h+='<button class="hbtn" onclick="loadFromDB()">🔄 Reload</button>';
-h+='<button class="hbtn" onclick="addMonth()">+ New Month</button>';
-h+='<button class="hbtn" onclick="resetM()">Reset Month</button>';
-h+='</div></div>';
-
-h+='<div class="tabs">';months.forEach(function(m){var act=m===actMonth;h+='<button class="tab'+(act?" act":"")+'" onclick="switchM(\''+E(m)+'\')">'+E(m)+'<span class="cnt">'+(allData[m]||[]).length+'</span>';if(act)h+='<button class="tdel" onclick="event.stopPropagation();delMonth()" title="Delete month">×</button>';h+='</button>';});h+='</div>';
-
-function sc(lbl,val,col,bg,ft,kpiAmt){var on=flt===ft;var amtStr=kpiAmt>0?'<div class="amt">₹'+kpiAmt.toLocaleString("en-IN")+'</div>':"";return '<div class="sc'+(on?" on":"")+'" onclick="setFlt(\''+ft+'\')" style="color:'+(on?"#fff":col)+';background:'+(on?col:bg)+';border-color:'+(on?col:"transparent")+'"><div class="v">'+val+'</div><div class="l">'+lbl+'</div>'+amtStr+'</div>';}
-h+='<div class="stats">'+sc("All",st.total,"#3b82f6","#eff6ff","all",st.amt)+sc("Overdue",st.ov,"#dc2626","#fef2f2","overdue",st.oAmt)+sc("Due Today",st.td,"#ea580c","#fff7ed","today",st.tAmt)+sc("Within 5d",st.w5,"#d97706","#fffbeb","5days",st.w5Amt)+sc("Within 7d",st.w7,"#16a34a","#f0fdf4","7days",st.w7Amt)+'</div>';
-
-h+='<div class="flt"><div style="position:relative;min-width:240px"><input id="srchInp" placeholder="Search location, CA, brand..." value="'+E(srch)+'" oninput="doSearch(this.value)" autocomplete="off"><div id="srchDrop" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid #e2e8f0;border-radius:0 0 8px 8px;box-shadow:0 4px 16px rgba(0,0,0,.12);max-height:220px;overflow:auto;z-index:100"></div></div>';
-h+='<select onchange="setCompF(this.value)"><option value="all">All Companies</option>';coList.forEach(function(c){h+='<option value="'+E(c)+'"'+(compF===c?' selected':'')+'>'+E(c)+'</option>';});
-h+='</select><select onchange="setBrandF(this.value)"><option value="all">All Brands</option>';brList.forEach(function(b){h+='<option value="'+E(b)+'"'+(brandF===b?' selected':'')+'>'+E(b)+'</option>';});
-h+='</select><span style="font-size:11px;color:#64748b;margin-left:auto">'+f.length+' of '+data.length+'</span></div>';
-
-function sh(col,lbl){var ar=sCol===col?(sDir==="asc"?" ↑":" ↓"):"";return '<th onclick="doSort(\''+col+'\')">'+lbl+ar+'</th>';}
-h+='<div class="tw"><div class="ts"><table><thead><tr><th>#</th>'+sh("location","Location")+sh("brand","Brand")+'<th>Company</th>'+sh("ca","CA No.")+sh("billDate","Bill Date")+sh("amount","₹ Amount")+sh("dueDate","Due Date")+'<th>Alert</th>'+sh("status","Status")+sh("remarks","Remarks")+'<th>Bill</th><th>Receipt</th><th>Del</th></tr></thead><tbody>';
-
-if(!f.length&&!addingRow)h+='<tr><td colspan="14" style="text-align:center;padding:30px;color:#94a3b8">No entries</td></tr>';
-var filtTotal=0;
-f.forEach(function(r,i){
-  var isPd=(r.status||"").toLowerCase().indexOf("paid")>=0;
-  var tag=dueTag(r.dueDate,r.status);var isOD=tag&&(tag.l.indexOf("Overdue")>=0||tag.l.indexOf("Today")>=0);var rc=isOD?"rod":isPd?"rpd":"";
-  filtTotal+=(parseFloat(r.amount)||0);
-  function cell(fd,v,w){if(editing===r.id+"_"+fd){var tp=fd==="dueDate"||fd==="billDate"?' type="date"':"";return'<div class="ce"><input value="'+E(editVal)+'"'+tp+' oninput="editVal=this.value" onkeydown="ck(event,\''+r.id+'\',\''+fd+'\')" autofocus style="width:'+(w?'130':'80')+'px"><button class="sv" onclick="sv(\''+r.id+'\',\''+fd+'\')">✓</button><button class="cn" onclick="cn()">✗</button></div>';}var dv=(fd==="dueDate"||fd==="billDate")?displayDate(v):v;return'<span class="cl'+(dv?"":" mt")+'" onclick="se(\''+r.id+'\',\''+fd+'\')">'+E(dv||"—")+'</span>';}
-  var caH;if(editing===r.id+"_ca"){caH='<div class="ce"><input value="'+E(editVal)+'" oninput="editVal=this.value" onkeydown="ck(event,\''+r.id+'\',\'ca\')" autofocus style="width:130px"><button class="sv" onclick="sv(\''+r.id+'\',\'ca\')">✓</button><button class="cn" onclick="cn()">✗</button></div>';}else{caH='<span class="cat">'+E(r.ca||"—")+'</span><button class="cab" onclick="se(\''+r.id+'\',\'ca\')">✎</button>';}
-  var tagH=tag?'<span class="tag" style="color:'+tag.c+';background:'+tag.b+';border:1px solid '+tag.c+'22">'+tag.l+'</span>':'<span style="color:#cbd5e1;font-size:10px">—</span>';
-  var bH;if(editing===r.id+"_billLink"){bH='<div class="ce"><input value="'+E(editVal)+'" oninput="editVal=this.value" onkeydown="ck(event,\''+r.id+'\',\'billLink\')" placeholder="Paste link" autofocus style="width:130px"><button class="sv" onclick="sv(\''+r.id+'\',\'billLink\')">✓</button><button class="cn" onclick="cn()">✗</button></div>';}else if(r.billLink){bH='<div class="ba"><button class="vb" style="background:#dbeafe;color:#2563eb" onclick="prevFile(\''+r.id+'\',\'bill\')">📄View</button><button class="eb" onclick="se(\''+r.id+'\',\'billLink\')">✎</button><button class="rb" onclick="rmF(\''+r.id+'\',\'billLink\')">✗</button></div>';}else{bH='<button class="ub" onclick="upFlow(\''+r.id+'\',\'bill\')">📤 Upload</button>';}
-  var rH;if(editing===r.id+"_receiptLink"){rH='<div class="ce"><input value="'+E(editVal)+'" oninput="editVal=this.value" onkeydown="ck(event,\''+r.id+'\',\'receiptLink\')" placeholder="Paste link" autofocus style="width:130px"><button class="sv" onclick="sv(\''+r.id+'\',\'receiptLink\')">✓</button><button class="cn" onclick="cn()">✗</button></div>';}else if(r.receiptLink){rH='<div class="ba"><button class="vb" style="background:#dcfce7;color:#16a34a" onclick="prevFile(\''+r.id+'\',\'receipt\')">🧾View</button><button class="eb" onclick="se(\''+r.id+'\',\'receiptLink\')">✎</button><button class="rb" onclick="rmF(\''+r.id+'\',\'receiptLink\')">✗</button></div>';}else{rH='<button class="ub" onclick="upFlow(\''+r.id+'\',\'receipt\')">📤 Upload</button>';}
-  h+='<tr class="'+rc+'"><td style="font-size:10px;color:#94a3b8">'+(i+1)+'</td><td style="font-weight:600;min-width:130px">'+cell("location",r.location,true)+'</td><td style="min-width:70px">'+cell("brand",r.brand)+'</td><td style="min-width:100px"><a href="'+getUrl(r.company)+'" target="_blank" class="lk">'+E(r.company)+' ↗</a></td><td class="cac">'+caH+'</td><td style="min-width:90px">'+cell("billDate",r.billDate,true)+'</td><td style="font-weight:600">'+cell("amount",r.amount)+'</td><td style="min-width:100px">'+cell("dueDate",r.dueDate,true)+'</td><td>'+tagH+'</td><td style="min-width:90px">'+cell("status",r.status,true)+'</td><td style="min-width:100px;max-width:160px">'+cell("remarks",r.remarks,true)+'</td><td class="bc">'+bH+'</td><td class="bc">'+rH+'</td><td style="text-align:center"><button class="del" onclick="delR(\''+r.id+'\')">🗑</button></td></tr>';
+document.getElementById("csvFileInput").addEventListener("change",function(e){
+  var file=e.target.files[0];if(!file)return;
+  var reader=new FileReader();
+  reader.onload=function(evt){
+    try{
+      var data=new Uint8Array(evt.target.result);
+      var wb=XLSX.read(data,{type:"array",cellDates:true,raw:false});
+      var ws=wb.Sheets[wb.SheetNames[0]];
+      var parsed=parseImportRows(ws);
+      if(!parsed.rows.length){alert("No data rows found.");return;}
+      showImportModal(parsed);
+    }catch(err){alert("Error: "+err.message);}
+  };
+  reader.readAsArrayBuffer(file);
 });
 
-// Total row
-if(f.length>0){
-  h+='<tr class="totrow"><td colspan="6" style="text-align:right;font-size:11px;padding-right:10px">TOTAL ('+f.length+' bills)</td><td style="font-size:13px;color:#1e40af">₹'+filtTotal.toLocaleString("en-IN")+'</td><td colspan="7"></td></tr>';
+function exportCSV(){
+  var d=gd();
+  var hd=["S.No","Location","Brand","Electricity Company","CA No.","Bill Date","Amount","Due Date","Status & Payment Date","Remarks","Bill Link","Receipt Link"];
+  var lines=[hd.join(",")];
+  d.forEach(function(r,i){
+    var row=[i+1,'"'+r.location.replace(/"/g,'""')+'"','"'+r.brand.replace(/"/g,'""')+'"','"'+r.company.replace(/"/g,'""')+'"','"'+r.ca+'"',r.billDate,r.amount,r.dueDate,'"'+(r.status||"").replace(/"/g,'""')+'"','"'+(r.remarks||"").replace(/"/g,'""')+'"',r.billLink,r.receiptLink];
+    lines.push(row.join(","));
+  });
+  var blob=new Blob([lines.join("\n")],{type:"text/csv;charset=utf-8;"});
+  var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="Electricity_"+actMonth.replace(" ","_")+".csv";a.click();
 }
 
-if(addingRow){var coOpts='';Object.keys(CU).forEach(function(c){coOpts+='<option value="'+E(c)+'">'+E(c)+'</option>';});h+='<tr class="newrow"><td style="font-size:10px;color:#3b82f6;font-weight:700;text-align:center">NEW</td><td><input class="nr-inp" id="nr_loc" placeholder="Location *"></td><td><input class="nr-inp" id="nr_brand" placeholder="Brand"></td><td><select class="nr-sel" id="nr_comp">'+coOpts+'</select></td><td><input class="nr-inp" id="nr_ca" placeholder="CA No. *"></td><td><input class="nr-inp" id="nr_bdate" type="date"></td><td><input class="nr-inp" id="nr_amt" placeholder="Amount"></td><td><input class="nr-inp" id="nr_due" type="date"></td><td style="color:#cbd5e1;font-size:10px;text-align:center">—</td><td><input class="nr-inp" id="nr_stat" placeholder="Status"></td><td><input class="nr-inp" id="nr_rem" placeholder="Remarks"></td><td colspan="2" style="text-align:center"><button class="nr-save" onclick="saveNewRow()">✓ Save</button></td><td style="text-align:center"><button class="nr-cancel" onclick="cancelNewRow()">✗</button></td></tr>';}
-h+='<tr><td colspan="14" style="padding:4px 8px;border:none"><button class="add-row-btn" onclick="startAddRow()">+ Add New Store</button></td></tr>';
-h+='</tbody></table></div></div>';
-h+='<div class="ft"><span>☁️ Supabase connected · Auto-saves on edit · Click cells to edit</span><span>Pan India Electricity 2026</span></div>';
-
-document.getElementById("app").innerHTML=h;
-var ns=document.querySelector(".ts");if(ns&&scTop)ns.scrollTop=scTop;
-if(addingRow){var ts=document.querySelector(".ts");if(ts)ts.scrollTop=ts.scrollHeight;var li=document.getElementById("nr_loc");if(li)li.focus();}
-var ai=document.querySelector("input[autofocus]");if(ai){ai.focus();ai.selectionStart=ai.value.length;}
+function showAddCompany(){
+  var ov=document.createElement("div");ov.className="mo";
+  ov.addEventListener("click",function(e){if(e.target===ov)ov.remove();});
+  var md=document.createElement("div");md.className="md";md.style.width="440px";
+  var h2=document.createElement("h2");h2.textContent="🏢 Add New Electricity Company";md.appendChild(h2);
+  var info=document.createElement("div");info.className="imp-info";info.innerHTML="Currently <b>"+Object.keys(CU).length+"</b> companies. Add new:";md.appendChild(info);
+  var lb1=document.createElement("label");lb1.textContent="Company Name *";md.appendChild(lb1);
+  var inp1=document.createElement("input");inp1.id="nc_name";inp1.placeholder="e.g. KSEB, TPDDL...";md.appendChild(inp1);
+  var lb2=document.createElement("label");lb2.textContent="Payment Portal URL";md.appendChild(lb2);
+  var inp2=document.createElement("input");inp2.id="nc_url";inp2.placeholder="https://...";md.appendChild(inp2);
+  var btns=document.createElement("div");btns.className="mbtn";
+  var cb=document.createElement("button");cb.className="mcn";cb.textContent="Cancel";
+  cb.addEventListener("click",function(){ov.remove();});
+  var sb=document.createElement("button");sb.className="msv";sb.textContent="+ Add";
+  sb.addEventListener("click",function(){
+    var name=document.getElementById("nc_name").value.trim();
+    if(!name){alert("Name required");return;}
+    if(CU[name]){alert("Exists!");return;}
+    addCompany(name,document.getElementById("nc_url").value.trim()||"#");ov.remove();render();showToast("✅ Added "+name);
+  });
+  btns.appendChild(cb);btns.appendChild(sb);md.appendChild(btns);ov.appendChild(md);document.body.appendChild(ov);
 }
 
-/* ===== ACTIONS (unchanged logic, sd() now triggers DB save) ===== */
+/* ========================================= */
+/* ===== RENDER ===== */
+/* ========================================= */
+function render(){
+  var scEl=document.querySelector(".ts");var scTop=scEl?scEl.scrollTop:0;
+  var data=gd(),st=getStats(data),f=getF();
+  var cos={},brs={};
+  data.forEach(function(r){cos[r.company]=1;if(r.brand)brs[r.brand]=1;});
+  var coList=Object.keys(cos).sort(),brList=Object.keys(brs).sort();
+  var months=Object.keys(allData).sort(mSort);
+  var h="";
+  var syncDot='<span class="synci '+syncStatus+'" title="'+(syncStatus==="ok"?"Synced":syncStatus==="saving"?"Saving...":"Error")+'"></span>';
+
+  h+='<div class="header"><div><h1>⚡ Pan India Electricity Dashboard 2026 '+syncDot+'</h1>';
+  h+='<p>'+E(actMonth)+' · '+st.total+' stores · Total: ₹'+st.amt.toLocaleString("en-IN");
+  h+=' <a href="'+BILL_FOLDER+'" target="_blank" class="df" style="background:#e8f5e9;color:#2e7d32">📁 Bills</a>';
+  h+=' <a href="'+RCPT_FOLDER+'" target="_blank" class="df" style="background:#e8eaf6;color:#3949ab">🧾 Receipts</a>';
+  h+='</p></div><div style="display:flex;gap:6px;flex-wrap:wrap">';
+  h+='<button class="hbtn" onclick="triggerImport()" style="background:rgba(34,197,94,.3);border-color:rgba(34,197,94,.5)">📤 Import CSV/Excel</button>';
+  h+='<button class="hbtn" onclick="exportCSV()">📥 Export CSV</button>';
+  h+='<button class="hbtn" onclick="expMonth()">📥 Export Excel</button>';
+  h+='<button class="hbtn" onclick="expAll()">📥 Export All</button>';
+  h+='<button class="hbtn" onclick="showAddCompany()" style="background:rgba(168,85,247,.3);border-color:rgba(168,85,247,.5)">🏢 Companies</button>';
+  h+='<button class="hbtn" onclick="saveAllToDB()" style="background:rgba(34,197,94,.4);border-color:rgba(34,197,94,.6)">☁️ Sync All</button>';
+  h+='<button class="hbtn" onclick="loadFromDB()">🔄 Reload</button>';
+  h+='<button class="hbtn" onclick="addMonth()">+ New Month</button>';
+  h+='<button class="hbtn" onclick="resetM()">Reset Month</button>';
+  h+='<button class="hbtn" onclick="doLogout()" style="background:rgba(239,68,68,.3);border-color:rgba(239,68,68,.5)">🔒 Logout</button>';
+  h+='</div></div>';
+
+  h+='<div class="tabs">';
+  months.forEach(function(m){
+    var act=m===actMonth;
+    h+='<button class="tab'+(act?" act":"")+'" onclick="switchM(\''+E(m)+'\')">'+E(m)+'<span class="cnt">'+(allData[m]||[]).length+'</span>';
+    if(act)h+='<button class="tdel" onclick="event.stopPropagation();delMonth()" title="Delete month">×</button>';
+    h+='</button>';
+  });
+  h+='</div>';
+
+  function sc(lbl,val,col,bg,ft,kpiAmt){
+    var on=flt===ft;
+    var amtStr=kpiAmt>0?'<div class="amt">₹'+kpiAmt.toLocaleString("en-IN")+'</div>':"";
+    return '<div class="sc'+(on?" on":"")+'" onclick="setFlt(\''+ft+'\')" style="color:'+(on?"#fff":col)+';background:'+(on?col:bg)+';border-color:'+(on?col:"transparent")+'"><div class="v">'+val+'</div><div class="l">'+lbl+'</div>'+amtStr+'</div>';
+  }
+  h+='<div class="stats">'+sc("All",st.total,"#3b82f6","#eff6ff","all",st.amt)+sc("Overdue",st.ov,"#dc2626","#fef2f2","overdue",st.oAmt)+sc("Due Today",st.td,"#ea580c","#fff7ed","today",st.tAmt)+sc("Within 5d",st.w5,"#d97706","#fffbeb","5days",st.w5Amt)+sc("Within 7d",st.w7,"#16a34a","#f0fdf4","7days",st.w7Amt)+'</div>';
+
+  h+='<div class="flt"><div style="position:relative;min-width:240px"><input id="srchInp" placeholder="Search location, CA, brand..." value="'+E(srch)+'" oninput="doSearch(this.value)" autocomplete="off"><div id="srchDrop" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid #e2e8f0;border-radius:0 0 8px 8px;box-shadow:0 4px 16px rgba(0,0,0,.12);max-height:220px;overflow:auto;z-index:100"></div></div>';
+  h+='<select onchange="setCompF(this.value)"><option value="all">All Companies</option>';
+  coList.forEach(function(c){h+='<option value="'+E(c)+'"'+(compF===c?' selected':'')+'>'+E(c)+'</option>';});
+  h+='</select><select onchange="setBrandF(this.value)"><option value="all">All Brands</option>';
+  brList.forEach(function(b){h+='<option value="'+E(b)+'"'+(brandF===b?' selected':'')+'>'+E(b)+'</option>';});
+  h+='</select><span style="font-size:11px;color:#64748b;margin-left:auto">'+f.length+' of '+data.length+'</span></div>';
+
+  function sh(col,lbl){var ar=sCol===col?(sDir==="asc"?" ↑":" ↓"):"";return '<th onclick="doSort(\''+col+'\')">'+lbl+ar+'</th>';}
+  h+='<div class="tw"><div class="ts"><table><thead><tr><th>#</th>'+sh("location","Location")+sh("brand","Brand")+'<th>Company</th>'+sh("ca","CA No.")+sh("billDate","Bill Date")+sh("amount","₹ Amount")+sh("dueDate","Due Date")+'<th>Alert</th>'+sh("status","Status")+sh("remarks","Remarks")+'<th>Bill</th><th>Receipt</th><th>Del</th></tr></thead><tbody>';
+
+  if(!f.length&&!addingRow)h+='<tr><td colspan="14" style="text-align:center;padding:30px;color:#94a3b8">No entries</td></tr>';
+
+  var filtTotal=0;
+  f.forEach(function(r,i){
+    var isPd=(r.status||"").toLowerCase().indexOf("paid")>=0;
+    var tag=dueTag(r.dueDate,r.status);
+    var isOD=tag&&(tag.l.indexOf("Overdue")>=0||tag.l.indexOf("Today")>=0);
+    var rc=isOD?"rod":isPd?"rpd":"";
+    filtTotal+=(parseFloat(r.amount)||0);
+
+    function cell(fd,v,w){
+      if(editing===r.id+"_"+fd){
+        var tp=fd==="dueDate"||fd==="billDate"?' type="date"':"";
+        return'<div class="ce"><input value="'+E(editVal)+'"'+tp+' oninput="editVal=this.value" onkeydown="ck(event,\''+r.id+'\',\''+fd+'\')" autofocus style="width:'+(w?'130':'80')+'px"><button class="sv" onclick="sv(\''+r.id+'\',\''+fd+'\')">✓</button><button class="cn" onclick="cn()">✗</button></div>';
+      }
+      var dv=(fd==="dueDate"||fd==="billDate")?displayDate(v):v;
+      return'<span class="cl'+(dv?"":" mt")+'" onclick="se(\''+r.id+'\',\''+fd+'\')">'+E(dv||"—")+'</span>';
+    }
+
+    var caH;
+    if(editing===r.id+"_ca"){
+      caH='<div class="ce"><input value="'+E(editVal)+'" oninput="editVal=this.value" onkeydown="ck(event,\''+r.id+'\',\'ca\')" autofocus style="width:130px"><button class="sv" onclick="sv(\''+r.id+'\',\'ca\')">✓</button><button class="cn" onclick="cn()">✗</button></div>';
+    }else{
+      caH='<span class="cat">'+E(r.ca||"—")+'</span><button class="cab" onclick="se(\''+r.id+'\',\'ca\')">✎</button>';
+    }
+
+    var tagH=tag?'<span class="tag" style="color:'+tag.c+';background:'+tag.b+';border:1px solid '+tag.c+'22">'+tag.l+'</span>':'<span style="color:#cbd5e1;font-size:10px">—</span>';
+
+    var bH;
+    if(editing===r.id+"_billLink"){
+      bH='<div class="ce"><input value="'+E(editVal)+'" oninput="editVal=this.value" onkeydown="ck(event,\''+r.id+'\',\'billLink\')" placeholder="Paste link" autofocus style="width:130px"><button class="sv" onclick="sv(\''+r.id+'\',\'billLink\')">✓</button><button class="cn" onclick="cn()">✗</button></div>';
+    }else if(r.billLink){
+      bH='<div class="ba"><button class="vb" style="background:#dbeafe;color:#2563eb" onclick="prevFile(\''+r.id+'\',\'bill\')">📄View</button><button class="eb" onclick="se(\''+r.id+'\',\'billLink\')">✎</button><button class="rb" onclick="rmF(\''+r.id+'\',\'billLink\')">✗</button></div>';
+    }else{
+      bH='<button class="ub" onclick="upFlow(\''+r.id+'\',\'bill\')">📤 Upload</button>';
+    }
+
+    var rH;
+    if(editing===r.id+"_receiptLink"){
+      rH='<div class="ce"><input value="'+E(editVal)+'" oninput="editVal=this.value" onkeydown="ck(event,\''+r.id+'\',\'receiptLink\')" placeholder="Paste link" autofocus style="width:130px"><button class="sv" onclick="sv(\''+r.id+'\',\'receiptLink\')">✓</button><button class="cn" onclick="cn()">✗</button></div>';
+    }else if(r.receiptLink){
+      rH='<div class="ba"><button class="vb" style="background:#dcfce7;color:#16a34a" onclick="prevFile(\''+r.id+'\',\'receipt\')">🧾View</button><button class="eb" onclick="se(\''+r.id+'\',\'receiptLink\')">✎</button><button class="rb" onclick="rmF(\''+r.id+'\',\'receiptLink\')">✗</button></div>';
+    }else{
+      rH='<button class="ub" onclick="upFlow(\''+r.id+'\',\'receipt\')">📤 Upload</button>';
+    }
+
+    h+='<tr class="'+rc+'"><td style="font-size:10px;color:#94a3b8">'+(i+1)+'</td><td style="font-weight:600;min-width:130px">'+cell("location",r.location,true)+'</td><td style="min-width:70px">'+cell("brand",r.brand)+'</td><td style="min-width:100px"><a href="'+getUrl(r.company)+'" target="_blank" class="lk">'+E(r.company)+' ↗</a></td><td class="cac">'+caH+'</td><td style="min-width:90px">'+cell("billDate",r.billDate,true)+'</td><td style="font-weight:600">'+cell("amount",r.amount)+'</td><td style="min-width:100px">'+cell("dueDate",r.dueDate,true)+'</td><td>'+tagH+'</td><td style="min-width:90px">'+cell("status",r.status,true)+'</td><td style="min-width:100px;max-width:160px">'+cell("remarks",r.remarks,true)+'</td><td class="bc">'+bH+'</td><td class="bc">'+rH+'</td><td style="text-align:center"><button class="del" onclick="delR(\''+r.id+'\')">🗑</button></td></tr>';
+  });
+
+  if(f.length>0){
+    h+='<tr class="totrow"><td colspan="6" style="text-align:right;font-size:11px;padding-right:10px">TOTAL ('+f.length+' bills)</td><td style="font-size:13px;color:#1e40af">₹'+filtTotal.toLocaleString("en-IN")+'</td><td colspan="7"></td></tr>';
+  }
+
+  if(addingRow){
+    var coOpts='';Object.keys(CU).forEach(function(c){coOpts+='<option value="'+E(c)+'">'+E(c)+'</option>';});
+    h+='<tr class="newrow"><td style="font-size:10px;color:#3b82f6;font-weight:700;text-align:center">NEW</td><td><input class="nr-inp" id="nr_loc" placeholder="Location *"></td><td><input class="nr-inp" id="nr_brand" placeholder="Brand"></td><td><select class="nr-sel" id="nr_comp">'+coOpts+'</select></td><td><input class="nr-inp" id="nr_ca" placeholder="CA No. *"></td><td><input class="nr-inp" id="nr_bdate" type="date"></td><td><input class="nr-inp" id="nr_amt" placeholder="Amount"></td><td><input class="nr-inp" id="nr_due" type="date"></td><td style="color:#cbd5e1;font-size:10px;text-align:center">—</td><td><input class="nr-inp" id="nr_stat" placeholder="Status"></td><td><input class="nr-inp" id="nr_rem" placeholder="Remarks"></td><td colspan="2" style="text-align:center"><button class="nr-save" onclick="saveNewRow()">✓ Save</button></td><td style="text-align:center"><button class="nr-cancel" onclick="cancelNewRow()">✗</button></td></tr>';
+  }
+
+  h+='<tr><td colspan="14" style="padding:4px 8px;border:none"><button class="add-row-btn" onclick="startAddRow()">+ Add New Store</button></td></tr>';
+  h+='</tbody></table></div></div>';
+  h+='<div class="ft"><span>☁️ Supabase connected · Auto-saves on edit · Click cells to edit</span><span>Pan India Electricity 2026</span></div>';
+
+  document.getElementById("app").innerHTML=h;
+
+  var ns=document.querySelector(".ts");
+  if(ns&&scTop)ns.scrollTop=scTop;
+  if(addingRow){var ts=document.querySelector(".ts");if(ts)ts.scrollTop=ts.scrollHeight;var li=document.getElementById("nr_loc");if(li)li.focus();}
+  var ai=document.querySelector("input[autofocus]");
+  if(ai){ai.focus();ai.selectionStart=ai.value.length;}
+}
+
+/* ========================================= */
+/* ===== ACTIONS ===== */
+/* ========================================= */
 function startAddRow(){addingRow=true;editing=null;render();}
 function cancelNewRow(){addingRow=false;render();}
-function saveNewRow(){var loc=(document.getElementById("nr_loc").value||"").trim();var ca=(document.getElementById("nr_ca").value||"").trim();if(!loc||!ca){alert("Location & CA required");return;}var d=gd();d.push({id:String(_n++),location:loc,brand:(document.getElementById("nr_brand").value||"").trim(),company:document.getElementById("nr_comp").value,ca:ca,billDate:document.getElementById("nr_bdate").value||"",amount:(document.getElementById("nr_amt").value||"").trim(),dueDate:document.getElementById("nr_due").value||"",status:(document.getElementById("nr_stat").value||"").trim(),remarks:(document.getElementById("nr_rem").value||"").trim(),billLink:"",receiptLink:""});sd(d);addingRow=false;render();}
 
-document.addEventListener("keydown",function(e){if(!addingRow)return;var t=e.target;if(!t||!t.id||!t.id.startsWith("nr_"))return;if(e.key==="Enter"){e.preventDefault();saveNewRow();}if(e.key==="Escape"){e.preventDefault();cancelNewRow();}});
-document.addEventListener("click",function(e){var drop=document.getElementById("srchDrop");var inp=document.getElementById("srchInp");if(drop&&inp&&!inp.contains(e.target)&&!drop.contains(e.target))drop.style.display="none";});
+function saveNewRow(){
+  var loc=(document.getElementById("nr_loc").value||"").trim();
+  var ca=(document.getElementById("nr_ca").value||"").trim();
+  if(!loc||!ca){alert("Location & CA required");return;}
+  var d=gd();
+  d.push({id:String(_n++),location:loc,brand:(document.getElementById("nr_brand").value||"").trim(),company:document.getElementById("nr_comp").value,ca:ca,billDate:document.getElementById("nr_bdate").value||"",amount:(document.getElementById("nr_amt").value||"").trim(),dueDate:document.getElementById("nr_due").value||"",status:(document.getElementById("nr_stat").value||"").trim(),remarks:(document.getElementById("nr_rem").value||"").trim(),billLink:"",receiptLink:""});
+  sd(d);addingRow=false;render();
+}
+
+document.addEventListener("keydown",function(e){
+  if(!addingRow)return;
+  var t=e.target;
+  if(!t||!t.id||!t.id.startsWith("nr_"))return;
+  if(e.key==="Enter"){e.preventDefault();saveNewRow();}
+  if(e.key==="Escape"){e.preventDefault();cancelNewRow();}
+});
+
+document.addEventListener("click",function(e){
+  var drop=document.getElementById("srchDrop");
+  var inp=document.getElementById("srchInp");
+  if(drop&&inp&&!inp.contains(e.target)&&!drop.contains(e.target))drop.style.display="none";
+});
 
 function switchM(m){actMonth=m;editing=null;flt="all";srch="";compF="all";brandF="all";sCol=null;addingRow=false;render();}
 function setFlt(f){flt=f;render();}
 function setSrch(v){srch=v;renderTable();}
-function doSearch(v){srch=v;renderTable();showSuggestions(v);}
-function showSuggestions(v){var drop=document.getElementById("srchDrop");if(!drop)return;if(!v||v.length<1){drop.style.display="none";return;}var s=v.toLowerCase();var data=gd();var seen={};var items=[];data.forEach(function(r){[{type:"📍 Location",val:r.location},{type:"🏷 Brand",val:r.brand},{type:"🔢 CA No.",val:r.ca},{type:"🏢 Company",val:r.company}].forEach(function(f){if(!f.val)return;if(f.val.toLowerCase().indexOf(s)>=0){var key=f.type+":"+f.val;if(!seen[key]){seen[key]=1;items.push(f);}}});});if(!items.length){drop.style.display="none";return;}items=items.slice(0,10);var h='';items.forEach(function(it){var safe=E(it.val).replace(/'/g,"\\'");h+='<div style="padding:7px 12px;cursor:pointer;font-size:12px;display:flex;gap:8px;align-items:center;border-bottom:1px solid #f1f5f9" onmousedown="pickSugg(\''+safe+'\')" onmouseover="this.style.background=\'#eff6ff\'" onmouseout="this.style.background=\'#fff\'"><span style="font-size:10px;color:#94a3b8;white-space:nowrap">'+it.type+'</span><span>'+E(it.val)+'</span></div>';});drop.innerHTML=h;drop.style.display="block";}
-function pickSugg(val){srch=val;var drop=document.getElementById("srchDrop");if(drop)drop.style.display="none";renderTable();var inp=document.getElementById("srchInp");if(inp){inp.value=val;inp.focus();}}
 
-function renderTable(){var f=getF();var data=gd(),st=getStats(data);var statEls=document.querySelectorAll('.sc .v');if(statEls.length>=5){statEls[0].textContent=st.total;statEls[1].textContent=st.ov;statEls[2].textContent=st.td;statEls[3].textContent=st.w5;statEls[4].textContent=st.w7;}var countSpan=document.querySelector('.flt span[style*="margin-left"]');if(countSpan)countSpan.textContent=f.length+' of '+data.length;var tbody=document.querySelector("tbody");if(!tbody){render();return;}/* full re-render for simplicity */render();}
+function doSearch(v){srch=v;renderTable();showSuggestions(v);}
+
+function showSuggestions(v){
+  var drop=document.getElementById("srchDrop");if(!drop)return;
+  if(!v||v.length<1){drop.style.display="none";return;}
+  var s=v.toLowerCase();var data=gd();var seen={};var items=[];
+  data.forEach(function(r){
+    [{type:"📍 Location",val:r.location},{type:"🏷 Brand",val:r.brand},{type:"🔢 CA No.",val:r.ca},{type:"🏢 Company",val:r.company}].forEach(function(f){
+      if(!f.val)return;
+      if(f.val.toLowerCase().indexOf(s)>=0){var key=f.type+":"+f.val;if(!seen[key]){seen[key]=1;items.push(f);}}
+    });
+  });
+  if(!items.length){drop.style.display="none";return;}
+  items=items.slice(0,10);
+  var h='';
+  items.forEach(function(it){
+    var safe=E(it.val).replace(/'/g,"\\'");
+    h+='<div style="padding:7px 12px;cursor:pointer;font-size:12px;display:flex;gap:8px;align-items:center;border-bottom:1px solid #f1f5f9" onmousedown="pickSugg(\''+safe+'\')" onmouseover="this.style.background=\'#eff6ff\'" onmouseout="this.style.background=\'#fff\'"><span style="font-size:10px;color:#94a3b8;white-space:nowrap">'+it.type+'</span><span>'+E(it.val)+'</span></div>';
+  });
+  drop.innerHTML=h;drop.style.display="block";
+}
+
+function pickSugg(val){
+  srch=val;var drop=document.getElementById("srchDrop");if(drop)drop.style.display="none";
+  renderTable();var inp=document.getElementById("srchInp");if(inp){inp.value=val;inp.focus();}
+}
+
+function renderTable(){
+  var f=getF();var data=gd(),st=getStats(data);
+  var statEls=document.querySelectorAll('.sc .v');
+  if(statEls.length>=5){statEls[0].textContent=st.total;statEls[1].textContent=st.ov;statEls[2].textContent=st.td;statEls[3].textContent=st.w5;statEls[4].textContent=st.w7;}
+  var countSpan=document.querySelector('.flt span[style*="margin-left"]');
+  if(countSpan)countSpan.textContent=f.length+' of '+data.length;
+  var tbody=document.querySelector("tbody");if(!tbody){render();return;}
+  render();
+}
 
 function setCompF(v){compF=v;render();}
 function setBrandF(v){brandF=v;render();}
 function doSort(c){if(sCol===c)sDir=sDir==="asc"?"desc":"asc";else{sCol=c;sDir="asc";}render();}
-function se(id,fd){var d=gd();for(var i=0;i<d.length;i++){if(d[i].id===id){editing=id+"_"+fd;editVal=d[i][fd]||"";break;}}render();}
+
+function se(id,fd){
+  var d=gd();
+  for(var i=0;i<d.length;i++){if(d[i].id===id){editing=id+"_"+fd;editVal=d[i][fd]||"";break;}}
+  render();
+}
+
 function cn(){editing=null;editVal="";render();}
-function sv(id,fd){var v=editVal;if(fd==="status"&&v.toLowerCase().indexOf("paid")>=0&&!/\d{2}\.\d{2}\.\d{4}/.test(v)&&!/\d{4}-\d{2}-\d{2}/.test(v)&&!/\d{1,2}(st|nd|rd|th)\s/i.test(v)){var t=new Date();var ds=String(t.getDate()).padStart(2,"0")+"."+String(t.getMonth()+1).padStart(2,"0")+"."+t.getFullYear();v=v.replace(/\s*$/,"")+" on "+ds;}var d=gd();for(var i=0;i<d.length;i++){if(d[i].id===id){d[i][fd]=v;break;}}sd(d);editing=null;editVal="";render();}
+
+function sv(id,fd){
+  var v=editVal;
+  if(fd==="status"&&v.toLowerCase().indexOf("paid")>=0&&!/\d{2}\.\d{2}\.\d{4}/.test(v)&&!/\d{4}-\d{2}-\d{2}/.test(v)&&!/\d{1,2}(st|nd|rd|th)\s/i.test(v)){
+    var t=new Date();var ds=String(t.getDate()).padStart(2,"0")+"."+String(t.getMonth()+1).padStart(2,"0")+"."+t.getFullYear();
+    v=v.replace(/\s*$/,"")+" on "+ds;
+  }
+  var d=gd();
+  for(var i=0;i<d.length;i++){if(d[i].id===id){d[i][fd]=v;break;}}
+  sd(d);editing=null;editVal="";render();
+}
+
 function ck(e,id,fd){if(e.key==="Enter")sv(id,fd);if(e.key==="Escape")cn();}
-function rmF(id,fd){var d=gd();for(var i=0;i<d.length;i++){if(d[i].id===id){d[i][fd]="";break;}}sd(d);render();}
-function delR(id){var d=gd();var r=null;for(var i=0;i<d.length;i++){if(d[i].id===id){r=d[i];break;}}if(!r)return;if(!confirm('Delete "'+r.location+'" (CA: '+r.ca+')?'))return;if(!confirm('Final confirm: Remove "'+r.location+'"?'))return;sd(d.filter(function(x){return x.id!==id;}));render();}
 
-function upFlow(id,type){var d=gd(),r=null;for(var i=0;i<d.length;i++){if(d[i].id===id){r=d[i];break;}}if(!r)return;var isB=type==="bill";var folder=isB?BILL_FOLDER:RCPT_FOLDER;var field=isB?"billLink":"receiptLink";var label=isB?"Bill":"Receipt";var fn=r.location.replace(/[^a-zA-Z0-9]/g,"_")+"_"+actMonth.replace(" ","_")+"_"+label;var ov=document.createElement("div");ov.className="mo";ov.addEventListener("click",function(e){if(e.target===ov)ov.remove();});var md=document.createElement("div");md.className="md";md.style.width="520px";var h2=document.createElement("h2");h2.textContent=(isB?"📄":"🧾")+" Upload "+label+" — "+r.location;md.appendChild(h2);var box=document.createElement("div");box.style.cssText="background:#f8fafc;border-radius:10px;padding:16px;margin-bottom:14px";var ti=document.createElement("div");ti.style.cssText="font-size:13px;font-weight:700;margin-bottom:12px";ti.textContent="Follow these steps:";box.appendChild(ti);var s1=document.createElement("div");s1.className="step";var n1=document.createElement("div");n1.className="snum";n1.textContent="1";var t1=document.createElement("div");t1.className="stxt";t1.innerHTML="Open the <b>"+label+"s</b> folder in Drive";s1.appendChild(n1);s1.appendChild(t1);box.appendChild(s1);var bw=document.createElement("div");bw.style.cssText="text-align:center;margin-bottom:14px";var ab=document.createElement("a");ab.href=folder;ab.target="_blank";ab.style.cssText="display:inline-block;padding:10px 24px;background:#1e40af;color:#fff;border-radius:8px;text-decoration:none;font-size:13px;font-weight:700";ab.textContent="📁 Open Folder";var s2w=document.createElement("div");s2w.style.cssText="opacity:0.4;transition:opacity .3s";ab.addEventListener("click",function(){s2w.style.opacity="1";});bw.appendChild(ab);box.appendChild(bw);var s2=document.createElement("div");s2.className="step";var n2=document.createElement("div");n2.className="snum";n2.textContent="2";var t2=document.createElement("div");t2.className="stxt";var code=document.createElement("code");code.style.cssText="background:#e2e8f0;padding:2px 6px;border-radius:4px;font-size:11px;color:#1e40af;user-select:all";code.textContent=fn;t2.textContent="Upload as: ";t2.appendChild(code);s2.appendChild(n2);s2.appendChild(t2);s2w.appendChild(s2);var s3=document.createElement("div");s3.className="step";var n3=document.createElement("div");n3.className="snum";n3.textContent="3";var t3=document.createElement("div");t3.className="stxt";t3.innerHTML="Right-click → <b>Share</b> → <b>Copy link</b>";s3.appendChild(n3);s3.appendChild(t3);s2w.appendChild(s3);var s4=document.createElement("div");s4.className="step";var n4=document.createElement("div");n4.className="snum g";n4.textContent="4";var t4=document.createElement("div");t4.className="stxt";t4.style.fontWeight="600";t4.textContent="Paste link below:";s4.appendChild(n4);s4.appendChild(t4);s2w.appendChild(s4);box.appendChild(s2w);md.appendChild(box);var inp=document.createElement("input");inp.id="upLink";inp.placeholder="Paste Google Drive link...";inp.style.cssText="width:100%;padding:10px 12px;border:2px solid #3b82f6;border-radius:8px;font-size:13px;outline:none;margin-bottom:10px;box-sizing:border-box";md.appendChild(inp);var btns=document.createElement("div");btns.className="mbtn";var cb=document.createElement("button");cb.className="mcn";cb.textContent="Cancel";cb.addEventListener("click",function(){ov.remove();});var sb=document.createElement("button");sb.className="msv";sb.textContent="Save Link";sb.addEventListener("click",function(){var link=document.getElementById("upLink").value.trim();if(!link){alert("Paste link first");return;}var dd=gd();for(var j=0;j<dd.length;j++){if(dd[j].id===id){dd[j][field]=link;break;}}sd(dd);ov.remove();render();});btns.appendChild(cb);btns.appendChild(sb);md.appendChild(btns);ov.appendChild(md);document.body.appendChild(ov);}
+function rmF(id,fd){
+  var d=gd();
+  for(var i=0;i<d.length;i++){if(d[i].id===id){d[i][fd]="";break;}}
+  sd(d);render();
+}
 
-function prevFile(id,type){var d=gd(),r=null;for(var i=0;i<d.length;i++){if(d[i].id===id){r=d[i];break;}}if(!r)return;var isB=type==="bill";var link=isB?r.billLink:r.receiptLink;if(!link)return;var embedUrl=link;var m=link.match(/\/d\/([^\/]+)/);if(m)embedUrl="https://drive.google.com/file/d/"+m[1]+"/preview";var m2=link.match(/id=([^&]+)/);if(!m&&m2)embedUrl="https://drive.google.com/file/d/"+m2[1]+"/preview";var ov=document.createElement("div");ov.className="mo";ov.addEventListener("click",function(e){if(e.target===ov)ov.remove();});var md=document.createElement("div");md.style.cssText="background:#fff;border-radius:14px;padding:16px;width:800px;max-width:95vw;height:80vh;display:flex;flex-direction:column";var top=document.createElement("div");top.style.cssText="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px";var title=document.createElement("h3");title.style.cssText="margin:0;font-size:15px;font-weight:700";title.textContent=(isB?"📄 Bill":"🧾 Receipt")+" — "+r.location;var tbtns=document.createElement("div");tbtns.style.cssText="display:flex;gap:6px";var odr=document.createElement("a");odr.href=link;odr.target="_blank";odr.style.cssText="padding:5px 12px;background:#eff6ff;color:#2563eb;border-radius:6px;font-size:11px;font-weight:600;text-decoration:none";odr.textContent="Open in Drive ↗";var cls=document.createElement("button");cls.style.cssText="padding:5px 12px;background:#fee2e2;color:#dc2626;border:none;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer";cls.textContent="Close";cls.addEventListener("click",function(){ov.remove();});tbtns.appendChild(odr);tbtns.appendChild(cls);top.appendChild(title);top.appendChild(tbtns);md.appendChild(top);var ifr=document.createElement("iframe");ifr.src=embedUrl;ifr.style.cssText="flex:1;border:1px solid #e2e8f0;border-radius:8px";ifr.allow="autoplay";md.appendChild(ifr);ov.appendChild(md);document.body.appendChild(ov);}
+function delR(id){
+  var d=gd();var r=null;
+  for(var i=0;i<d.length;i++){if(d[i].id===id){r=d[i];break;}}
+  if(!r)return;
+  if(!confirm('Delete "'+r.location+'" (CA: '+r.ca+')?'))return;
+  if(!confirm('Final confirm: Remove "'+r.location+'"?'))return;
+  sd(d.filter(function(x){return x.id!==id;}));render();
+}
 
-function addMonth(){var name=prompt("Month name (e.g. May 2026):","");if(!name||!name.trim())return;var n=name.trim();if(allData[n]){alert("Exists!");return;}var prev=gd();allData[n]=prev.map(function(r){return{id:String(_n++),location:r.location,brand:r.brand,company:r.company,ca:r.ca,billDate:"",amount:"",dueDate:"",status:"",remarks:"",billLink:"",receiptLink:""};});actMonth=n;saveToDB();render();}
-function delMonth(){var m=actMonth;var months=Object.keys(allData);if(months.length<=1){alert("Cannot delete last month.");return;}var cnt=(allData[m]||[]).length;var step1=prompt("⚠️ DELETE \""+m+"\" ("+cnt+" stores)?\nType month name exactly:");if(!step1||step1.trim()!==m)return;if(!confirm("🔴 FINAL: Delete "+m+"?"))return;delete allData[m];try{supaFetch(SUPA_TBL+"?month=eq."+encodeURIComponent(m),{method:"DELETE"});}catch(e){}var rem=Object.keys(allData).sort(mSort);actMonth=rem[rem.length-1];render();}
-function resetM(){var cnt=(allData[actMonth]||[]).length;var s=prompt("⚠️ RESET \""+actMonth+"\"? Type RESET:");if(!s||s.trim()!=="RESET")return;allData[actMonth]=[];sd([]);render();showToast("🗑 Cleared "+actMonth);}
+function upFlow(id,type){
+  var d=gd(),r=null;
+  for(var i=0;i<d.length;i++){if(d[i].id===id){r=d[i];break;}}
+  if(!r)return;
+  var isB=type==="bill";var folder=isB?BILL_FOLDER:RCPT_FOLDER;var field=isB?"billLink":"receiptLink";var label=isB?"Bill":"Receipt";
+  var fn=r.location.replace(/[^a-zA-Z0-9]/g,"_")+"_"+actMonth.replace(" ","_")+"_"+label;
+  var ov=document.createElement("div");ov.className="mo";
+  ov.addEventListener("click",function(e){if(e.target===ov)ov.remove();});
+  var md=document.createElement("div");md.className="md";md.style.width="520px";
+  var h2=document.createElement("h2");h2.textContent=(isB?"📄":"🧾")+" Upload "+label+" — "+r.location;md.appendChild(h2);
+  var box=document.createElement("div");box.style.cssText="background:#f8fafc;border-radius:10px;padding:16px;margin-bottom:14px";
+  var ti=document.createElement("div");ti.style.cssText="font-size:13px;font-weight:700;margin-bottom:12px";ti.textContent="Follow these steps:";box.appendChild(ti);
+  var s1=document.createElement("div");s1.className="step";
+  var n1=document.createElement("div");n1.className="snum";n1.textContent="1";
+  var t1=document.createElement("div");t1.className="stxt";t1.innerHTML="Open the <b>"+label+"s</b> folder in Drive";
+  s1.appendChild(n1);s1.appendChild(t1);box.appendChild(s1);
+  var bw=document.createElement("div");bw.style.cssText="text-align:center;margin-bottom:14px";
+  var ab=document.createElement("a");ab.href=folder;ab.target="_blank";
+  ab.style.cssText="display:inline-block;padding:10px 24px;background:#1e40af;color:#fff;border-radius:8px;text-decoration:none;font-size:13px;font-weight:700";
+  ab.textContent="📁 Open Folder";
+  var s2w=document.createElement("div");s2w.style.cssText="opacity:0.4;transition:opacity .3s";
+  ab.addEventListener("click",function(){s2w.style.opacity="1";});
+  bw.appendChild(ab);box.appendChild(bw);
+  var s2=document.createElement("div");s2.className="step";
+  var n2=document.createElement("div");n2.className="snum";n2.textContent="2";
+  var t2=document.createElement("div");t2.className="stxt";
+  var code=document.createElement("code");code.style.cssText="background:#e2e8f0;padding:2px 6px;border-radius:4px;font-size:11px;color:#1e40af;user-select:all";code.textContent=fn;
+  t2.textContent="Upload as: ";t2.appendChild(code);
+  s2.appendChild(n2);s2.appendChild(t2);s2w.appendChild(s2);
+  var s3=document.createElement("div");s3.className="step";
+  var n3=document.createElement("div");n3.className="snum";n3.textContent="3";
+  var t3=document.createElement("div");t3.className="stxt";t3.innerHTML="Right-click → <b>Share</b> → <b>Copy link</b>";
+  s3.appendChild(n3);s3.appendChild(t3);s2w.appendChild(s3);
+  var s4=document.createElement("div");s4.className="step";
+  var n4=document.createElement("div");n4.className="snum g";n4.textContent="4";
+  var t4=document.createElement("div");t4.className="stxt";t4.style.fontWeight="600";t4.textContent="Paste link below:";
+  s4.appendChild(n4);s4.appendChild(t4);s2w.appendChild(s4);
+  box.appendChild(s2w);md.appendChild(box);
+  var inp=document.createElement("input");inp.id="upLink";inp.placeholder="Paste Google Drive link...";
+  inp.style.cssText="width:100%;padding:10px 12px;border:2px solid #3b82f6;border-radius:8px;font-size:13px;outline:none;margin-bottom:10px;box-sizing:border-box";
+  md.appendChild(inp);
+  var btns=document.createElement("div");btns.className="mbtn";
+  var cb=document.createElement("button");cb.className="mcn";cb.textContent="Cancel";
+  cb.addEventListener("click",function(){ov.remove();});
+  var sb=document.createElement("button");sb.className="msv";sb.textContent="Save Link";
+  sb.addEventListener("click",function(){
+    var link=document.getElementById("upLink").value.trim();
+    if(!link){alert("Paste link first");return;}
+    var dd=gd();for(var j=0;j<dd.length;j++){if(dd[j].id===id){dd[j][field]=link;break;}}
+    sd(dd);ov.remove();render();
+  });
+  btns.appendChild(cb);btns.appendChild(sb);md.appendChild(btns);ov.appendChild(md);document.body.appendChild(ov);
+}
 
-function expMonth(){var d=gd();var hd=["S.No","Location","Brand","Electricity Company","CA No.","Bill Date","Amount","Due Date","Status & Payment Date","Remarks","Bill Link","Receipt Link"];if(typeof XLSX!=="undefined"){try{var ws=XLSX.utils.aoa_to_sheet([hd].concat(d.map(function(r,i){return[i+1,r.location,r.brand,r.company,r.ca,r.billDate,r.amount,r.dueDate,r.status,r.remarks,r.billLink,r.receiptLink];})));ws["!cols"]=[{wch:5},{wch:25},{wch:15},{wch:22},{wch:16},{wch:12},{wch:10},{wch:12},{wch:25},{wch:25},{wch:35},{wch:35}];var wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,actMonth);XLSX.writeFile(wb,"Electricity_"+actMonth.replace(" ","_")+".xlsx");return;}catch(e){}}alert("XLSX export failed");}
-function expAll(){var hd=["S.No","Location","Brand","Electricity Company","CA No.","Bill Date","Amount","Due Date","Status & Payment Date","Remarks","Bill Link","Receipt Link"];var months=Object.keys(allData).sort(mSort);if(typeof XLSX!=="undefined"){try{var wb=XLSX.utils.book_new();months.forEach(function(m){var d=allData[m]||[];var ws=XLSX.utils.aoa_to_sheet([hd].concat(d.map(function(r,i){return[i+1,r.location,r.brand,r.company,r.ca,r.billDate,r.amount,r.dueDate,r.status,r.remarks,r.billLink,r.receiptLink];})));ws["!cols"]=[{wch:5},{wch:25},{wch:15},{wch:22},{wch:16},{wch:12},{wch:10},{wch:12},{wch:25},{wch:25},{wch:35},{wch:35}];XLSX.utils.book_append_sheet(wb,ws,m);});XLSX.writeFile(wb,"Pan_India_Electricity_2026.xlsx");return;}catch(e){}}alert("XLSX export failed");}
+function prevFile(id,type){
+  var d=gd(),r=null;
+  for(var i=0;i<d.length;i++){if(d[i].id===id){r=d[i];break;}}
+  if(!r)return;
+  var isB=type==="bill";var link=isB?r.billLink:r.receiptLink;if(!link)return;
+  var embedUrl=link;
+  var m=link.match(/\/d\/([^\/]+)/);if(m)embedUrl="https://drive.google.com/file/d/"+m[1]+"/preview";
+  var m2=link.match(/id=([^&]+)/);if(!m&&m2)embedUrl="https://drive.google.com/file/d/"+m2[1]+"/preview";
+  var ov=document.createElement("div");ov.className="mo";
+  ov.addEventListener("click",function(e){if(e.target===ov)ov.remove();});
+  var md=document.createElement("div");md.style.cssText="background:#fff;border-radius:14px;padding:16px;width:800px;max-width:95vw;height:80vh;display:flex;flex-direction:column";
+  var top=document.createElement("div");top.style.cssText="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px";
+  var title=document.createElement("h3");title.style.cssText="margin:0;font-size:15px;font-weight:700";title.textContent=(isB?"📄 Bill":"🧾 Receipt")+" — "+r.location;
+  var tbtns=document.createElement("div");tbtns.style.cssText="display:flex;gap:6px";
+  var odr=document.createElement("a");odr.href=link;odr.target="_blank";odr.style.cssText="padding:5px 12px;background:#eff6ff;color:#2563eb;border-radius:6px;font-size:11px;font-weight:600;text-decoration:none";odr.textContent="Open in Drive ↗";
+  var cls=document.createElement("button");cls.style.cssText="padding:5px 12px;background:#fee2e2;color:#dc2626;border:none;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer";cls.textContent="Close";
+  cls.addEventListener("click",function(){ov.remove();});
+  tbtns.appendChild(odr);tbtns.appendChild(cls);top.appendChild(title);top.appendChild(tbtns);md.appendChild(top);
+  var ifr=document.createElement("iframe");ifr.src=embedUrl;ifr.style.cssText="flex:1;border:1px solid #e2e8f0;border-radius:8px";ifr.allow="autoplay";
+  md.appendChild(ifr);ov.appendChild(md);document.body.appendChild(ov);
+}
 
-/* ===== INIT: Load from Supabase ===== */
-loadFromDB();
-</script>
-</body>
-</html>
+function addMonth(){
+  var name=prompt("Month name (e.g. May 2026):","");
+  if(!name||!name.trim())return;
+  var n=name.trim();
+  if(allData[n]){alert("Exists!");return;}
+  var prev=gd();
+  allData[n]=prev.map(function(r){
+    return{id:String(_n++),location:r.location,brand:r.brand,company:r.company,ca:r.ca,billDate:"",amount:"",dueDate:"",status:"",remarks:"",billLink:"",receiptLink:""};
+  });
+  actMonth=n;saveToDB();render();
+}
+
+function delMonth(){
+  var m=actMonth;var months=Object.keys(allData);
+  if(months.length<=1){alert("Cannot delete last month.");return;}
+  var cnt=(allData[m]||[]).length;
+  var step1=prompt("⚠️ DELETE \""+m+"\" ("+cnt+" stores)?\nType month name exactly:");
+  if(!step1||step1.trim()!==m)return;
+  if(!confirm("🔴 FINAL: Delete "+m+"?"))return;
+  delete allData[m];
+  try{supaFetch(SUPA_TBL+"?month=eq."+encodeURIComponent(m),{method:"DELETE"});}catch(e){}
+  var rem=Object.keys(allData).sort(mSort);actMonth=rem[rem.length-1];render();
+}
+
+function resetM(){
+  var cnt=(allData[actMonth]||[]).length;
+  var s=prompt("⚠️ RESET \""+actMonth+"\"? Type RESET:");
+  if(!s||s.trim()!=="RESET")return;
+  allData[actMonth]=[];sd([]);render();showToast("🗑 Cleared "+actMonth);
+}
+
+function expMonth(){
+  var d=gd();
+  var hd=["S.No","Location","Brand","Electricity Company","CA No.","Bill Date","Amount","Due Date","Status & Payment Date","Remarks","Bill Link","Receipt Link"];
+  if(typeof XLSX!=="undefined"){
+    try{
+      var ws=XLSX.utils.aoa_to_sheet([hd].concat(d.map(function(r,i){return[i+1,r.location,r.brand,r.company,r.ca,r.billDate,r.amount,r.dueDate,r.status,r.remarks,r.billLink,r.receiptLink];})));
+      ws["!cols"]=[{wch:5},{wch:25},{wch:15},{wch:22},{wch:16},{wch:12},{wch:10},{wch:12},{wch:25},{wch:25},{wch:35},{wch:35}];
+      var wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,actMonth);
+      XLSX.writeFile(wb,"Electricity_"+actMonth.replace(" ","_")+".xlsx");return;
+    }catch(e){}
+  }
+  alert("XLSX export failed");
+}
+
+function expAll(){
+  var hd=["S.No","Location","Brand","Electricity Company","CA No.","Bill Date","Amount","Due Date","Status & Payment Date","Remarks","Bill Link","Receipt Link"];
+  var months=Object.keys(allData).sort(mSort);
+  if(typeof XLSX!=="undefined"){
+    try{
+      var wb=XLSX.utils.book_new();
+      months.forEach(function(m){
+        var d=allData[m]||[];
+        var ws=XLSX.utils.aoa_to_sheet([hd].concat(d.map(function(r,i){return[i+1,r.location,r.brand,r.company,r.ca,r.billDate,r.amount,r.dueDate,r.status,r.remarks,r.billLink,r.receiptLink];})));
+        ws["!cols"]=[{wch:5},{wch:25},{wch:15},{wch:22},{wch:16},{wch:12},{wch:10},{wch:12},{wch:25},{wch:25},{wch:35},{wch:35}];
+        XLSX.utils.book_append_sheet(wb,ws,m);
+      });
+      XLSX.writeFile(wb,"Pan_India_Electricity_2026.xlsx");return;
+    }catch(e){}
+  }
+  alert("XLSX export failed");
+}
+
+/* ========================================= */
+/* ===== INIT: Wait for auth ===== */
+/* ========================================= */
+document.getElementById("authUser").focus();
+</script></body></html>
