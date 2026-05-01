@@ -80,6 +80,32 @@
 .live-dot .dot{width:6px;height:6px;border-radius:50%;background:#22c55e;animation:livePulse 2s infinite}
 @keyframes livePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.3)}}
 .live-dot.off{color:#94a3b8}.live-dot.off .dot{background:#94a3b8;animation:none}
+
+/* ===== DUPLICATE DETECTION ===== */
+tr.dup-row{background:#fef3c7!important;border-left:3px solid #f59e0b}
+tr.dup-row td{border-color:#fde68a}
+tr.dup-row:hover{background:#fef9c3!important}
+.dup-bar{background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:10px 16px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.dup-bar .dup-info{font-size:12px;color:#92400e;font-weight:600;display:flex;align-items:center;gap:6px}
+.dup-bar .dup-info .dup-count{background:#f59e0b;color:#fff;border-radius:12px;padding:1px 8px;font-size:11px;font-weight:800}
+.dup-remove-btn{background:#ef4444;color:#fff;border:none;border-radius:7px;padding:6px 16px;cursor:pointer;font-size:11px;font-weight:700;transition:all .15s}
+.dup-remove-btn:hover{background:#dc2626;box-shadow:0 2px 8px rgba(239,68,68,.3)}
+.dup-view-btn{background:#f59e0b;color:#fff;border:none;border-radius:7px;padding:6px 16px;cursor:pointer;font-size:11px;font-weight:700}
+.dup-view-btn:hover{background:#d97706}
+
+/* ===== RESTORE CONFIRM MODAL ===== */
+.restore-modal{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1100;display:flex;align-items:center;justify-content:center}
+.restore-box{background:#fff;border-radius:14px;padding:24px;width:480px;max-width:92vw;box-shadow:0 20px 50px rgba(0,0,0,.2)}
+.restore-box h3{margin:0 0 12px;font-size:16px;font-weight:700;display:flex;align-items:center;gap:8px}
+.restore-box .rb-detail{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:12px;margin-bottom:14px;font-size:12px}
+.restore-box .rb-detail .rb-field{color:#64748b;font-size:10px;font-weight:600;text-transform:uppercase;margin-bottom:3px}
+.restore-box .rb-from{background:#fef2f2;color:#dc2626;padding:2px 8px;border-radius:4px;font-size:12px;text-decoration:line-through;display:inline-block;margin-right:6px}
+.restore-box .rb-to{background:#f0fdf4;color:#16a34a;padding:2px 8px;border-radius:4px;font-size:12px;display:inline-block}
+.restore-box .rb-arrow{color:#94a3b8;font-size:14px;margin:0 4px}
+.restore-box .rb-btns{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
+.restore-box .rb-cancel{padding:8px 20px;background:#f1f5f9;color:#475569;border:1px solid #e2e8f0;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600}
+.restore-box .rb-confirm{padding:8px 20px;background:#2563eb;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;transition:all .15s}
+.restore-box .rb-confirm:hover{background:#1d4ed8;box-shadow:0 2px 8px rgba(37,99,235,.3)}
 </style></head><body>
 
 <!-- ===== AUTH PAGE ===== -->
@@ -111,24 +137,14 @@
 <!-- ===== HISTORY SIDE PANEL ===== -->
 <div class="hist-panel" id="histPanel">
   <div class="hist-head">
-    <h3>📋 Change History & Recovery</h3>
+    <h3>📋 Edit History & Recovery</h3>
     <button class="hist-close" onclick="toggleHistory()">✕</button>
   </div>
-  <div class="hist-tabs">
-    <button class="hist-tab active" id="htabChanges" onclick="switchHistTab('changes')">✏️ Changes</button>
-    <button class="hist-tab" id="htabSnapshots" onclick="switchHistTab('snapshots')">📸 Snapshots & Recovery</button>
+  <div class="hist-filter">
+    <input type="text" id="histSearch" placeholder="Search changes..." oninput="renderHistory()">
+    <select id="histMonthFilter" onchange="renderHistory()"><option value="all">All Months</option></select>
   </div>
-  <div id="histChangesView">
-    <div class="hist-filter">
-      <input type="text" id="histSearch" placeholder="Search changes..." oninput="renderHistory()">
-      <select id="histMonthFilter" onchange="renderHistory()"><option value="all">All Months</option></select>
-    </div>
-    <div class="hist-body" id="histBody"></div>
-  </div>
-  <div id="histSnapshotsView" style="display:none">
-    <div style="padding:12px 16px 0"><button class="snap-create-btn" onclick="createManualSnapshot()">📸 Save Current Snapshot Now</button></div>
-    <div class="hist-body" id="snapBody"></div>
-  </div>
+  <div class="hist-body" id="histBody"></div>
 </div>
 
 <!-- ===== DASHBOARD (hidden until auth) ===== -->
@@ -197,7 +213,6 @@ var SUPA_URL="https://awsrsmddcfksdrfpijqf.supabase.co";
 var SUPA_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF3c3JzbWRkY2Zrc2RyZnBpanFmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2MzA5MzksImV4cCI6MjA5MDIwNjkzOX0.eNI3Sv6Pqp-bK7I16ph-r5PZNAwSA86_S7AcEO6DSQ4";
 var SUPA_TBL="electricity_bills";
 var SUPA_HIST_TBL="change_history";
-var SUPA_SNAP_TBL="data_snapshots";
 var syncStatus="ok";
 var realtimeChannel=null;
 var realtimeConnected=false;
@@ -220,7 +235,7 @@ function dataHash(){
     var all=[];
     Object.keys(allData).sort().forEach(function(m){
       (allData[m]||[]).forEach(function(r){
-        all.push(m+"|"+r.location+"|"+r.ca+"|"+r.amount+"|"+r.status+"|"+r.dueDate+"|"+r.billDate+"|"+r.remarks+"|"+r.billLink+"|"+r.receiptLink);
+        all.push(m+"|"+r.location+"|"+r.ca+"|"+r.amount+"|"+r.status+"|"+r.dueDate+"|"+r.billDate+"|"+r.remarks+"|"+r.billLink+"|"+r.receiptLink+"|"+(r.amount2||"")+"|"+(r.dueDate2||"")+"|"+(r.paidBy2||"")+"|"+(r.status2||""));
       });
     });
     return all.join("##");
@@ -233,7 +248,7 @@ function startRealtime(){
   realtimeConnected=true;
   // Poll every 5 seconds for changes from other users
   _pollInterval=setInterval(async function(){
-    if(!isAuthed||saving)return;
+    if(!isAuthed||saving||_saveInProgress)return;
     try{
       var resp=await supaFetch(SUPA_TBL+"?select=*&order=id.asc&limit=5000");
       if(!resp.ok)return;
@@ -243,7 +258,25 @@ function startRealtime(){
         rows.forEach(function(r){
           var m=r.month||"Apr 2026";
           if(!newData[m])newData[m]=[];
-          newData[m].push({id:String(r.id),_dbId:r.id,location:r.location||"",brand:r.brand||"",company:r.company||"",ca:r.ca||"",billDate:r.bill_date||"",amount:r.amount||"",dueDate:r.due_date||"",status:r.status||"",remarks:r.remarks||"",billLink:r.bill_link||"",receiptLink:r.receipt_link||""});
+          newData[m].push({id:String(r.id),_dbId:r.id,location:r.location||"",brand:r.brand||"",company:r.company||"",ca:r.ca||"",billDate:r.bill_date||"",amount:r.amount||"",dueDate:r.due_date||"",status:r.status||"",remarks:r.remarks||"",billLink:r.bill_link||"",receiptLink:r.receipt_link||"",amount2:r.amount_2||"",dueDate2:r.due_date_2||"",paidBy2:r.paid_by_2||"",status2:r.status_2||""});
+        });
+        // Dedup each month by CA number (keep last/highest ID)
+        Object.keys(newData).forEach(function(m){
+          var seen={};var deduped=[];
+          newData[m].forEach(function(r){
+            var key=r.ca+"|"+r.location;
+            if(seen[key]){
+              // Keep the one with higher DB id (most recent insert)
+              var existing=seen[key];
+              if((r._dbId||0)>(existing._dbId||0)){
+                deduped=deduped.filter(function(x){return(x.ca+"|"+x.location)!==key;});
+                deduped.push(r);seen[key]=r;
+              }
+            }else{
+              seen[key]=r;deduped.push(r);
+            }
+          });
+          newData[m]=deduped;
         });
       }
       // Check if data changed
@@ -414,7 +447,7 @@ function renderHistory(){
       restoreBtn='<div class="hi-restore-row"><button class="hi-restore" style="background:#fef3c7;color:#92400e;border-color:#fde68a" onclick="undoImport(\''+E(h.month).replace(/'/g,"\\'")+'\')">↩ Undo import (clear month)</button></div>';
     }
     if(h.action==="reset"){
-      restoreBtn='<div class="hi-restore-row"><span style="font-size:9px;color:#94a3b8">💡 Use Snapshots tab to recover full data</span></div>';
+      restoreBtn='<div class="hi-restore-row"><span style="font-size:9px;color:#94a3b8">💡 Data was reset - cannot auto-recover</span></div>';
     }
 
     html+='<div class="hist-item"><div class="hi-time">'+actionIcon+' '+timeStr+' · <span class="hi-user">'+E(h.user)+'</span> · '+E(h.month)+'</div><div class="hi-action">'+actionHtml+'</div>'+restoreBtn+'</div>';
@@ -424,21 +457,156 @@ function renderHistory(){
 }
 
 function restoreChange(month,ca,field,oldVal){
-  if(!confirm('Restore "'+field+'" to "'+oldVal+'" for CA: '+ca+'?'))return;
+  // Show confirmation popup
   var d=allData[month]||[];
-  for(var i=0;i<d.length;i++){
-    if(d[i].ca===ca){
-      var currentVal=d[i][field]||"";
-      d[i][field]=oldVal;
-      logChange("edit",month,d[i].location,ca,field,currentVal,oldVal);
-      break;
+  var r=null;for(var i=0;i<d.length;i++){if(d[i].ca===ca){r=d[i];break;}}
+  if(!r)return;
+  var currentVal=r[field]||"";
+  
+  var ov=document.createElement("div");ov.className="restore-modal";
+  ov.addEventListener("click",function(e){if(e.target===ov)ov.remove();});
+  var box=document.createElement("div");box.className="restore-box";
+  box.innerHTML='<h3>↩ Confirm Recovery</h3>'+
+    '<div class="rb-detail">'+
+    '<div class="rb-field">Location</div><div style="font-weight:600;margin-bottom:8px">'+E(r.location)+' (CA: '+E(ca)+')</div>'+
+    '<div class="rb-field">Field: '+E(field)+' · Month: '+E(month)+'</div>'+
+    '<div style="margin-top:8px"><span class="rb-from">'+E(currentVal||"(empty)")+'</span><span class="rb-arrow">→</span><span class="rb-to">'+E(oldVal)+'</span></div>'+
+    '</div>'+
+    '<div style="font-size:11px;color:#64748b;margin-bottom:4px">This will revert <b>'+E(field)+'</b> back to the old value.</div>'+
+    '<div class="rb-btns">'+
+    '<button class="rb-cancel" id="rbCancel">Cancel</button>'+
+    '<button class="rb-confirm" id="rbConfirm">✓ Confirm Recovery</button>'+
+    '</div>';
+  ov.appendChild(box);document.body.appendChild(ov);
+  
+  document.getElementById("rbCancel").addEventListener("click",function(){ov.remove();});
+  document.getElementById("rbConfirm").addEventListener("click",function(){
+    r[field]=oldVal;
+    logChange("edit",month,r.location,ca,field,currentVal,oldVal);
+    allData[month]=d;
+    if(month===actMonth)sd(d);
+    else saveAllToDB();
+    render();
+    ov.remove();
+    showToast("↩ Restored "+field+" for "+r.location);
+    if(historyPanelOpen)renderHistory();
+  });
+}
+
+/* ========================================= */
+/* ===== DUPLICATE DETECTION & REMOVAL ===== */
+/* ========================================= */
+function findDuplicates(){
+  var d=gd();
+  var caCount={};var fullRowCount={};
+  var dupCAs=[];var dupFullRows=[];
+  
+  d.forEach(function(r,idx){
+    // Check by CA number (primary key for duplicates)
+    var caKey=r.ca;
+    if(caKey){
+      if(!caCount[caKey])caCount[caKey]={count:0,indices:[]};
+      caCount[caKey].count++;
+      caCount[caKey].indices.push(idx);
     }
+    // Check by full row data
+    var fullKey=r.location+"|"+r.ca+"|"+r.brand+"|"+r.company+"|"+r.amount+"|"+r.dueDate+"|"+r.status;
+    if(!fullRowCount[fullKey])fullRowCount[fullKey]={count:0,indices:[]};
+    fullRowCount[fullKey].count++;
+    fullRowCount[fullKey].indices.push(idx);
+  });
+  
+  // Exact full-row duplicates
+  Object.keys(fullRowCount).forEach(function(key){
+    if(fullRowCount[key].count>1)dupFullRows.push({key:key,indices:fullRowCount[key].indices});
+  });
+  // CA-only duplicates (same CA, different data = data conflict)
+  Object.keys(caCount).forEach(function(ca){
+    if(caCount[ca].count>1)dupCAs.push({ca:ca,indices:caCount[ca].indices});
+  });
+  
+  return{fullRows:dupFullRows,caConflicts:dupCAs,totalDups:dupFullRows.length,hasDups:dupFullRows.length>0||dupCAs.length>0};
+}
+
+function getDupIndices(){
+  var dups=findDuplicates();
+  var indices={};
+  // Mark full-row duplicates (all except first occurrence)
+  dups.fullRows.forEach(function(g){
+    for(var i=1;i<g.indices.length;i++)indices[g.indices[i]]="full";
+  });
+  // Mark CA conflicts (all occurrences)
+  dups.caConflicts.forEach(function(g){
+    g.indices.forEach(function(idx){
+      if(!indices[idx])indices[idx]="ca";
+    });
+  });
+  return indices;
+}
+
+function removeDuplicates(){
+  var dups=findDuplicates();
+  if(!dups.hasDups){showToast("✅ No duplicates found");return;}
+  
+  var d=gd();
+  var removeCount=0;
+  
+  // Show confirmation modal with details
+  var ov=document.createElement("div");ov.className="restore-modal";
+  ov.addEventListener("click",function(e){if(e.target===ov)ov.remove();});
+  var box=document.createElement("div");box.className="restore-box";box.style.width="560px";
+  
+  var html='<h3>⚠️ Remove Duplicate Rows</h3>';
+  html+='<div class="rb-detail">';
+  
+  if(dups.fullRows.length){
+    html+='<div style="margin-bottom:8px"><b style="color:#dc2626">'+dups.fullRows.length+' exact duplicate group(s) found</b></div>';
+    dups.fullRows.forEach(function(g){
+      var firstIdx=g.indices[0];
+      var r=d[firstIdx];
+      html+='<div style="font-size:11px;padding:4px 0;border-bottom:1px solid #f1f5f9">📍 <b>'+E(r.location)+'</b> (CA: '+E(r.ca)+') — <span style="color:#dc2626">'+g.indices.length+' copies</span>, keeping 1</div>';
+      removeCount+=g.indices.length-1;
+    });
   }
-  allData[month]=d;
-  if(month===actMonth)sd(d);
-  else saveAllToDB();
-  render();
-  showToast("↩ Restored "+field+" for CA: "+ca);
+  
+  if(dups.caConflicts.length && dups.fullRows.length===0){
+    html+='<div style="margin-top:8px"><b style="color:#d97706">'+dups.caConflicts.length+' CA number(s) with different data</b></div>';
+    html+='<div style="font-size:10px;color:#64748b;margin-top:4px">These have the same CA but different amounts/dates. Review manually.</div>';
+  }
+  
+  html+='</div>';
+  
+  if(removeCount>0){
+    html+='<div style="font-size:12px;font-weight:600;color:#dc2626;margin-bottom:4px">'+removeCount+' duplicate row(s) will be removed. First occurrence is kept.</div>';
+    html+='<div class="rb-btns">';
+    html+='<button class="rb-cancel" onclick="this.closest(\'.restore-modal\').remove()">Cancel</button>';
+    html+='<button class="rb-confirm" style="background:#ef4444" onclick="doRemoveDuplicates();this.closest(\'.restore-modal\').remove()">🗑 Remove '+removeCount+' Duplicates</button>';
+    html+='</div>';
+  }else{
+    html+='<div style="font-size:12px;color:#64748b;margin-bottom:4px">No exact duplicates to auto-remove. Review CA conflicts manually.</div>';
+    html+='<div class="rb-btns"><button class="rb-cancel" onclick="this.closest(\'.restore-modal\').remove()">Close</button></div>';
+  }
+  
+  box.innerHTML=html;ov.appendChild(box);document.body.appendChild(ov);
+}
+
+function doRemoveDuplicates(){
+  var d=gd();
+  var seen={};var deduped=[];var removed=0;
+  
+  d.forEach(function(r){
+    var key=r.location+"|"+r.ca+"|"+r.brand+"|"+r.company+"|"+r.amount+"|"+r.dueDate+"|"+r.status;
+    if(seen[key]){
+      removed++;
+    }else{
+      seen[key]=true;
+      deduped.push(r);
+    }
+  });
+  
+  logChange("edit",actMonth,"","","duplicates","Removed "+removed+" duplicate rows","");
+  sd(deduped);render();
+  showToast("🗑 Removed "+removed+" duplicate rows");
 }
 
 function restoreDeletedRow(month,encodedData){
@@ -457,7 +625,7 @@ function restoreDeletedRow(month,encodedData){
 }
 
 function undoImport(month){
-  if(!confirm('⚠️ Undo import for "'+month+'"?\n\nThis will clear all data in this month. Use Snapshots tab first to save a backup if needed.'))return;
+  if(!confirm('⚠️ Undo import for "'+month+'"?\n\nThis will clear all data in this month.'))return;
   if(!confirm('🔴 FINAL CONFIRM: Clear all data in "'+month+'"?'))return;
   allData[month]=[];
   logChange("reset",month,"","","","","Undo import - cleared month");
@@ -468,305 +636,7 @@ function undoImport(month){
 }
 
 /* ========================================= */
-/* ===== SNAPSHOT / RECOVERY SYSTEM ===== */
-/* ========================================= */
-var snapshots=[];
-var histTabActive="changes";
 
-function switchHistTab(tab){
-  histTabActive=tab;
-  document.getElementById("htabChanges").classList.toggle("active",tab==="changes");
-  document.getElementById("htabSnapshots").classList.toggle("active",tab==="snapshots");
-  document.getElementById("histChangesView").style.display=tab==="changes"?"":"none";
-  document.getElementById("histSnapshotsView").style.display=tab==="snapshots"?"":"none";
-  if(tab==="snapshots")loadSnapshots().then(renderSnapshots);
-}
-
-async function createSnapshot(label,type){
-  var snap={
-    timestamp:new Date().toISOString(),
-    user_id:currentUser||"Unknown",
-    label:label||"Manual Snapshot",
-    snap_type:type||"manual",
-    data_json:JSON.stringify(allData),
-    month_count:Object.keys(allData).length,
-    total_records:0
-  };
-  Object.keys(allData).forEach(function(m){snap.total_records+=(allData[m]||[]).length;});
-  
-  try{
-    var resp=await supaFetch(SUPA_SNAP_TBL,{method:"POST",body:snap,prefer:"return=representation"});
-    if(resp.ok){
-      var result=await resp.json();
-      showToast("📸 Snapshot saved"+(label?" — "+label:""));
-      return result;
-    }else{
-      // Table might not exist, store locally
-      snap.id=Date.now();
-      snapshots.unshift(snap);
-      showToast("📸 Snapshot saved locally");
-      return snap;
-    }
-  }catch(e){
-    snap.id=Date.now();
-    snapshots.unshift(snap);
-    showToast("📸 Snapshot saved locally");
-    return snap;
-  }
-}
-
-function createManualSnapshot(){
-  var label=prompt("Give this snapshot a name (optional):","Snapshot "+new Date().toLocaleString("en-IN"));
-  if(label===null)return; // cancelled
-  createSnapshot(label||"Manual Snapshot","manual").then(function(){
-    loadSnapshots().then(renderSnapshots);
-  });
-}
-
-async function autoSnapshot(reason){
-  await createSnapshot("Auto: "+reason,"auto");
-}
-
-async function loadSnapshots(){
-  try{
-    var resp=await supaFetch(SUPA_SNAP_TBL+"?select=id,timestamp,user_id,label,snap_type,month_count,total_records&order=timestamp.desc&limit=50");
-    if(!resp.ok)return;
-    var rows=await resp.json();
-    if(Array.isArray(rows)){
-      snapshots=rows;
-    }
-  }catch(e){
-    console.log("Snapshots load (table may not exist):",e.message||e);
-  }
-}
-
-async function getSnapshotData(snapId){
-  try{
-    var resp=await supaFetch(SUPA_SNAP_TBL+"?id=eq."+snapId+"&select=data_json");
-    if(!resp.ok)return null;
-    var rows=await resp.json();
-    if(Array.isArray(rows)&&rows.length>0&&rows[0].data_json){
-      return JSON.parse(rows[0].data_json);
-    }
-  }catch(e){console.log("Snapshot fetch error:",e);}
-  // Check local snapshots
-  for(var i=0;i<snapshots.length;i++){
-    if(snapshots[i].id===snapId&&snapshots[i].data_json){
-      return JSON.parse(snapshots[i].data_json);
-    }
-  }
-  return null;
-}
-
-async function previewSnapshot(snapId,snapLabel){
-  var data=await getSnapshotData(snapId);
-  if(!data){showToast("⚠️ Could not load snapshot data");return;}
-  
-  var ov=document.createElement("div");ov.className="snap-preview-modal";
-  ov.addEventListener("click",function(e){if(e.target===ov)ov.remove();});
-  
-  var md=document.createElement("div");md.className="snap-preview-content";
-  
-  // Header
-  var head=document.createElement("div");head.className="snap-preview-head";
-  var h2=document.createElement("h2");h2.style.cssText="margin:0;font-size:16px;font-weight:700";h2.textContent="📸 Preview: "+snapLabel;
-  var btns=document.createElement("div");btns.style.cssText="display:flex;gap:6px";
-  
-  var restBtn=document.createElement("button");
-  restBtn.style.cssText="padding:7px 18px;background:#2563eb;color:#fff;border:none;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer";
-  restBtn.textContent="↩ Restore This Snapshot";
-  restBtn.addEventListener("click",function(){ov.remove();restoreSnapshot(snapId,snapLabel);});
-  
-  var clsBtn=document.createElement("button");
-  clsBtn.style.cssText="padding:7px 14px;background:#f1f5f9;color:#475569;border:1px solid #e2e8f0;border-radius:7px;font-size:12px;cursor:pointer";
-  clsBtn.textContent="Close";
-  clsBtn.addEventListener("click",function(){ov.remove();});
-  
-  btns.appendChild(restBtn);btns.appendChild(clsBtn);
-  head.appendChild(h2);head.appendChild(btns);md.appendChild(head);
-  
-  // Diff summary
-  var diffDiv=document.createElement("div");diffDiv.className="snap-diff";
-  var diffHtml=computeDiff(data,allData);
-  diffDiv.innerHTML=diffHtml;
-  md.appendChild(diffDiv);
-  
-  // Month tabs and data preview
-  var months=Object.keys(data).sort(mSort);
-  var tabBar=document.createElement("div");tabBar.style.cssText="display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap";
-  
-  var previewBody=document.createElement("div");previewBody.className="snap-preview-body";
-  
-  function showMonth(m){
-    var d=data[m]||[];
-    var html='<table><thead><tr><th>#</th><th>Location</th><th>Brand</th><th>Company</th><th>CA No.</th><th>Bill Date</th><th>Amount</th><th>Due Date</th><th>Status</th><th>Remarks</th></tr></thead><tbody>';
-    if(!d.length)html+='<tr><td colspan="10" style="text-align:center;padding:20px;color:#94a3b8">No records</td></tr>';
-    d.forEach(function(r,i){
-      html+='<tr><td>'+(i+1)+'</td><td>'+E(r.location)+'</td><td>'+E(r.brand)+'</td><td>'+E(r.company)+'</td><td>'+E(r.ca)+'</td><td>'+E(r.billDate)+'</td><td>'+E(r.amount)+'</td><td>'+E(r.dueDate)+'</td><td>'+E(r.status)+'</td><td>'+E(r.remarks)+'</td></tr>';
-    });
-    html+='</tbody></table>';
-    previewBody.innerHTML=html;
-    // Update active tab
-    tabBar.querySelectorAll("button").forEach(function(b){
-      b.style.background=b.dataset.month===m?"#1e40af":"#f1f5f9";
-      b.style.color=b.dataset.month===m?"#fff":"#475569";
-    });
-  }
-  
-  months.forEach(function(m,idx){
-    var tb=document.createElement("button");
-    tb.textContent=m+" ("+(data[m]||[]).length+")";
-    tb.dataset.month=m;
-    tb.style.cssText="padding:5px 12px;border-radius:6px;border:none;font-size:11px;font-weight:600;cursor:pointer;background:#f1f5f9;color:#475569";
-    tb.addEventListener("click",function(){showMonth(m);});
-    tabBar.appendChild(tb);
-  });
-  
-  md.appendChild(tabBar);md.appendChild(previewBody);
-  if(months.length)showMonth(months[0]);
-  
-  ov.appendChild(md);document.body.appendChild(ov);
-}
-
-function computeDiff(snapData,currentData){
-  var snapMonths=Object.keys(snapData);
-  var currMonths=Object.keys(currentData);
-  var allMonths=Array.from(new Set(snapMonths.concat(currMonths))).sort(mSort);
-  
-  var addedRows=0,removedRows=0,changedFields=0,addedMonths=[],removedMonths=[];
-  
-  allMonths.forEach(function(m){
-    var snapRows=snapData[m]||[];
-    var currRows=currentData[m]||[];
-    if(!snapData[m]&&currentData[m])addedMonths.push(m);
-    if(snapData[m]&&!currentData[m])removedMonths.push(m);
-    
-    // Compare by CA number
-    var snapCAs={},currCAs={};
-    snapRows.forEach(function(r){snapCAs[r.ca]=r;});
-    currRows.forEach(function(r){currCAs[r.ca]=r;});
-    
-    Object.keys(snapCAs).forEach(function(ca){
-      if(!currCAs[ca])removedRows++;
-      else{
-        // Compare fields
-        var fields=["location","brand","company","amount","billDate","dueDate","status","remarks","billLink","receiptLink"];
-        fields.forEach(function(f){
-          if((snapCAs[ca][f]||"")!==(currCAs[ca][f]||""))changedFields++;
-        });
-      }
-    });
-    Object.keys(currCAs).forEach(function(ca){
-      if(!snapCAs[ca])addedRows++;
-    });
-  });
-  
-  var parts=[];
-  if(removedMonths.length)parts.push('<span class="diff-del">'+removedMonths.length+' month(s) removed since snapshot</span>');
-  if(addedMonths.length)parts.push('<span class="diff-add">'+addedMonths.length+' month(s) added since snapshot</span>');
-  if(addedRows)parts.push('<span class="diff-add">'+addedRows+' row(s) added since snapshot</span>');
-  if(removedRows)parts.push('<span class="diff-del">'+removedRows+' row(s) removed since snapshot</span>');
-  if(changedFields)parts.push('<span class="diff-edit">'+changedFields+' field(s) changed since snapshot</span>');
-  if(!parts.length)parts.push('✅ No differences — current data matches this snapshot exactly');
-  
-  return '<b>Comparison with current data:</b><br>'+parts.join(' · ');
-}
-
-async function restoreSnapshot(snapId,snapLabel){
-  var data=await getSnapshotData(snapId);
-  if(!data){showToast("⚠️ Could not load snapshot data");return;}
-  
-  var totalRecords=0;
-  Object.keys(data).forEach(function(m){totalRecords+=(data[m]||[]).length;});
-  
-  if(!confirm('⚠️ RESTORE SNAPSHOT\n\n"'+snapLabel+'"\n\nThis will replace ALL current data ('+Object.keys(allData).length+' months) with the snapshot data ('+Object.keys(data).length+' months, '+totalRecords+' records).\n\nA backup snapshot of current data will be saved automatically before restoring.\n\nContinue?'))return;
-  
-  if(!confirm('🔴 FINAL CONFIRM: Replace all current data with snapshot "'+snapLabel+'"?\n\nThis cannot be easily undone.'))return;
-  
-  // Auto-snapshot current data before restoring
-  await createSnapshot("Auto-backup before restoring: "+snapLabel,"auto");
-  
-  // Restore
-  allData=data;
-  // Re-assign IDs
-  Object.keys(allData).forEach(function(m){
-    (allData[m]||[]).forEach(function(r){r.id=String(_n++);});
-  });
-  
-  var sorted=Object.keys(allData).sort(mSort);
-  if(sorted.length)actMonth=sorted[sorted.length-1];
-  
-  logChange("restore","",snapLabel,"","","","Restored snapshot: "+snapLabel);
-  
-  await saveAllToDB();
-  render();
-  showToast("↩ Restored snapshot: "+snapLabel);
-  
-  // Refresh snapshots list
-  loadSnapshots().then(renderSnapshots);
-}
-
-async function downloadSnapshot(snapId,snapLabel){
-  var data=await getSnapshotData(snapId);
-  if(!data){showToast("⚠️ Could not load snapshot data");return;}
-  
-  var hd=["S.No","Location","Brand","Electricity Company","CA No.","Bill Date","Amount","Due Date","Status & Payment Date","Remarks","Bill Link","Receipt Link"];
-  var months=Object.keys(data).sort(mSort);
-  
-  if(typeof XLSX!=="undefined"){
-    try{
-      var wb=XLSX.utils.book_new();
-      months.forEach(function(m){
-        var d=data[m]||[];
-        var ws=XLSX.utils.aoa_to_sheet([hd].concat(d.map(function(r,i){return[i+1,r.location,r.brand,r.company,r.ca,r.billDate,r.amount,r.dueDate,r.status,r.remarks,r.billLink,r.receiptLink];})));
-        ws["!cols"]=[{wch:5},{wch:25},{wch:15},{wch:22},{wch:16},{wch:12},{wch:10},{wch:12},{wch:25},{wch:25},{wch:35},{wch:35}];
-        XLSX.utils.book_append_sheet(wb,ws,m);
-      });
-      XLSX.writeFile(wb,"Snapshot_"+snapLabel.replace(/[^a-zA-Z0-9]/g,"_")+".xlsx");
-      showToast("📥 Downloaded snapshot");return;
-    }catch(e){}
-  }
-  showToast("⚠️ Export failed");
-}
-
-async function deleteSnapshot(snapId){
-  if(!confirm("Delete this snapshot permanently?"))return;
-  try{
-    await supaFetch(SUPA_SNAP_TBL+"?id=eq."+snapId,{method:"DELETE"});
-    snapshots=snapshots.filter(function(s){return s.id!==snapId;});
-    renderSnapshots();
-    showToast("🗑 Snapshot deleted");
-  }catch(e){showToast("⚠️ Delete failed");}
-}
-
-function renderSnapshots(){
-  var body=document.getElementById("snapBody");
-  if(!snapshots.length){
-    body.innerHTML='<div class="hist-empty"><div class="he-icon">📸</div><div>No snapshots yet</div><div style="font-size:10px;margin-top:4px">Click "Save Current Snapshot Now" to create one.<br>Snapshots are also saved automatically before imports, resets, and restores.</div></div>';
-    return;
-  }
-  
-  var html="";
-  snapshots.forEach(function(s){
-    var dt=new Date(s.timestamp);
-    var timeStr=dt.toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"});
-    var typeTag=s.snap_type==="auto"?'<span class="snap-auto-tag">AUTO</span>':'<span class="snap-manual-tag">MANUAL</span>';
-    
-    html+='<div class="snap-item">';
-    html+='<div class="snap-head"><span class="snap-time">📸 '+timeStr+'</span><span class="snap-user">by '+E(s.user_id||"Unknown")+' '+typeTag+'</span></div>';
-    html+='<div class="snap-label">'+E(s.label||"Untitled Snapshot")+'</div>';
-    html+='<div class="snap-meta"><span>📅 '+s.month_count+' months</span><span>📊 '+s.total_records+' records</span></div>';
-    html+='<div class="snap-actions">';
-    html+='<button class="snap-restore-btn" onclick="previewSnapshot('+s.id+',\''+E(s.label||"Snapshot").replace(/'/g,"\\'")+'\')">👁 Preview & Restore</button>';
-    html+='<button class="snap-dl-btn" onclick="downloadSnapshot('+s.id+',\''+E(s.label||"Snapshot").replace(/'/g,"\\'")+'\')">📥 Download</button>';
-    html+='<button class="snap-del-btn" onclick="deleteSnapshot('+s.id+')">🗑</button>';
-    html+='</div></div>';
-  });
-  
-  body.innerHTML=html;
-}
-
-/* ========================================= */
 /* ===== GLOBALS ===== */
 /* ========================================= */
 var BILL_FOLDER="https://drive.google.com/drive/folders/1asQDHp907t6zQToBnTOcScpZZp-R4mR-";
@@ -801,7 +671,7 @@ async function loadFromDB(){
       rows.forEach(function(r){
         var m=r.month||"Apr 2026";
         if(!allData[m])allData[m]=[];
-        allData[m].push({id:String(r.id),_dbId:r.id,location:r.location||"",brand:r.brand||"",company:r.company||"",ca:r.ca||"",billDate:r.bill_date||"",amount:r.amount||"",dueDate:r.due_date||"",status:r.status||"",remarks:r.remarks||"",billLink:r.bill_link||"",receiptLink:r.receipt_link||""});
+        allData[m].push({id:String(r.id),_dbId:r.id,location:r.location||"",brand:r.brand||"",company:r.company||"",ca:r.ca||"",billDate:r.bill_date||"",amount:r.amount||"",dueDate:r.due_date||"",status:r.status||"",remarks:r.remarks||"",billLink:r.bill_link||"",receiptLink:r.receipt_link||"",amount2:r.amount_2||"",dueDate2:r.due_date_2||"",paidBy2:r.paid_by_2||"",status2:r.status_2||""});
       });
       var sorted=Object.keys(allData).sort(mSort);
       actMonth=sorted[sorted.length-1];
@@ -824,16 +694,22 @@ async function loadFromDB(){
 
 async function saveToDB(){if(saveQueue)clearTimeout(saveQueue);saveQueue=setTimeout(doSave,800);}
 
+var _saveInProgress=false;
+
 async function doSave(){
-  if(saving)return;
-  saving=true;syncStatus="saving";render();
+  if(_saveInProgress||saving)return;
+  _saveInProgress=true;saving=true;syncStatus="saving";render();
   try{
     var m=actMonth;
-    await supaFetch(SUPA_TBL+"?month=eq."+encodeURIComponent(m),{method:"DELETE"});
+    // Use select to verify delete worked before inserting
+    var delResp=await supaFetch(SUPA_TBL+"?month=eq."+encodeURIComponent(m),{method:"DELETE"});
+    if(!delResp.ok)throw new Error("Delete failed: "+delResp.status);
+    // Small delay to ensure delete propagated
+    await new Promise(function(r){setTimeout(r,100);});
     var d=gd();
     if(d.length>0){
       var rows=d.map(function(r){
-        return{month:m,location:r.location,brand:r.brand,company:r.company,ca:r.ca,bill_date:r.billDate,amount:r.amount,due_date:r.dueDate,status:r.status,remarks:r.remarks,bill_link:r.billLink,receipt_link:r.receiptLink};
+        return{month:m,location:r.location,brand:r.brand,company:r.company,ca:r.ca,bill_date:r.billDate,amount:r.amount,due_date:r.dueDate,status:r.status,remarks:r.remarks,bill_link:r.billLink,receipt_link:r.receiptLink,amount_2:r.amount2||"",due_date_2:r.dueDate2||"",paid_by_2:r.paidBy2||"",status_2:r.status2||""};
       });
       var resp=await supaFetch(SUPA_TBL,{method:"POST",body:rows,prefer:"return=representation"});
       var ins=await resp.json();
@@ -844,7 +720,7 @@ async function doSave(){
     syncStatus="ok";
     _lastDataHash=dataHash();
   }catch(e){console.log("Save error:",e);syncStatus="err";}
-  saving=false;render();
+  saving=false;_saveInProgress=false;render();
 }
 
 async function saveAllToDB(){
@@ -854,7 +730,7 @@ async function saveAllToDB(){
     var all=[];
     Object.keys(allData).forEach(function(m){
       (allData[m]||[]).forEach(function(r){
-        all.push({month:m,location:r.location,brand:r.brand,company:r.company,ca:r.ca,bill_date:r.billDate,amount:r.amount,due_date:r.dueDate,status:r.status,remarks:r.remarks,bill_link:r.billLink,receipt_link:r.receiptLink});
+        all.push({month:m,location:r.location,brand:r.brand,company:r.company,ca:r.ca,bill_date:r.billDate,amount:r.amount,due_date:r.dueDate,status:r.status,remarks:r.remarks,bill_link:r.billLink,receipt_link:r.receiptLink,amount_2:r.amount2||"",due_date_2:r.dueDate2||"",paid_by_2:r.paidBy2||"",status_2:r.status2||""});
       });
     });
     for(var i=0;i<all.length;i+=500){
@@ -929,22 +805,37 @@ function getStats(d){
   var drCount=0,drAmt=0;
   d.forEach(function(r){
     var a=parseFloat(r.amount)||0;
+    var a2=parseFloat(r.amount2)||0;
     if(a>0)amt+=a;
-    if(!ic||!r.dueDate)return;
-    var paid=(r.status||"").toLowerCase().indexOf("paid")>=0;
-    if(paid)return;
-    var dt=r.dueDate;
-    if(!/^\d{4}-/.test(dt))dt=parseDate(dt);
-    var dd=new Date(dt+"T00:00:00");
-    if(isNaN(dd.getTime()))return;
-    var diff=Math.ceil((dd-now)/864e5);
-    if(diff<0){o++;oAmt+=a;}
-    if(diff===0){t++;tAmt+=a;}
-    // Date range check
-    if(drFrom&&drTo){
-      var fromD=new Date(drFrom+"T00:00:00");
-      var toD=new Date(drTo+"T00:00:00");
-      if(dd>=fromD&&dd<=toD){drCount++;drAmt+=a;}
+    if(a2>0)amt+=a2;
+    if(!ic)return;
+    // Bill 1 due check
+    if(r.dueDate){
+      var paid=(r.status||"").toLowerCase().indexOf("paid")>=0;
+      if(!paid){
+        var dt=r.dueDate;if(!/^\d{4}-/.test(dt))dt=parseDate(dt);
+        var dd=new Date(dt+"T00:00:00");
+        if(!isNaN(dd.getTime())){
+          var diff=Math.ceil((dd-now)/864e5);
+          if(diff<0){o++;oAmt+=a;}
+          if(diff===0){t++;tAmt+=a;}
+          if(drFrom&&drTo){var fromD=new Date(drFrom+"T00:00:00");var toD=new Date(drTo+"T00:00:00");if(dd>=fromD&&dd<=toD){drCount++;drAmt+=a;}}
+        }
+      }
+    }
+    // Bill 2 due check
+    if(r.dueDate2){
+      var paid2=(r.status2||"").toLowerCase().indexOf("paid")>=0;
+      if(!paid2){
+        var dt2=r.dueDate2;if(!/^\d{4}-/.test(dt2))dt2=parseDate(dt2);
+        var dd2=new Date(dt2+"T00:00:00");
+        if(!isNaN(dd2.getTime())){
+          var diff2=Math.ceil((dd2-now)/864e5);
+          if(diff2<0){o++;oAmt+=a2;}
+          if(diff2===0){t++;tAmt+=a2;}
+          if(drFrom&&drTo){var fromD2=new Date(drFrom+"T00:00:00");var toD2=new Date(drTo+"T00:00:00");if(dd2>=fromD2&&dd2<=toD2){drCount++;drAmt+=a2;}}
+        }
+      }
     }
   });
   return{ov:o,td:t,total:d.length,amt:amt,oAmt:oAmt,tAmt:tAmt,drCount:drCount,drAmt:drAmt};
@@ -1009,11 +900,11 @@ function getDateRangeData(){
 function exportDateRange(){
   var d=getDateRangeData();
   if(!d.length){showToast("⚠️ No bills in selected range");return;}
-  var hd=["S.No","Location","Brand","Electricity Company","CA No.","Bill Date","Amount","Due Date","Status & Payment Date","Remarks"];
+  var hd=["S.No","Location","Brand","Electricity Company","CA No.","Bill Date","Amount","Due Date","Status & Payment Date","Remarks","Amount 2","Due Date 2","Paid By 2","Status 2"];
   if(typeof XLSX!=="undefined"){
     try{
-      var ws=XLSX.utils.aoa_to_sheet([hd].concat(d.map(function(r,i){return[i+1,r.location,r.brand,r.company,r.ca,r.billDate,r.amount,r.dueDate,r.status,r.remarks];})));
-      ws["!cols"]=[{wch:5},{wch:25},{wch:15},{wch:22},{wch:16},{wch:12},{wch:10},{wch:12},{wch:25},{wch:25}];
+      var ws=XLSX.utils.aoa_to_sheet([hd].concat(d.map(function(r,i){return[i+1,r.location,r.brand,r.company,r.ca,r.billDate,r.amount,r.dueDate,r.status,r.remarks,r.amount2||"",r.dueDate2||"",r.paidBy2||"",r.status2||""];})));
+      ws["!cols"]=[{wch:5},{wch:25},{wch:15},{wch:22},{wch:16},{wch:12},{wch:10},{wch:12},{wch:25},{wch:25},{wch:10},{wch:12},{wch:18},{wch:25}];
       var wb=XLSX.utils.book_new();
       var sheetName="Due_"+drFrom+"_to_"+drTo;
       XLSX.utils.book_append_sheet(wb,ws,sheetName.substring(0,31));
@@ -1049,7 +940,7 @@ function clearDateRange(){
 /* ========================================= */
 /* ===== CSV/EXCEL IMPORT ===== */
 /* ========================================= */
-var COL_MAP={"location":["location","store","site","place","loc"],"brand":["brand","brand name"],"company":["company","electricity company","elec company","provider","discom"],"ca":["ca","ca no","ca no.","ca number","consumer no","consumer number","account"],"billDate":["bill date","billdate","billing date"],"amount":["amount","amt","bill amount","rs amount","bill amt","total"],"dueDate":["due date","duedate","due","payment due","due by","last date","status payment date","status payment date","status and payment date"],"status":["status","payment status","paid","payment"],"remarks":["remarks","remark","notes","note","comment","comments"],"billLink":["bill link","billlink","bill url"],"receiptLink":["receipt link","receiptlink","receipt url"]};
+var COL_MAP={"location":["location","store","site","place","loc"],"brand":["brand","brand name"],"company":["company","electricity company","elec company","provider","discom"],"ca":["ca","ca no","ca no.","ca number","consumer no","consumer number","account"],"billDate":["bill date","billdate","billing date"],"amount":["amount","amt","bill amount","rs amount","bill amt","total"],"dueDate":["due date","duedate","due","payment due","due by","last date","status payment date","status payment date","status and payment date"],"status":["status","payment status","paid","payment"],"remarks":["remarks","remark","notes","note","comment","comments"],"billLink":["bill link","billlink","bill url"],"receiptLink":["receipt link","receiptlink","receipt url"],"amount2":["amount 2","amt 2","bill amount 2","amount2"],"dueDate2":["due date 2","duedate2","due 2","due date2"],"paidBy2":["paid by 2","paidby2","paid by2","paid 2"],"status2":["status 2","status2","payment status 2"]};
 
 function matchCol(header){
   var raw=header.toLowerCase().trim();
@@ -1111,7 +1002,7 @@ function parseDate(v){
 function rowToRecord(row,mapped){
   function g(field){if(mapped[field]===undefined)return"";var v=row[mapped[field]];return v===undefined||v===null?"":String(v).trim();}
   function gd(field){if(mapped[field]===undefined)return"";var v=row[mapped[field]];if(v===undefined||v===null)return"";return parseDate(v);}
-  return{id:String(_n++),location:g("location"),brand:g("brand"),company:g("company"),ca:g("ca"),billDate:gd("billDate"),amount:g("amount"),dueDate:gd("dueDate"),status:g("status"),remarks:g("remarks"),billLink:g("billLink"),receiptLink:g("receiptLink")};
+  return{id:String(_n++),location:g("location"),brand:g("brand"),company:g("company"),ca:g("ca"),billDate:gd("billDate"),amount:g("amount"),dueDate:gd("dueDate"),status:g("status"),remarks:g("remarks"),billLink:g("billLink"),receiptLink:g("receiptLink"),amount2:g("amount2"),dueDate2:gd("dueDate2"),paidBy2:g("paidBy2"),status2:g("status2")};
 }
 
 function showImportModal(parsed){
@@ -1140,7 +1031,6 @@ function showImportModal(parsed){
   var sb=document.createElement("button");sb.className="msv";sb.style.cssText="background:#22c55e;padding:8px 24px;font-size:13px";
   sb.textContent="✓ Import "+parsed.rows.length+" Rows";
   sb.addEventListener("click",async function(){
-    await autoSnapshot("Before import into "+actMonth);
     var newData=[];for(var j=0;j<parsed.rows.length;j++)newData.push(rowToRecord(parsed.rows[j],parsed.mapped));
     logChange("import",actMonth,"","","","",parsed.rows.length+" rows");
     allData[actMonth]=newData;sd(newData);ov.remove();render();showToast("✅ Imported "+newData.length+" rows");
@@ -1175,10 +1065,10 @@ document.getElementById("csvFileInput").addEventListener("change",function(e){
 
 function exportCSV(){
   var d=gd();
-  var hd=["S.No","Location","Brand","Electricity Company","CA No.","Bill Date","Amount","Due Date","Status & Payment Date","Remarks","Bill Link","Receipt Link"];
+  var hd=["S.No","Location","Brand","Electricity Company","CA No.","Bill Date","Amount","Due Date","Status & Payment Date","Remarks","Bill Link","Receipt Link","Amount 2","Due Date 2","Paid By 2","Status 2"];
   var lines=[hd.join(",")];
   d.forEach(function(r,i){
-    var row=[i+1,'"'+r.location.replace(/"/g,'""')+'"','"'+r.brand.replace(/"/g,'""')+'"','"'+r.company.replace(/"/g,'""')+'"','"'+r.ca+'"',r.billDate,r.amount,r.dueDate,'"'+(r.status||"").replace(/"/g,'""')+'"','"'+(r.remarks||"").replace(/"/g,'""')+'"',r.billLink,r.receiptLink];
+    var row=[i+1,'"'+r.location.replace(/"/g,'""')+'"','"'+r.brand.replace(/"/g,'""')+'"','"'+r.company.replace(/"/g,'""')+'"','"'+r.ca+'"',r.billDate,r.amount,r.dueDate,'"'+(r.status||"").replace(/"/g,'""')+'"','"'+(r.remarks||"").replace(/"/g,'""')+'"',r.billLink,r.receiptLink,r.amount2||"",r.dueDate2||"",'"'+(r.paidBy2||"").replace(/"/g,'""')+'"','"'+(r.status2||"").replace(/"/g,'""')+'"'];
     lines.push(row.join(","));
   });
   var blob=new Blob([lines.join("\n")],{type:"text/csv;charset=utf-8;"});
@@ -1233,6 +1123,7 @@ function render(){
   h+='<button class="hbtn" onclick="expAll()">📥 Export All</button>';
   h+='<button class="hbtn" onclick="showAddCompany()" style="background:rgba(168,85,247,.3);border-color:rgba(168,85,247,.5)">🏢 Companies</button>';
   h+='<button class="hbtn" onclick="toggleHistory()" style="background:rgba(251,191,36,.3);border-color:rgba(251,191,36,.5)">📋 History</button>';
+  h+='<button class="hbtn" onclick="removeDuplicates()" style="background:rgba(249,115,22,.3);border-color:rgba(249,115,22,.5)">🧹 Dedup</button>';
   h+='<button class="hbtn" onclick="saveAllToDB()" style="background:rgba(34,197,94,.4);border-color:rgba(34,197,94,.6)">☁️ Sync All</button>';
   h+='<button class="hbtn" onclick="loadFromDB()">🔄 Reload</button>';
   h+='<button class="hbtn" onclick="addMonth()">+ New Month</button>';
@@ -1295,25 +1186,40 @@ function render(){
   brList.forEach(function(b){h+='<option value="'+E(b)+'"'+(brandF===b?' selected':'')+'>'+E(b)+'</option>';});
   h+='</select><span style="font-size:11px;color:#64748b;margin-left:auto">'+f.length+' of '+data.length+'</span></div>';
 
+  // Duplicate detection
+  var dupInfo=findDuplicates();
+  var dupIdxMap=getDupIndices();
+  if(dupInfo.hasDups){
+    h+='<div class="dup-bar"><div class="dup-info">⚠️ <span class="dup-count">'+dupInfo.totalDups+'</span> duplicate group(s) detected in '+E(actMonth)+'</div><div style="display:flex;gap:6px"><button class="dup-view-btn" onclick="setFlt(\'all\')">Show All</button><button class="dup-remove-btn" onclick="removeDuplicates()">🗑 Review & Remove Duplicates</button></div></div>';
+  }
+
   function sh(col,lbl){var ar=sCol===col?(sDir==="asc"?" ↑":" ↓"):"";return '<th onclick="doSort(\''+col+'\')">'+lbl+ar+'</th>';}
-  h+='<div class="tw"><div class="ts"><table><thead><tr><th>#</th>'+sh("location","Location")+sh("brand","Brand")+'<th>Company</th>'+sh("ca","CA No.")+sh("billDate","Bill Date")+sh("amount","₹ Amount")+sh("dueDate","Due Date")+'<th>Alert</th>'+sh("status","Status")+sh("remarks","Remarks")+'<th>Bill</th><th>Receipt</th><th>Del</th></tr></thead><tbody>';
+  h+='<div class="tw"><div class="ts"><table><thead><tr><th>#</th>'+sh("location","Location")+sh("brand","Brand")+'<th>Company</th>'+sh("ca","CA No.")+sh("billDate","Bill Date")+sh("amount","₹ Amount")+sh("dueDate","Due Date")+'<th>Alert</th>'+sh("status","Status")+sh("remarks","Remarks")+'<th>Bill</th><th>Receipt</th><th style="background:#faf5ff;color:#6d28d9;border-left:2px solid #a78bfa" onclick="doSort(\'amount2\')">₹ Amt 2'+(sCol==="amount2"?(sDir==="asc"?" ↑":" ↓"):"")+'</th><th style="background:#faf5ff;color:#6d28d9" onclick="doSort(\'dueDate2\')">Due Date 2'+(sCol==="dueDate2"?(sDir==="asc"?" ↑":" ↓"):"")+'</th><th style="background:#faf5ff;color:#6d28d9">Alert 2</th><th style="background:#faf5ff;color:#6d28d9">Paid By 2</th><th style="background:#faf5ff;color:#6d28d9">Status 2</th><th>Del</th></tr></thead><tbody>';
 
-  if(!f.length&&!addingRow)h+='<tr><td colspan="14" style="text-align:center;padding:30px;color:#94a3b8">No entries</td></tr>';
+  if(!f.length&&!addingRow)h+='<tr><td colspan="18" style="text-align:center;padding:30px;color:#94a3b8">No entries</td></tr>';
 
-  var filtTotal=0;
+  var filtTotal=0,filtTotal2=0;
   f.forEach(function(r,i){
     var isPd=(r.status||"").toLowerCase().indexOf("paid")>=0;
     var tag=dueTag(r.dueDate,r.status);
     var isOD=tag&&(tag.l.indexOf("Overdue")>=0||tag.l.indexOf("Today")>=0);
-    var rc=isOD?"rod":isPd?"rpd":"";
+    // Bill 2 alerts
+    var isPd2=(r.status2||"").toLowerCase().indexOf("paid")>=0;
+    var tag2=dueTag(r.dueDate2,r.status2);
+    var isOD2=tag2&&(tag2.l.indexOf("Overdue")>=0||tag2.l.indexOf("Today")>=0);
+    var rc=(isOD||isOD2)?"rod":(isPd&&(!r.amount2||isPd2))?"rpd":"";
+    // Check if this row is a duplicate
+    var origIdx=-1;var origData=gd();for(var oi=0;oi<origData.length;oi++){if(origData[oi].id===r.id){origIdx=oi;break;}}
+    if(origIdx>=0&&dupIdxMap[origIdx])rc+=" dup-row";
     filtTotal+=(parseFloat(r.amount)||0);
+    filtTotal2+=(parseFloat(r.amount2)||0);
 
     function cell(fd,v,w){
       if(editing===r.id+"_"+fd){
-        var tp=fd==="dueDate"||fd==="billDate"?' type="date"':"";
+        var tp=fd==="dueDate"||fd==="billDate"||fd==="dueDate2"?' type="date"':"";
         return'<div class="ce"><input value="'+E(editVal)+'"'+tp+' oninput="editVal=this.value" onkeydown="ck(event,\''+r.id+'\',\''+fd+'\')" autofocus style="width:'+(w?'130':'80')+'px"><button class="sv" onclick="sv(\''+r.id+'\',\''+fd+'\')">✓</button><button class="cn" onclick="cn()">✗</button></div>';
       }
-      var dv=(fd==="dueDate"||fd==="billDate")?displayDate(v):v;
+      var dv=(fd==="dueDate"||fd==="billDate"||fd==="dueDate2")?displayDate(v):v;
       return'<span class="cl'+(dv?"":" mt")+'" onclick="se(\''+r.id+'\',\''+fd+'\')">'+E(dv||"—")+'</span>';
     }
 
@@ -1325,6 +1231,7 @@ function render(){
     }
 
     var tagH=tag?'<span class="tag" style="color:'+tag.c+';background:'+tag.b+';border:1px solid '+tag.c+'22">'+tag.l+'</span>':'<span style="color:#cbd5e1;font-size:10px">—</span>';
+    var tag2H=tag2?'<span class="tag" style="color:'+tag2.c+';background:'+tag2.b+';border:1px solid '+tag2.c+'22">'+tag2.l+'</span>':'<span style="color:#cbd5e1;font-size:10px">—</span>';
 
     var bH;
     if(editing===r.id+"_billLink"){
@@ -1344,19 +1251,21 @@ function render(){
       rH='<button class="ub" onclick="upFlow(\''+r.id+'\',\'receipt\')">📤 Upload</button>';
     }
 
-    h+='<tr class="'+rc+'"><td style="font-size:10px;color:#94a3b8">'+(i+1)+'</td><td style="font-weight:600;min-width:130px">'+cell("location",r.location,true)+'</td><td style="min-width:70px">'+cell("brand",r.brand)+'</td><td style="min-width:100px"><a href="'+getUrl(r.company)+'" target="_blank" class="lk">'+E(r.company)+' ↗</a></td><td class="cac">'+caH+'</td><td style="min-width:90px">'+cell("billDate",r.billDate,true)+'</td><td style="font-weight:600">'+cell("amount",r.amount)+'</td><td style="min-width:100px">'+cell("dueDate",r.dueDate,true)+'</td><td>'+tagH+'</td><td style="min-width:90px">'+cell("status",r.status,true)+'</td><td style="min-width:100px;max-width:160px">'+cell("remarks",r.remarks,true)+'</td><td class="bc">'+bH+'</td><td class="bc">'+rH+'</td><td style="text-align:center"><button class="del" onclick="delR(\''+r.id+'\')">🗑</button></td></tr>';
+    var b2bg=r.amount2?'#faf5ff':'';
+    h+='<tr class="'+rc+'"><td style="font-size:10px;color:#94a3b8">'+(i+1)+'</td><td style="font-weight:600;min-width:130px">'+cell("location",r.location,true)+'</td><td style="min-width:70px">'+cell("brand",r.brand)+'</td><td style="min-width:100px"><a href="'+getUrl(r.company)+'" target="_blank" class="lk">'+E(r.company)+' ↗</a></td><td class="cac">'+caH+'</td><td style="min-width:90px">'+cell("billDate",r.billDate,true)+'</td><td style="font-weight:600">'+cell("amount",r.amount)+'</td><td style="min-width:100px">'+cell("dueDate",r.dueDate,true)+'</td><td>'+tagH+'</td><td style="min-width:90px">'+cell("status",r.status,true)+'</td><td style="min-width:100px;max-width:160px">'+cell("remarks",r.remarks,true)+'</td><td class="bc">'+bH+'</td><td class="bc">'+rH+'</td><td style="font-weight:600;border-left:2px solid #a78bfa;background:'+b2bg+'">'+cell("amount2",r.amount2||"")+'</td><td style="min-width:100px;background:'+b2bg+'">'+cell("dueDate2",r.dueDate2||"",true)+'</td><td style="background:'+b2bg+'">'+tag2H+'</td><td style="min-width:90px;background:'+b2bg+'">'+cell("paidBy2",r.paidBy2||"",true)+'</td><td style="min-width:90px;background:'+b2bg+'">'+cell("status2",r.status2||"",true)+'</td><td style="text-align:center"><button class="del" onclick="delR(\''+r.id+'\')">🗑</button></td></tr>';
   });
 
   if(f.length>0){
-    h+='<tr class="totrow"><td colspan="6" style="text-align:right;font-size:11px;padding-right:10px">TOTAL ('+f.length+' bills)</td><td style="font-size:13px;color:#1e40af">₹'+filtTotal.toLocaleString("en-IN")+'</td><td colspan="7"></td></tr>';
+    var grandTotal=filtTotal+filtTotal2;
+    h+='<tr class="totrow"><td colspan="6" style="text-align:right;font-size:11px;padding-right:10px">TOTAL ('+f.length+' bills)</td><td style="font-size:13px;color:#1e40af">₹'+filtTotal.toLocaleString("en-IN")+'</td><td colspan="6"></td><td style="font-size:13px;color:#6d28d9;border-left:2px solid #a78bfa">₹'+filtTotal2.toLocaleString("en-IN")+'</td><td colspan="3"></td><td style="font-size:11px;color:#1e40af;font-weight:800">Grand: ₹'+grandTotal.toLocaleString("en-IN")+'</td></tr>';
   }
 
   if(addingRow){
     var coOpts='';Object.keys(CU).forEach(function(c){coOpts+='<option value="'+E(c)+'">'+E(c)+'</option>';});
-    h+='<tr class="newrow"><td style="font-size:10px;color:#3b82f6;font-weight:700;text-align:center">NEW</td><td><input class="nr-inp" id="nr_loc" placeholder="Location *"></td><td><input class="nr-inp" id="nr_brand" placeholder="Brand"></td><td><select class="nr-sel" id="nr_comp">'+coOpts+'</select></td><td><input class="nr-inp" id="nr_ca" placeholder="CA No. *"></td><td><input class="nr-inp" id="nr_bdate" type="date"></td><td><input class="nr-inp" id="nr_amt" placeholder="Amount"></td><td><input class="nr-inp" id="nr_due" type="date"></td><td style="color:#cbd5e1;font-size:10px;text-align:center">—</td><td><input class="nr-inp" id="nr_stat" placeholder="Status"></td><td><input class="nr-inp" id="nr_rem" placeholder="Remarks"></td><td colspan="2" style="text-align:center"><button class="nr-save" onclick="saveNewRow()">✓ Save</button></td><td style="text-align:center"><button class="nr-cancel" onclick="cancelNewRow()">✗</button></td></tr>';
+    h+='<tr class="newrow"><td style="font-size:10px;color:#3b82f6;font-weight:700;text-align:center">NEW</td><td><input class="nr-inp" id="nr_loc" placeholder="Location *"></td><td><input class="nr-inp" id="nr_brand" placeholder="Brand"></td><td><select class="nr-sel" id="nr_comp">'+coOpts+'</select></td><td><input class="nr-inp" id="nr_ca" placeholder="CA No. *"></td><td><input class="nr-inp" id="nr_bdate" type="date"></td><td><input class="nr-inp" id="nr_amt" placeholder="Amount"></td><td><input class="nr-inp" id="nr_due" type="date"></td><td style="color:#cbd5e1;font-size:10px;text-align:center">—</td><td><input class="nr-inp" id="nr_stat" placeholder="Status"></td><td><input class="nr-inp" id="nr_rem" placeholder="Remarks"></td><td colspan="2" style="text-align:center"><button class="nr-save" onclick="saveNewRow()">✓ Save</button></td><td colspan="5" style="color:#cbd5e1;font-size:10px;text-align:center;border-left:2px solid #a78bfa">Bill 2 — edit after saving</td><td style="text-align:center"><button class="nr-cancel" onclick="cancelNewRow()">✗</button></td></tr>';
   }
 
-  h+='<tr><td colspan="14" style="padding:4px 8px;border:none"><button class="add-row-btn" onclick="startAddRow()">+ Add New Store</button></td></tr>';
+  h+='<tr><td colspan="19" style="padding:4px 8px;border:none"><button class="add-row-btn" onclick="startAddRow()">+ Add New Store</button></td></tr>';
   h+='</tbody></table></div></div>';
   h+='<div class="ft"><span>☁️ Supabase connected · Auto-saves on edit · Click cells to edit · 🔄 Auto-syncs every 5s</span><span>Pan India Electricity 2026</span></div>';
 
@@ -1380,7 +1289,7 @@ function saveNewRow(){
   var ca=(document.getElementById("nr_ca").value||"").trim();
   if(!loc||!ca){alert("Location & CA required");return;}
   var d=gd();
-  var newRec={id:String(_n++),location:loc,brand:(document.getElementById("nr_brand").value||"").trim(),company:document.getElementById("nr_comp").value,ca:ca,billDate:document.getElementById("nr_bdate").value||"",amount:(document.getElementById("nr_amt").value||"").trim(),dueDate:document.getElementById("nr_due").value||"",status:(document.getElementById("nr_stat").value||"").trim(),remarks:(document.getElementById("nr_rem").value||"").trim(),billLink:"",receiptLink:""};
+  var newRec={id:String(_n++),location:loc,brand:(document.getElementById("nr_brand").value||"").trim(),company:document.getElementById("nr_comp").value,ca:ca,billDate:document.getElementById("nr_bdate").value||"",amount:(document.getElementById("nr_amt").value||"").trim(),dueDate:document.getElementById("nr_due").value||"",status:(document.getElementById("nr_stat").value||"").trim(),remarks:(document.getElementById("nr_rem").value||"").trim(),billLink:"",receiptLink:"",amount2:"",dueDate2:"",paidBy2:"",status2:""};
   d.push(newRec);
   logChange("add",actMonth,loc,ca,"","","Added new store");
   sd(d);addingRow=false;render();
@@ -1449,7 +1358,7 @@ function cn(){editing=null;editVal="";render();}
 
 function sv(id,fd){
   var v=editVal;
-  if(fd==="status"&&v.toLowerCase().indexOf("paid")>=0&&!/\d{2}\.\d{2}\.\d{4}/.test(v)&&!/\d{4}-\d{2}-\d{2}/.test(v)&&!/\d{1,2}(st|nd|rd|th)\s/i.test(v)){
+  if((fd==="status"||fd==="status2")&&v.toLowerCase().indexOf("paid")>=0&&!/\d{2}\.\d{2}\.\d{4}/.test(v)&&!/\d{4}-\d{2}-\d{2}/.test(v)&&!/\d{1,2}(st|nd|rd|th)\s/i.test(v)){
     var t=new Date();var ds=String(t.getDate()).padStart(2,"0")+"."+String(t.getMonth()+1).padStart(2,"0")+"."+t.getFullYear();
     v=v.replace(/\s*$/,"")+" on "+ds;
   }
@@ -1496,7 +1405,9 @@ function upFlow(id,type){
   var d=gd(),r=null;
   for(var i=0;i<d.length;i++){if(d[i].id===id){r=d[i];break;}}
   if(!r)return;
-  var isB=type==="bill";var folder=isB?BILL_FOLDER:RCPT_FOLDER;var field=isB?"billLink":"receiptLink";var label=isB?"Bill":"Receipt";
+  var isB=type==="bill";var folder=isB?BILL_FOLDER:RCPT_FOLDER;
+  var field=type==="bill"?"billLink":"receiptLink";
+  var label=isB?"Bill":"Receipt";
   var fn=r.location.replace(/[^a-zA-Z0-9]/g,"_")+"_"+actMonth.replace(" ","_")+"_"+label;
   var ov=document.createElement("div");ov.className="mo";
   ov.addEventListener("click",function(e){if(e.target===ov)ov.remove();});
@@ -1556,7 +1467,9 @@ function prevFile(id,type){
   var d=gd(),r=null;
   for(var i=0;i<d.length;i++){if(d[i].id===id){r=d[i];break;}}
   if(!r)return;
-  var isB=type==="bill";var link=isB?r.billLink:r.receiptLink;if(!link)return;
+  var isB=type==="bill";
+  var link=type==="bill"?r.billLink:r.receiptLink;
+  if(!link)return;
   var embedUrl=link;
   var m=link.match(/\/d\/([^\/]+)/);if(m)embedUrl="https://drive.google.com/file/d/"+m[1]+"/preview";
   var m2=link.match(/id=([^&]+)/);if(!m&&m2)embedUrl="https://drive.google.com/file/d/"+m2[1]+"/preview";
@@ -1581,7 +1494,7 @@ function addMonth(){
   if(allData[n]){alert("Exists!");return;}
   var prev=gd();
   allData[n]=prev.map(function(r){
-    return{id:String(_n++),location:r.location,brand:r.brand,company:r.company,ca:r.ca,billDate:"",amount:"",dueDate:"",status:"",remarks:"",billLink:"",receiptLink:""};
+    return{id:String(_n++),location:r.location,brand:r.brand,company:r.company,ca:r.ca,billDate:"",amount:"",dueDate:"",status:"",remarks:"",billLink:"",receiptLink:"",amount2:"",dueDate2:"",paidBy2:"",status2:""};
   });
   actMonth=n;saveToDB();render();
 }
@@ -1593,7 +1506,6 @@ async function delMonth(){
   var step1=prompt("⚠️ DELETE \""+m+"\" ("+cnt+" stores)?\nType month name exactly:");
   if(!step1||step1.trim()!==m)return;
   if(!confirm("🔴 FINAL: Delete "+m+"?"))return;
-  await autoSnapshot("Before deleting month "+m+" ("+cnt+" records)");
   logChange("reset",m,"","","","","Deleted month with "+cnt+" records");
   delete allData[m];
   try{supaFetch(SUPA_TBL+"?month=eq."+encodeURIComponent(m),{method:"DELETE"});}catch(e){}
@@ -1604,18 +1516,17 @@ async function resetM(){
   var cnt=(allData[actMonth]||[]).length;
   var s=prompt("⚠️ RESET \""+actMonth+"\"? Type RESET:");
   if(!s||s.trim()!=="RESET")return;
-  await autoSnapshot("Before reset of "+actMonth+" ("+cnt+" records)");
   logChange("reset",actMonth,"","","","","Reset month (had "+cnt+" records)");
   allData[actMonth]=[];sd([]);render();showToast("🗑 Cleared "+actMonth);
 }
 
 function expMonth(){
   var d=gd();
-  var hd=["S.No","Location","Brand","Electricity Company","CA No.","Bill Date","Amount","Due Date","Status & Payment Date","Remarks","Bill Link","Receipt Link"];
+  var hd=["S.No","Location","Brand","Electricity Company","CA No.","Bill Date","Amount","Due Date","Status & Payment Date","Remarks","Bill Link","Receipt Link","Amount 2","Due Date 2","Paid By 2","Status 2"];
   if(typeof XLSX!=="undefined"){
     try{
-      var ws=XLSX.utils.aoa_to_sheet([hd].concat(d.map(function(r,i){return[i+1,r.location,r.brand,r.company,r.ca,r.billDate,r.amount,r.dueDate,r.status,r.remarks,r.billLink,r.receiptLink];})));
-      ws["!cols"]=[{wch:5},{wch:25},{wch:15},{wch:22},{wch:16},{wch:12},{wch:10},{wch:12},{wch:25},{wch:25},{wch:35},{wch:35}];
+      var ws=XLSX.utils.aoa_to_sheet([hd].concat(d.map(function(r,i){return[i+1,r.location,r.brand,r.company,r.ca,r.billDate,r.amount,r.dueDate,r.status,r.remarks,r.billLink,r.receiptLink,r.amount2||"",r.dueDate2||"",r.paidBy2||"",r.status2||""];})));
+      ws["!cols"]=[{wch:5},{wch:25},{wch:15},{wch:22},{wch:16},{wch:10},{wch:12},{wch:18},{wch:25},{wch:10},{wch:12},{wch:18},{wch:25}];
       var wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,actMonth);
       XLSX.writeFile(wb,"Electricity_"+actMonth.replace(" ","_")+".xlsx");return;
     }catch(e){}
@@ -1624,15 +1535,15 @@ function expMonth(){
 }
 
 function expAll(){
-  var hd=["S.No","Location","Brand","Electricity Company","CA No.","Bill Date","Amount","Due Date","Status & Payment Date","Remarks","Bill Link","Receipt Link"];
+  var hd=["S.No","Location","Brand","Electricity Company","CA No.","Bill Date","Amount","Due Date","Status & Payment Date","Remarks","Bill Link","Receipt Link","Amount 2","Due Date 2","Paid By 2","Status 2"];
   var months=Object.keys(allData).sort(mSort);
   if(typeof XLSX!=="undefined"){
     try{
       var wb=XLSX.utils.book_new();
       months.forEach(function(m){
         var d=allData[m]||[];
-        var ws=XLSX.utils.aoa_to_sheet([hd].concat(d.map(function(r,i){return[i+1,r.location,r.brand,r.company,r.ca,r.billDate,r.amount,r.dueDate,r.status,r.remarks,r.billLink,r.receiptLink];})));
-        ws["!cols"]=[{wch:5},{wch:25},{wch:15},{wch:22},{wch:16},{wch:12},{wch:10},{wch:12},{wch:25},{wch:25},{wch:35},{wch:35}];
+        var ws=XLSX.utils.aoa_to_sheet([hd].concat(d.map(function(r,i){return[i+1,r.location,r.brand,r.company,r.ca,r.billDate,r.amount,r.dueDate,r.status,r.remarks,r.billLink,r.receiptLink,r.amount2||"",r.dueDate2||"",r.paidBy2||"",r.status2||""];})));
+        ws["!cols"]=[{wch:5},{wch:25},{wch:15},{wch:22},{wch:16},{wch:10},{wch:12},{wch:18},{wch:25},{wch:10},{wch:12},{wch:18},{wch:25}];
         XLSX.utils.book_append_sheet(wb,ws,m);
       });
       XLSX.writeFile(wb,"Pan_India_Electricity_2026.xlsx");return;
